@@ -13,6 +13,8 @@
 
 using namespace std;
 
+namespace wiimWrapper{  // Defino un namespace, no vaya a ser que nos de guerra de otro modo.
+    
 class WiimoteEvent
 {
     public:
@@ -29,6 +31,7 @@ class WiimoteEvent
 class WiimoteListener
 {
     public:
+        virtual ~WiimoteListener(){};
         virtual bool WiimoteButtonUp(const WiimoteEvent & arg) = 0;
         virtual bool WiimoteButtonDown(const WiimoteEvent & arg) = 0;
         virtual bool WiimoteIRMove(const WiimoteEvent & arg) = 0;
@@ -40,7 +43,7 @@ class Wiimote
         Wiimote();
         virtual ~Wiimote();
 
-        size_t Connect(string hci_address); // Necesitará al miembro _wiimote y su dirección bluetooth para conectarse, algo como 00:15:83:15:A3:10.
+        size_t Connect(std::string hci_address); // Necesitará al miembro _wiimote y su dirección bluetooth para conectarse, algo como 00:15:83:15:A3:10.
         void ActivaLed(size_t led,bool activa);  // Activa el led indicado en el wiimote.
         size_t Update();                    // Para sincronizar el objeto wiimote con el wiimote real. Se debería llamar tantas veces como sea posible para minimizar la latencia.
         void Disconnect();                  // Desconecta el wiimote. Lo apaga.
@@ -50,14 +53,7 @@ class Wiimote
         void ActivaAccelerator(bool activar); // Activa o desactiva el acelerómetro.
         bool Wiimote_is_open();
         wiimote_t getWiimoteStatus();
-        bool AddWiimoteListener(unique_ptr<WiimoteListener> listener);
-//      bool Home();
-//      bool A();
-//      bool B();
-//      bool Plus();
-//      bool Minus();
-//      bool One();
-//      bool Two();
+        bool AddWiimoteListener(shared_ptr<WiimoteListener> listener);
 
     protected:
 
@@ -65,21 +61,16 @@ class Wiimote
         unique_ptr<wiimote_t> _wiimote {new wiimote_t};
 	    unique_ptr<wiimote_report_t> _report {new wiimote_report_t};
 	    string _hci_address;
-	    vector< unique_ptr<WiimoteListener> > _WiimoteListeners;
+	    vector< shared_ptr<WiimoteListener> > _WiimoteListeners;
 	    vector<wiimote_ir_t> _ir; // sirve para ir almacenando los valores IR y compararlos para ver si han cambiado y comunicárselo a un listener.
 	    inline void setIRActual(); // Aquí es donde actualizamos los valores IR actuales
 	    bool NuevosValoresIR();
 	    wiimote_keys_t _oldBits; // Estado de los botones anterior al momento en el que se dispara un evento ButtonUP o ButtonDOWN
 	    inline void setOldKeysBits();
 	    bool NuevosKeysBits();
-//   	bool _home;
-//	    bool _A;
-//	    bool _B;
-//	    bool _Plus;
-//	    bool _Minus;
-//	    bool _One;
-//	    bool _Two;
 
 };
+
+} // Fin del namespace wiimWrapper
 
 #endif // WIIMOTE_H

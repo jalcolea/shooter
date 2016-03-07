@@ -89,3 +89,9 @@ LooseState& LooseState::getSingleton ()
   return *msSingleton;
 }
 
+bool LooseState::WiimoteButtonDown(const wiimWrapper::WiimoteEvent &e)
+{return true;}
+bool LooseState::WiimoteButtonUp(const wiimWrapper::WiimoteEvent &e)
+{return true;}
+bool LooseState::WiimoteIRMove(const wiimWrapper::WiimoteEvent &e)
+{return true;}

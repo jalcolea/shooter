@@ -31,12 +31,14 @@
 #include "RecordsState.h"
 #include "sounds.h"
 #include "records.h"
+#include "testwiimoteState.h"
 
 #include <iostream>
 
 using namespace std;
 
 int main () {
+  
   srand(time(NULL));
 
   GameManager* game = new GameManager();
@@ -48,8 +50,9 @@ int main () {
   WinState* winState = new WinState();
   LooseState* looseState = new LooseState();
   RecordsState * recordState = new RecordsState();
-  sounds * s = sounds::getInstance();
+  testwiimoteState * testWiimote = new testwiimoteState();
   records * r = records::getInstance();
+  sounds * s = sounds::getInstance();
 
   UNUSED_VARIABLE(introState);
   UNUSED_VARIABLE(playState);
@@ -65,6 +68,7 @@ int main () {
     {
       // Inicializa el juego y transición al primer estado.
       game->start(IntroState::getSingletonPtr());
+      //game->start(testwiimoteState::getSingletonPtr());
     }
   catch (Ogre::Exception& e)
     {

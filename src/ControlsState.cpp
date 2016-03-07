@@ -97,3 +97,9 @@ void ControlsState::createScene()
  createMyGui();
 }
 
+bool ControlsState::WiimoteButtonDown(const wiimWrapper::WiimoteEvent &e)
+{return true;}
+bool ControlsState::WiimoteButtonUp(const wiimWrapper::WiimoteEvent &e)
+{return true;}
+bool ControlsState::WiimoteIRMove(const wiimWrapper::WiimoteEvent &e)
+{return true;}

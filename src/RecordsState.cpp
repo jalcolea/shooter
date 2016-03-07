@@ -127,3 +127,11 @@ void RecordsState::destroyMyGui()
 void RecordsState::createMyGui()
 {
 }
+
+bool RecordsState::WiimoteButtonDown(const wiimWrapper::WiimoteEvent &e)
+{return true;}
+bool RecordsState::WiimoteButtonUp(const wiimWrapper::WiimoteEvent &e)
+{return true;}
+bool RecordsState::WiimoteIRMove(const wiimWrapper::WiimoteEvent &e)
+{return true;}
+

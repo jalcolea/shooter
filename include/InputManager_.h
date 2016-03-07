@@ -15,7 +15,7 @@
  * This file is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.  
+ * General Public License for more details.
  *********************************************************************/
 
 #ifndef InputManager_H
@@ -24,58 +24,81 @@
 #include <Ogre.h>
 #include <OIS/OIS.h>
 
+#include "Wiimote.h"                                                        //WIIMOTE
+#include "Bluez_Util.h"                                                     //WIIMOTE
+
 // Gestor para los eventos de entrada (teclado y ratón).
-class InputManager_ : public Ogre::Singleton<InputManager_>, public OIS::KeyListener, public OIS::MouseListener {
- public:
-  InputManager_ ();
-  virtual ~InputManager_ ();
-  
-  void initialise (Ogre::RenderWindow *renderWindow);
-  void capture ();
+class InputManager_ : public Ogre::Singleton<InputManager_>,
+                      public OIS::KeyListener,
+                      public OIS::MouseListener,
+                      public wiimWrapper::WiimoteListener
+{
+public:
+    InputManager_();
+    virtual ~InputManager_();
 
-  // Gestión de listeners.
-  void addKeyListener (OIS::KeyListener *keyListener,
-			 const std::string& instanceName);
-  void addMouseListener (OIS::MouseListener *mouseListener,
-			   const std::string& instanceName );
+    void initialise(Ogre::RenderWindow* renderWindow);
+    void capture();
+    
+    bool initialiseWiimote();                                                                               //WIIMOTE
 
-  void removeKeyListener (const std::string& instanceName);
-  void removeMouseListener (const std::string& instanceName);
-  void removeKeyListener (OIS::KeyListener *keyListener);
-  void removeMouseListener (OIS::MouseListener *mouseListener);
-  
-  void removeAllListeners ();
-  void removeAllKeyListeners ();
-  void removeAllMouseListeners ();
-  
-  void setWindowExtents (int width, int height);
 
-  OIS::Keyboard* getKeyboard ();
-  OIS::Mouse* getMouse ();
+    // Gestión de listeners.
+    void addKeyListener(OIS::KeyListener* keyListener, const std::string& instanceName);
+    void addMouseListener(OIS::MouseListener* mouseListener, const std::string& instanceName);
+    
+    void addWiimoteListener(wiimWrapper::WiimoteListener* wiimoteListener, const std::string& instanceName);   //WIIMOTE
 
-  // Heredados de Ogre::Singleton.
-  static InputManager_& getSingleton ();
-  static InputManager_* getSingletonPtr ();
+    void removeKeyListener(const std::string& instanceName);
+    void removeMouseListener(const std::string& instanceName);
+    void removeKeyListener(OIS::KeyListener* keyListener);
+    void removeMouseListener(OIS::MouseListener* mouseListener);
+    
+    void removeWiimoteListener(const std::string& instanceName);                        //WIIMOTE
+    void removeWiimoteListener(wiimWrapper::WiimoteListener* wiimoteListener);          //WIIMOTE
 
- private:
-  bool keyPressed (const OIS::KeyEvent &e);
-  bool keyReleased (const OIS::KeyEvent &e);
-  
-  bool mouseMoved (const OIS::MouseEvent &e);
-  bool mousePressed (const OIS::MouseEvent &e, 
-		     OIS::MouseButtonID id);
-  bool mouseReleased (const OIS::MouseEvent &e,
-		      OIS::MouseButtonID id);
-  
-  OIS::InputManager *_inputSystem;
-  OIS::Keyboard *_keyboard;
-  OIS::Mouse *_mouse;
+    void removeAllListeners();
+    void removeAllKeyListeners();
+    void removeAllMouseListeners();
+    
+    void removeAllWiimoteListeners();                                                   //WIIMOTE
 
-  std::map<std::string, OIS::KeyListener*> _keyListeners;
-  std::map<std::string, OIS::MouseListener*> _mouseListeners;
-  std::map<std::string, OIS::KeyListener*>::iterator itKeyListener;
-  std::map<std::string, OIS::MouseListener*>::iterator itMouseListener;
-  std::map<std::string, OIS::KeyListener*>::iterator itKeyListenerEnd;
-  std::map<std::string, OIS::MouseListener*>::iterator itMouseListenerEnd;
+    void setWindowExtents(int width, int height);
+
+    OIS::Keyboard* getKeyboard();
+    OIS::Mouse* getMouse();
+    
+    wiimWrapper::Wiimote* getWiimote();                                                 //WIIMOTE
+
+    // Heredados de Ogre::Singleton.
+    static InputManager_& getSingleton();
+    static InputManager_* getSingletonPtr();
+
+private:
+    bool keyPressed(const OIS::KeyEvent& e);
+    bool keyReleased(const OIS::KeyEvent& e);
+
+    bool mouseMoved(const OIS::MouseEvent& e);
+    bool mousePressed(const OIS::MouseEvent& e, OIS::MouseButtonID id);
+    bool mouseReleased(const OIS::MouseEvent& e, OIS::MouseButtonID id);
+    
+    bool WiimoteButtonDown(const wiimWrapper::WiimoteEvent& arg);                                    //WIIMOTE
+    bool WiimoteButtonUp(const wiimWrapper::WiimoteEvent& arg);                                      //WIIMOTE
+    bool WiimoteIRMove(const wiimWrapper::WiimoteEvent& arg);                                        //WIIMOTE
+
+    OIS::InputManager* _inputSystem;
+    OIS::Keyboard* _keyboard;
+    OIS::Mouse* _mouse;
+    wiimWrapper::Wiimote* _wiimote;                                                     //WIIMOTE
+
+    std::map<std::string, OIS::KeyListener*> _keyListeners;
+    std::map<std::string, OIS::MouseListener*> _mouseListeners;
+    std::map<std::string, wiimWrapper::WiimoteListener*> _wiimoteListeners;             //WIIMOTE
+    std::map<std::string, OIS::KeyListener*>::iterator itKeyListener;
+    std::map<std::string, OIS::MouseListener*>::iterator itMouseListener;
+    std::map<std::string, OIS::KeyListener*>::iterator itKeyListenerEnd;
+    std::map<std::string, OIS::MouseListener*>::iterator itMouseListenerEnd;
+    std::map<std::string, wiimWrapper::WiimoteListener*>::iterator itWiimoteListener;   //WIIMOTE
+    std::map<std::string, wiimWrapper::WiimoteListener*>::iterator itWiimoteListenerEnd;//WIIMOTE
 };
 #endif

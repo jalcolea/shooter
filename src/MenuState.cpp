@@ -117,3 +117,10 @@ void MenuState::createScene()
 MenuState::MenuState()
 {
 }
+
+bool MenuState::WiimoteButtonDown(const wiimWrapper::WiimoteEvent &e)
+{return true;}
+bool MenuState::WiimoteButtonUp(const wiimWrapper::WiimoteEvent &e)
+{return true;}
+bool MenuState::WiimoteIRMove(const wiimWrapper::WiimoteEvent &e)
+{return true;}

@@ -28,6 +28,7 @@
 
 #include "InputManager_.h"
 
+#include "Wiimote.h"
 
 
 class GameState; // <----- Declaración en avanzada de la clase GameState (Forward declaration)
@@ -38,7 +39,11 @@ class GameState; // <----- Declaración en avanzada de la clase GameState (Forwa
 //de compilar la clase GameManager sin conocer la definición de la clase GameState. Vamos, un lío de cojones :D
 
 
-class GameManager : public Ogre::FrameListener, public Ogre::Singleton<GameManager>, public OIS::KeyListener, public OIS::MouseListener
+class GameManager :public Ogre::FrameListener, 
+                   public Ogre::Singleton<GameManager>, 
+                   public OIS::KeyListener, 
+                   public OIS::MouseListener,
+                   public wiimWrapper::WiimoteListener
 {
  public:
   GameManager ();
@@ -55,6 +60,8 @@ class GameManager : public Ogre::FrameListener, public Ogre::Singleton<GameManag
   // Heredados de Ogre::Singleton.
   static GameManager& getSingleton ();
   static GameManager* getSingletonPtr ();
+  
+  bool usarWiimote();                                   //  WIIMOTE
 
  protected:
   Ogre::Root* _root;
@@ -68,7 +75,7 @@ class GameManager : public Ogre::FrameListener, public Ogre::Singleton<GameManag
   // Heredados de FrameListener.
   bool frameStarted (const Ogre::FrameEvent& evt);
   bool frameEnded (const Ogre::FrameEvent& evt);
-
+  
  private:
   // Funciones para delegar eventos de teclado
   // y ratón en el estado actual.
@@ -78,6 +85,12 @@ class GameManager : public Ogre::FrameListener, public Ogre::Singleton<GameManag
   bool mouseMoved (const OIS::MouseEvent &e);
   bool mousePressed (const OIS::MouseEvent &e, OIS::MouseButtonID id);
   bool mouseReleased (const OIS::MouseEvent &e, OIS::MouseButtonID id);
+  
+/* WIIMOTE *********************************************************************/  
+  bool WiimoteButtonDown(const wiimWrapper::WiimoteEvent &e);
+  bool WiimoteButtonUp(const wiimWrapper::WiimoteEvent &e);
+  bool WiimoteIRMove(const wiimWrapper::WiimoteEvent &e);
+/*******************************************************************************/  
   
   // Gestor de eventos de entrada.
   InputManager_ *_inputMgr;
