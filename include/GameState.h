@@ -27,6 +27,8 @@
 #include "GameManager.h"
 #include "InputManager_.h"
 
+#include "Wiimote.h"
+
 // Clase abstracta de estado básico.
 // Definición base sobre la que extender
 // los estados del juego.
@@ -51,6 +53,11 @@ class GameState {
   virtual bool mousePressed (const OIS::MouseEvent &e, OIS::MouseButtonID id)=0 ;
   virtual bool mouseReleased (const OIS::MouseEvent &e, OIS::MouseButtonID id)=0;
 
+/* WIIMOTE *********************************************************************/  
+  virtual bool WiimoteButtonDown(const wiimWrapper::WiimoteEvent &e) = 0;
+  virtual bool WiimoteButtonUp(const wiimWrapper::WiimoteEvent &e) = 0;
+  virtual bool WiimoteIRMove(const wiimWrapper::WiimoteEvent &e) = 0;
+/*******************************************************************************/  
 
   // Gestión básica para la gestión
   // de eventos antes y después de renderizar un frame.
@@ -72,7 +79,7 @@ class GameState {
   {
     GameManager::getSingletonPtr()->popState();
   }
-
+  
 };
 
 #endif

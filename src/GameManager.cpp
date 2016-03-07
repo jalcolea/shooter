@@ -30,7 +30,7 @@ void GameManager::start(GameState* state)
   // Creación del objeto Ogre::Root.
   _root = new Ogre::Root();
 
-  
+   
   loadResources();
 
   if (!configure())
@@ -42,7 +42,7 @@ void GameManager::start(GameState* state)
   // Registro como key y mouse listener...
   _inputMgr->addKeyListener(this, "GameManager");
   _inputMgr->addMouseListener(this, "GameManager");
-
+  
   // El GameManager es un FrameListener.
   _root->addFrameListener(this);
 
@@ -51,6 +51,20 @@ void GameManager::start(GameState* state)
 
   // Bucle de rendering.
   _root->startRendering();
+}
+
+bool GameManager::usarWiimote() 
+{
+  if (_inputMgr)
+      if (_inputMgr->initialiseWiimote()) // Inicializar implica conectarse al wiimote. Si devuelve true es que nos hemos conectado.
+      {
+          cout << "wiimote conectado" << endl;
+         _inputMgr->addWiimoteListener(this,"GameManager");
+         return true;
+      }
+  
+  return false;
+
 }
 
 void GameManager::changeState(GameState* state)
@@ -126,7 +140,7 @@ bool GameManager::configure ()
     }
   }
   
-  _renderWindow = _root->initialise(true, "Pacman");
+  _renderWindow = _root->initialise(true, "Shooter");
   
   Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
   
@@ -186,3 +200,25 @@ bool GameManager::mouseReleased(const OIS::MouseEvent &e, OIS::MouseButtonID id)
   _states.top()->mouseReleased(e, id);
   return true;
 }
+
+bool GameManager::WiimoteButtonDown(const wiimWrapper::WiimoteEvent &e)
+{
+    std::cout << "GAMEMANAGER wiimoteButtonDown " <<  endl;
+    _states.top()->WiimoteButtonDown(e);
+    return true;
+}
+
+bool GameManager::WiimoteButtonUp(const wiimWrapper::WiimoteEvent &e)
+{
+    std::cout << "GAMEMANAGER wiimoteButtonUp " <<  endl;
+    _states.top()->WiimoteButtonUp(e);
+    return true;
+}
+
+bool GameManager::WiimoteIRMove(const wiimWrapper::WiimoteEvent &e)
+{
+    std::cout << "GAMEMANAGER wiimoteIRMove" << endl;
+    _states.top()->WiimoteIRMove(e);
+    return true;
+}
+

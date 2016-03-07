@@ -33,6 +33,7 @@
 #include "Utils/OgreBulletCollisionsMeshToShapeConverter.h"
 #include <vector>
 #include "OgreUtil.h"
+#include "Wiimote.h"
 
 using namespace std;
 using namespace Ogre;
@@ -58,6 +59,13 @@ class PlayState : public Ogre::Singleton<PlayState>, public GameState
 
   bool frameStarted (const Ogre::FrameEvent& evt);
   bool frameEnded (const Ogre::FrameEvent& evt);
+  
+/* WIIMOTE *********************************************************************/  
+    bool WiimoteButtonDown(const wiimWrapper::WiimoteEvent &e);
+    bool WiimoteButtonUp(const wiimWrapper::WiimoteEvent &e);
+    bool WiimoteIRMove(const wiimWrapper::WiimoteEvent &e);
+/*******************************************************************************/  
+  
 
   // Heredados de Ogre::Singleton.
   static PlayState& getSingleton ();

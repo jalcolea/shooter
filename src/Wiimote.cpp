@@ -1,6 +1,8 @@
 #include "Wiimote.h"
 #include <cstring>
 
+using namespace wiimWrapper;
+
 Wiimote::Wiimote()
 {
 //    _wiimote = std::make_unique<wiimote_t>();             // make_unique es c++14, hay que activar el flag std=c++14 al compilar si se quiere usar
@@ -10,18 +12,19 @@ Wiimote::Wiimote()
     _hci_address = "";
 
 }
-
+ 
 Wiimote::~Wiimote()
 {
+    _WiimoteListeners.clear();
     _wiimote.reset();
     _wiimote.release();
     _report.reset();
     _report.release();
 }
 
-size_t Wiimote::Connect(string hci_address)
+size_t Wiimote::Connect(std::string hci_address)
 {
-    _hci_address = hci_address;
+    _hci_address = hci_address; 
     size_t i;
     i = wiimote_connect(_wiimote.get(), hci_address.c_str()); // _wiimote.get() significa dame el puntero "myweapon" :D
 
@@ -101,14 +104,14 @@ inline void Wiimote::setIRActual()
 
 bool Wiimote::NuevosValoresIR()
 {
-    return (_ir[1].x != _wiimote.get()->ir1.x ||
-            _ir[1].y != _wiimote.get()->ir1.y ||
-            _ir[2].x != _wiimote.get()->ir2.x ||
-            _ir[2].y != _wiimote.get()->ir2.y ||
-            _ir[3].x != _wiimote.get()->ir3.x ||
-            _ir[3].y != _wiimote.get()->ir3.y ||
-            _ir[4].x != _wiimote.get()->ir4.x ||
-            _ir[4].y != _wiimote.get()->ir4.y);
+    return (_ir[0].x != _wiimote.get()->ir1.x ||
+            _ir[0].y != _wiimote.get()->ir1.y ||
+            _ir[1].x != _wiimote.get()->ir2.x ||
+            _ir[1].y != _wiimote.get()->ir2.y ||
+            _ir[2].x != _wiimote.get()->ir3.x ||
+            _ir[2].y != _wiimote.get()->ir3.y ||
+            _ir[3].x != _wiimote.get()->ir4.x ||
+            _ir[3].y != _wiimote.get()->ir4.y );
 
 }
 
@@ -178,53 +181,9 @@ wiimote_t Wiimote::getWiimoteStatus()
         return *_wiimote;
 }
 
-bool Wiimote::AddWiimoteListener(unique_ptr<WiimoteListener> listener)
+bool Wiimote::AddWiimoteListener(shared_ptr<WiimoteListener> listener)
 {
-//    for (auto it = _WiimoteListeners.begin(); it != _WiimoteListeners.end(); ++it)
-//        if (it == *it)
-//           return false;
-
-    _WiimoteListeners.push_back(move(listener));
-    //Update();
+    //_WiimoteListeners.push_back(move(listener));
+    _WiimoteListeners.push_back(listener);
     return true;
 }
-
-
-
-
-
-//bool Wiimote::Home()
-//{
-//    return _home;
-//}
-//
-//bool Wiimote::A()
-//{
-//    return _A;
-//}
-//
-//bool Wiimote::B()
-//{
-//    return _B;
-//}
-//
-//bool Wiimote::Plus()
-//{
-//    return _Plus;
-//}
-//
-//bool Wiimote::Minus()
-//{
-//    return _Minus;
-//}
-//
-//bool Wiimote::One()
-//{
-//    return _One;
-//}
-//
-//bool Wiimote::Two()
-//{
-//    return _Two;
-//}
-
