@@ -25,6 +25,7 @@ using namespace OgreBulletCollisions;
 void PlayState::enter ()
 {
   _root = Ogre::Root::getSingletonPtr();
+  _sceneMgr = _root->getSceneManager("SceneManager");
   createScene();
   _exitGame = false;
   paused=false;
@@ -109,9 +110,18 @@ PlayState::~PlayState()
 
 void PlayState::createScene()
 {
-
+  _sceneMgr->setAmbientLight(Ogre::ColourValue(0.5, 0.5, 0.5));
+  _sceneMgr->setShadowTechnique(SHADOWTYPE_STENCIL_MODULATIVE);
+  _sceneMgr->setShadowColour(ColourValue(0.5, 0.5, 0.5));
   createLight();
   createMyGui();
+  StaticGeometry* stage =   _sceneMgr->createStaticGeometry("SG");
+  Entity* entLevel = _sceneMgr->  createEntity("puesto.mesh");
+  
+  entLevel->setCastShadows(true);
+  stage->addEntity(entLevel, Vector3(0,0,0));
+  stage->build();
+
 }
 
 void PlayState::createMyGui()
@@ -122,8 +132,20 @@ void PlayState::destroyMyGui()
 {
 }
 
-void PlayState::createLight() 
+void PlayState::createLight()
+  
 {
+  _sceneMgr->setShadowTextureCount(2);
+  _sceneMgr->setShadowTextureSize(512);
+  Light* light = _sceneMgr->createLight("Light1");
+  light->setPosition(0, 12, 0);
+  light->setType(Light::LT_SPOTLIGHT);
+  light->setDirection(Vector3(0, -1, 0));
+  light->setSpotlightInnerAngle(Degree(60.0f));
+  light->setSpotlightOuterAngle(Degree(80.0f));
+  light->setSpotlightFalloff(0.0f);
+  light->setCastShadows(true);
+
 }
 
 void PlayState::win()
