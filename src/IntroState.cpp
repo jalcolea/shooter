@@ -2,6 +2,7 @@
 #include "IntroState.h"
 #include "PlayState.h"
 #include "MenuState.h"
+#include "testwiimoteState.h"
 #include "MyGUI.h"
 #include "MyGUI_OgrePlatform.h"
 
@@ -12,10 +13,53 @@ template<> IntroState *Ogre::Singleton<IntroState>::msSingleton = 0;
 
 void IntroState::enter()
 {
-  _root = Ogre::Root::getSingletonPtr();
-  createScene();
-  _exitGame = false;
-  _deltaT = 0;
+    _root = Ogre::Root::getSingletonPtr();
+    try
+    {
+        _sceneMgr = _root->getSceneManager("SceneManager");
+    }
+    catch (...)
+    {
+        cout << "SceneManager no existe, creándolo \n";
+        _sceneMgr = _root->createSceneManager(Ogre::ST_GENERIC, "SceneManager");
+    }
+
+    try
+    {
+        _camera = _sceneMgr->getCamera("IntroCamera");
+    }
+    catch (...)
+    {
+        cout << "IntroCamera no existe, creándola \n";
+        _camera = _sceneMgr->createCamera("IntroCamera");
+    }
+
+    try
+    {
+        _viewport = _root->getAutoCreatedWindow()->addViewport(_camera);
+    }
+    catch (...)
+    {
+        _viewport = _root->getAutoCreatedWindow()->getViewport(0);
+    }
+    
+    //Fondo a negro
+    _viewport->setBackgroundColour(Ogre::ColourValue(0.0, 0.0, 0.0));
+
+    //Configuramos la camara
+    double width = _viewport->getActualWidth();
+    double height = _viewport->getActualHeight();
+    _camera->setAspectRatio(width / height);
+    //_camera->setPosition(Vector3(0, 12, 18));
+    _camera->setPosition(Vector3(0, 0, 18));
+    _camera->lookAt(_sceneMgr->getRootSceneNode()->getPosition());
+    _camera->lookAt(0,0,0);
+    _camera->setNearClipDistance(0.1);
+    _camera->setFarClipDistance(100);
+
+    createScene();
+    _exitGame = false;
+    _deltaT = 0;
 }
 
 void IntroState::exit()
@@ -51,6 +95,11 @@ bool IntroState::keyPressed(const OIS::KeyEvent &e)
     if (e.key == OIS::KC_SPACE)
     {
         changeState(MenuState::getSingletonPtr());
+    }
+    else if (e.key == OIS::KC_T)
+    {
+        changeState(testwiimoteState::getSingletonPtr());
+        
     }
     return true;
 
@@ -109,4 +158,12 @@ void IntroState::destroyMyGui()
 void IntroState::createMyGui()
 {
 }
+
+bool IntroState::WiimoteButtonDown(const wiimWrapper::WiimoteEvent &e)
+{return true;}
+bool IntroState::WiimoteButtonUp(const wiimWrapper::WiimoteEvent &e)
+{return true;}
+bool IntroState::WiimoteIRMove(const wiimWrapper::WiimoteEvent &e)
+{return true;}
+
 

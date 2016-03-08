@@ -36,7 +36,6 @@
     <File Name="src/PauseState.cpp"/>
     <File Name="src/PlayState.cpp"/>
     <File Name="src/ControlsState.cpp"/>
-    <File Name="src/graphml_boost.cpp"/>
     <File Name="src/MenuState.cpp"/>
     <File Name="src/ogreUtil.cpp"/>
     <File Name="src/records.cpp"/>
@@ -46,16 +45,15 @@
     <File Name="src/LooseState.cpp"/>
     <File Name="src/Wiimote.cpp"/>
     <File Name="src/Bluez_Util.cpp"/>
+    <File Name="src/testwiimoteState.cpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="include">
     <File Name="include/GameManager.h"/>
     <File Name="include/GameState.h"/>
-    <File Name="include/InputManager.h"/>
     <File Name="include/IntroState.h"/>
     <File Name="include/PauseState.h"/>
     <File Name="include/PlayState.h"/>
     <File Name="include/ControlsState.h"/>
-    <File Name="include/graphml_boost.h"/>
     <File Name="include/InputManager_.h"/>
     <File Name="include/MenuState.h"/>
     <File Name="include/OgreUtil.h"/>
@@ -66,6 +64,7 @@
     <File Name="include/LooseState.h"/>
     <File Name="include/Wiimote.h"/>
     <File Name="include/Bluez_Util.h"/>
+    <File Name="include/testwiimoteState.h"/>
   </VirtualDirectory>
   <Settings Type="Executable">
     <GlobalSettings>

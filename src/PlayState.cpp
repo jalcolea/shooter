@@ -70,7 +70,7 @@ bool PlayState::keyPressed(const OIS::KeyEvent &e)
   }
   return true;
 }
-
+ 
 bool PlayState::keyReleased(const OIS::KeyEvent &e)
 {
   return true;
@@ -155,11 +155,16 @@ int PlayState::get_score ()
 
 }
 
-
 void PlayState::handleCollision(btCollisionObject *body0, btCollisionObject *body1) 
 {
 }
 
+bool PlayState::WiimoteButtonDown(const wiimWrapper::WiimoteEvent &e)
+{return true;}
+bool PlayState::WiimoteButtonUp(const wiimWrapper::WiimoteEvent &e)
+{return true;}
+bool PlayState::WiimoteIRMove(const wiimWrapper::WiimoteEvent &e)
+{return true;}
 
 
 

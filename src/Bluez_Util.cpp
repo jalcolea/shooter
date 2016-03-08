@@ -51,7 +51,7 @@ void Bluez_Util::Scanear()
             strcpy(name, "[unknown]");
         printf("%s %s\n", addr, name);
 
-        _devices.insert(pair<string,string>(addr,name));
+        _devices.insert(pair<std::string,std::string>(addr,name)); 
     }
 
     free( ii );

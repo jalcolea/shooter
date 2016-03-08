@@ -1,8 +1,11 @@
 #include "InputManager_.h"
 
+#include <regex> // expresion regular, para descartar dispositivos blueetooth que no sean wiimotes de nintendo, es una cochinada :D
+                 // debería meterlo en la clase Buez_util y pasar una expresión regular, de modo que busque dispositivos que cocincidan con ella
+
 template<> InputManager_* Ogre::Singleton<InputManager_>::msSingleton = 0;
 
-InputManager_::InputManager_ ():  _inputSystem(0),  _keyboard(0),  _mouse(0) {}
+InputManager_::InputManager_ ():  _inputSystem(0),  _keyboard(0),  _mouse(0), _wiimote(0) {}
 
 InputManager_::~InputManager_ ()
 {
@@ -27,6 +30,7 @@ InputManager_::~InputManager_ ()
     // Limpiar todos los listeners.
     _keyListeners.clear();
     _mouseListeners.clear();
+    _wiimoteListeners.clear();
   }
 }
 
@@ -50,11 +54,9 @@ void InputManager_::initialise(Ogre::RenderWindow *renderWindow)
     paramList.insert(std::make_pair(std::string("w32_keyboard"), std::string("DISCL_FOREGROUND")));
     paramList.insert(std::make_pair(std::string("w32_keyboard"), std::string("DISCL_NONEXCLUSIVE")));
     #elif defined OIS_LINUX_PLATFORM
-
     paramList.insert(std::make_pair(std::string("x11_mouse_grab"), std::string("false")));
     paramList.insert(std::make_pair(std::string("x11_mouse_hide"), std::string("false")));
     paramList.insert(std::make_pair(std::string("x11_keyboard_grab"), std::string("false")));
-
     paramList.insert(std::make_pair(std::string("XAutoRepeatOn"), std::string("true")));
     #endif
 
@@ -66,7 +68,7 @@ void InputManager_::initialise(Ogre::RenderWindow *renderWindow)
 
     _mouse = static_cast<OIS::Mouse*>(_inputSystem->createInputObject(OIS::OISMouse, true));
     _mouse->setEventCallback(this);
-
+    
     // Get window size
     unsigned int width, height, depth;
     int left, top;
@@ -77,6 +79,59 @@ void InputManager_::initialise(Ogre::RenderWindow *renderWindow)
   }
 }
 
+// Según mi diseño inicial, voy a considera que inicializar el Wiimote implica conectarse con él.
+// Se aisla la inicialización del wiimote del resto de dispositivos para no mezclar sus inicializaciones
+// ya que no tienen nada que ver. El proceso de conexión del wiimote conlleva un retardo (al menos por ahora)
+// por que no solo se busca un wiimote, se busca cualquier dispositivo bluetooth. Esto obviamente habría que
+// mejorarlo. Primero descartando cualquier dispositivo que no fuera un wiimote y segundo tratando de hacer 
+// la conexión de forma asíncrona. Lanzar la llamada de conexión y seguir con otra cosa, por ejemplo, pintando
+// alguna animación indicando el proceso de conexión. Ahora mismo probablemente se bloquee el renderizado cuando
+// se realice el intento de conexión.
+bool InputManager_::initialiseWiimote()
+{
+    if (!_wiimote)
+    {
+        _wiimote = new wiimWrapper::Wiimote;
+        Bluez_Util bluez;                // objeto que encapsula la funcionalidad para escanear dispositivos bluetooth.
+        cout << "ESCANEANDO DISPOSITIVOS BLUETOOTH" << endl;
+        bluez.Scanear();                // Scanea buscando dispositivos bluetooth
+        if (bluez.getDevices().empty())
+            return false;
+
+        std::string cadena_patron (R"(Nintendo RVL.*)");
+        std::regex patron_nombre { cadena_patron };         //Expresion regular para encontrar dispositivos con nombre "Nintento RVL ......lo que sea..... "
+        for (auto &dev : bluez.getDevices())                //Nos pateamos los dispositivos encontrados
+        {
+            cout << "Encontrado dispositivo [" << dev.first << "] Nombre: " << dev.second << endl;
+            if (regex_match(dev.second,patron_nombre))      //Si el nombre del dispositivo encontrado coincide con la expresión regular entonces
+            {
+                cout << "Tratando de conectar con " << dev.second << endl;
+                if (_wiimote->Connect(dev.first.c_str()) >= 0)      //Si al intentar conectar con el dispositivo nos devuelve un entero no negativo entonces
+                {   
+                                                            // De momento el propio wrapper para manejar el wiimote activa varias propiedades del mismo al conectar
+                                                            // También habría que mejorar esto y pasar como parámetro qué queremos tener activo o no: acelerómetro, infrarrojos, etc....
+                                                            // O delegar en el dueño del objeto wiimote si quiere activar/desactivar propiedades haciendo llamadas a métodos
+                                                            // del objeto wiimote que lo hagan. De momento no están hechas.
+                                                            //Success!!!!!!! Y salimos, de momento solo manejamos un Wiimote.
+                    cout << "Conexión con " << dev.second << " realizada!" << endl;
+                    return true;
+                }
+                else
+                {
+                    cout << "No he podido conectarme :(" << endl;
+                }
+            }
+            else
+            {
+                cout << "El dispositivo [" << dev.first << "] Nombre: " << dev.second << " no coincide con el patrón [" << cadena_patron << "]" << endl;
+            }
+        }    
+    }
+    
+    return false;
+    
+}
+
 void InputManager_::capture ()
 {
   // Capturar y actualizar cada frame.
@@ -85,6 +140,9 @@ void InputManager_::capture ()
   
   if (_keyboard)
     _keyboard->capture();
+    
+  if (_wiimote)
+      _wiimote->Update();
 }
 
 void InputManager_::addKeyListener(OIS::KeyListener *keyListener, const std::string& instanceName)
@@ -287,3 +345,102 @@ InputManager_& InputManager_::getSingleton()
   assert(msSingleton);
   return *msSingleton;
 }
+
+/*****************************************************************************/
+/*                         FUNCIONALIDAD WIIMOTE                             */
+/*****************************************************************************/
+bool InputManager_::WiimoteButtonDown(const wiimWrapper::WiimoteEvent& arg)
+{
+  itWiimoteListener = _wiimoteListeners.begin();
+  itWiimoteListenerEnd = _wiimoteListeners.end();
+  // Delega en los KeyListener añadidos.
+  for (; itWiimoteListener != itWiimoteListenerEnd; ++itWiimoteListener) 
+  {
+    itWiimoteListener->second->WiimoteButtonDown(arg);
+  }
+
+  return true;
+}
+
+bool InputManager_::WiimoteButtonUp(const wiimWrapper::WiimoteEvent& arg)
+{
+  itWiimoteListener = _wiimoteListeners.begin();
+  itWiimoteListenerEnd = _wiimoteListeners.end();
+  // Delega en los KeyListener añadidos.
+  for (; itWiimoteListener != itWiimoteListenerEnd; ++itWiimoteListener) 
+  {
+    itWiimoteListener->second->WiimoteButtonUp(arg);
+  }
+
+  return true;
+
+}
+
+bool InputManager_::WiimoteIRMove(const wiimWrapper::WiimoteEvent& arg)
+{
+  itWiimoteListener = _wiimoteListeners.begin();
+  itWiimoteListenerEnd = _wiimoteListeners.end();
+  // Delega en los KeyListener añadidos.
+  for (; itWiimoteListener != itWiimoteListenerEnd; ++itWiimoteListener) 
+  {
+    itWiimoteListener->second->WiimoteIRMove(arg);
+  }
+
+  return true;
+
+}
+
+void InputManager_::addWiimoteListener(wiimWrapper::WiimoteListener* wiimoteListener, const std::string& instanceName)
+{
+  if (_wiimote) 
+  {
+    // Comprobar si el listener existe.
+    itWiimoteListener = _wiimoteListeners.find(instanceName);
+    if (itWiimoteListener == _wiimoteListeners.end()) 
+    {
+      _wiimoteListeners[instanceName] = wiimoteListener;
+      _wiimote->AddWiimoteListener(static_cast< shared_ptr<wiimWrapper::WiimoteListener> > (wiimoteListener));
+    }
+    else 
+    {
+      // Elemento duplicado; no hacer nada.
+    }
+  }
+
+}
+
+void InputManager_::removeWiimoteListener(const std::string& instanceName)
+{
+  // Comprobar si el listener existe.
+  itWiimoteListener = _wiimoteListeners.find(instanceName);
+  if (itWiimoteListener != _wiimoteListeners.end()) 
+  {
+    _wiimoteListeners.erase(itWiimoteListener);
+  }
+  else 
+  {
+    // No hacer nada.
+  }
+}
+
+void InputManager_::removeWiimoteListener(wiimWrapper::WiimoteListener* wiimoteListener)
+{
+  itWiimoteListener = _wiimoteListeners.begin();
+  itWiimoteListenerEnd = _wiimoteListeners.end();
+  for (; itWiimoteListener != itWiimoteListenerEnd; ++itWiimoteListener) 
+  {
+    if (itWiimoteListener->second == wiimoteListener) 
+    {
+      _wiimoteListeners.erase(itWiimoteListener);
+      break;
+    }
+  }
+
+}    
+
+void InputManager_::removeAllWiimoteListeners()
+{
+    _wiimoteListeners.clear();
+}
+
+
