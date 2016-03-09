@@ -56,7 +56,7 @@ void InputManager_::initialise(Ogre::RenderWindow *renderWindow)
     #elif defined OIS_LINUX_PLATFORM
     paramList.insert(std::make_pair(std::string("x11_mouse_grab"), std::string("false")));
     paramList.insert(std::make_pair(std::string("x11_mouse_hide"), std::string("false")));
-    paramList.insert(std::make_pair(std::string("x11_keyboard_grab"), std::string("false")));
+    paramList.insert(std::make_pair(std::string("x11_keyboard_grab"), std::string("true")));
     paramList.insert(std::make_pair(std::string("XAutoRepeatOn"), std::string("true")));
     #endif
 
@@ -135,11 +135,11 @@ bool InputManager_::initialiseWiimote()
 void InputManager_::capture ()
 {
   // Capturar y actualizar cada frame.
-  if (_mouse)
-    _mouse->capture();
-  
   if (_keyboard)
     _keyboard->capture();
+    
+    if (_mouse)
+    _mouse->capture();
     
   if (_wiimote)
       _wiimote->Update();
@@ -277,6 +277,7 @@ bool InputManager_::keyPressed(const OIS::KeyEvent &e)
   // Delega en los KeyListener añadidos.
   for (; itKeyListener != itKeyListenerEnd; ++itKeyListener) 
   {
+    cout << "InputManager keypressed: " << e.key << endl;
     itKeyListener->second->keyPressed(e);
   }
 
