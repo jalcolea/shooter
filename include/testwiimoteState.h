@@ -72,6 +72,7 @@ private:
   void destroyMyGui();
   void createScene();
   void createLight();
+  Ogre::SceneNode* createCrossHair(const std::string & crosshairImg);
   
   Ogre::SceneNode* _nodeCrosshair;
 

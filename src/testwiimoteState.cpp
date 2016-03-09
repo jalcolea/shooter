@@ -184,15 +184,62 @@ void testwiimoteState::createScene()
     _sceneMgr->getRootSceneNode()->addChild(nodeCrossHairOut);
     nodeCrossHairOut->setPosition(0,0,0);
     
-    _nodeCrosshair = nodeCrossHairOut;
+    //_nodeCrosshair = nodeCrossHairOut;
     
-    //layout = MyGUI::LayoutManager::getInstance().loadLayout("");
-    
-    
-    
-
+    _nodeCrosshair = createCrossHair("");
     
 }
+
+Ogre::SceneNode* testwiimoteState::createCrossHair(const std::string & crosshairImg)
+{
+
+    // Creamos un objeto manual para el Crosshair
+    ManualObject* crossHair = _sceneMgr->createManualObject("crossHair");
+     
+    // Matriz identidad para que se vea en 2D
+    crossHair->setUseIdentityProjection(true);
+    crossHair->setUseIdentityView(true);
+     
+    //Esto es como un wrapper de openGl
+    crossHair->begin("BaseWhiteNoLighting", RenderOperation::OT_LINE_STRIP);
+        crossHair->position(-0.2, -0.2, 0.0);
+        crossHair->position( 0.2, -0.2, 0.0);
+        crossHair->position( 0.2,  0.2, 0.0);
+        crossHair->position(-0.2,  0.2, 0.0);
+        crossHair->index(0);
+        crossHair->index(1);
+        crossHair->index(2);
+        crossHair->index(3);
+        crossHair->index(0);
+    crossHair->end();
+    
+    // Uso de una Aligned Axis Box (AAB) infinita para estar siempre visible. O eso es 
+    // lo que pone en el tutorial que he mirado
+    AxisAlignedBox aabInf;
+    aabInf.setInfinite();
+    crossHair->setBoundingBox(aabInf);
+     
+    // Renderizado antes que naide :D
+    crossHair->setRenderQueueGroup(RENDER_QUEUE_OVERLAY - 1);
+
+    
+    MaterialPtr material = MaterialManager::getSingleton().create("crosshair", "General");
+    material->getTechnique(0)->getPass(0)->createTextureUnitState("circle-01.png");
+    material->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+    material->getTechnique(0)->getPass(0)->setDepthWriteEnabled(false);
+    material->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+    
+    Ogre::Entity* entCrossHair = _sceneMgr->createEntity(crossHair->convertToMesh("crossHairMesh"));
+    entCrossHair->setMaterial(material);
+    
+    SceneNode* aux = _sceneMgr->createSceneNode("CrossHair");
+    aux->attachObject(entCrossHair);
+    
+    return aux;
+    
+}
+
+
 
 void testwiimoteState::createLight()
 {
