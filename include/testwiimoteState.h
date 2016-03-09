@@ -59,6 +59,8 @@ protected:
     Ogre::Viewport* _viewport;
     Ogre::Camera* _camera;
     MyGUI::VectorWidgetPtr layout;
+    
+    Ogre::AnimationState* _animTiro;
     bool _exitGame;
     int lives;
     int score;
@@ -70,6 +72,8 @@ private:
   void destroyMyGui();
   void createScene();
   void createLight();
+  
+  Ogre::SceneNode* _nodeCrosshair;
 
 };
 
