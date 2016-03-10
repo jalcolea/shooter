@@ -73,6 +73,7 @@ private:
   void createScene();
   void createLight();
   Ogre::SceneNode* createCrossHair(const std::string & crosshairImg);
+  Ogre::Vector2 mouseCoordToAxis(size_t x, size_t y,size_t width, size_t height);
   
   Ogre::SceneNode* _nodeCrosshair;
 

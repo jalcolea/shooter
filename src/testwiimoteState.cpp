@@ -80,12 +80,36 @@ bool testwiimoteState::keyReleased (const OIS::KeyEvent &e)
 
 bool testwiimoteState::mouseMoved (const OIS::MouseEvent &e)
 { 
-    cout << "Posicion raton: [" << e.state.X.abs << "," << e.state.Y.abs << "]" << endl;
-    cout << "Posicion calculada crosshair: [" << e.state.X.abs/float(_root->getAutoCreatedWindow()->getWidth()) << "," << e.state.Y.abs/float(_root->getAutoCreatedWindow()->getHeight()) << "]" << endl;
-    _nodeCrosshair->setPosition(e.state.X.abs/float(_root->getAutoCreatedWindow()->getWidth()),
-                                -(e.state.Y.abs/float(_root->getAutoCreatedWindow()->getHeight())),0);
+    cout << "Posicion raton: [" << e.state.X.abs << "," << e.state.Y.abs << "] Area del ratón: [" << e.state.width << "," << e.state.height << "]" << endl;
+
+    const size_t& xMouse = InputManager_::getSingletonPtr()->getMouse()->getMouseState().X.abs + 6;// por alguna razón que desconozco el ratón está desplazado -6 unidades
+    const size_t& yMouse = InputManager_::getSingletonPtr()->getMouse()->getMouseState().Y.abs + 6;
+    const Ogre::Real& wWindow = e.state.width;
+    const Ogre::Real& hWindow = e.state.height;
+
+//    _nodeCrosshair->setPosition((xMouse/wWindow) * _nodeCrosshair->getScale().x,
+//                              -(yMouse/hWindow) * _nodeCrosshair->getScale().y,0); 
+//    cout << "Posicion del crosshair " << _nodeCrosshair->getPosition() << " Escala del crosshair: " << _nodeCrosshair->getScale() << endl;
+    
+
+    Ogre::Ray mouseray = _camera->getCameraToViewportRay(xMouse/wWindow,yMouse/hWindow);
+
+    //Create a plane which must be parallel to camera and at any position. 
+    Ogre::Plane plane = Ogre::Plane(_camera->getDerivedDirection(),Ogre::Vector3(0,0,0));
+
+    //check weather the mouse ray hits the plane on which camera is projected. 
+    std::pair<bool,Ogre::Real> intersectionResult = mouseray.intersects(plane);
+    if(intersectionResult.first) {auto WORLDPOS = mouseray.getPoint(intersectionResult.second);
+    cout << "WorldPOS " << WORLDPOS << endl;
+    _nodeCrosshair->setPosition(WORLDPOS);}
+    
 
     return true;
+}
+
+Ogre::Vector2 testwiimoteState::mouseCoordToAxis(size_t x, size_t y,size_t width, size_t height)
+{
+        return {0,0};
 }
 
 bool testwiimoteState::mousePressed (const OIS::MouseEvent &e, OIS::MouseButtonID id)
@@ -180,13 +204,17 @@ void testwiimoteState::createScene()
     nodeCrossHairOut->attachObject(entCrossHairOut);
     nodeCrossHairOut->addChild(nodeCrossHairIn);
     nodeCrossHairIn->setInheritScale(false);
-    nodeCrossHairOut->scale(0.30,0.30,0);
+    //nodeCrossHairOut->scale(0.30,0.30,0);
     _sceneMgr->getRootSceneNode()->addChild(nodeCrossHairOut);
     nodeCrossHairOut->setPosition(0,0,0);
+
+    _nodeCrosshair = nodeCrossHairOut;
     
-    //_nodeCrosshair = nodeCrossHairOut;
     
-    _nodeCrosshair = createCrossHair("");
+//    _nodeCrosshair = createCrossHair("circle-01.png");
+//    const int& x = InputManager_::getSingletonPtr()->getMouse()->getMouseState().X.abs;
+//    const int& y = InputManager_::getSingletonPtr()->getMouse()->getMouseState().Y.abs;
+//    _sceneMgr->getRootSceneNode()->addChild(_nodeCrosshair);
     
 }
 
@@ -224,7 +252,7 @@ Ogre::SceneNode* testwiimoteState::createCrossHair(const std::string & crosshair
 
     
     MaterialPtr material = MaterialManager::getSingleton().create("crosshair", "General");
-    material->getTechnique(0)->getPass(0)->createTextureUnitState("circle-01.png");
+    material->getTechnique(0)->getPass(0)->createTextureUnitState(crosshairImg);
     material->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
     material->getTechnique(0)->getPass(0)->setDepthWriteEnabled(false);
     material->getTechnique(0)->getPass(0)->setLightingEnabled(false);
