@@ -85,13 +85,16 @@ class PlayState : public Ogre::Singleton<PlayState>, public GameState
   Ogre::SceneManager* _sceneMgr;
   Ogre::Viewport* _viewport;
   Ogre::Camera* _camera;
-MyGUI::VectorWidgetPtr layout;
+  Ogre::SceneNode* _cameraNode;
+  MyGUI::VectorWidgetPtr layout;
 
   bool _exitGame;
   int lives;
   int score;
   bool paused;
   Ogre::Real _deltaT;
+  std::map<OIS::KeyCode,bool> keysArePressed;
+  
 
 private:
 
@@ -99,6 +102,8 @@ private:
   void destroyMyGui();
   void createScene();
   void createLight();
+  void moveCamera();
+  void createFloor();
 
 };
 

@@ -1,3 +1,4 @@
+
 #include "ControlsState.h"
 #include "RecordsState.h"
 #include "PauseState.h"
@@ -15,6 +16,9 @@
 #include "OgreUtil.h"
 #include <ctime>
 
+
+#define CAMSPEED 10
+#define CAMROTATESPEED 1
 template<> PlayState* Ogre::Singleton<PlayState>::msSingleton = 0;
 
 using namespace std;
@@ -26,6 +30,10 @@ void PlayState::enter ()
 {
   _root = Ogre::Root::getSingletonPtr();
   _sceneMgr = _root->getSceneManager("SceneManager");
+  _camera = _sceneMgr->getCamera("IntroCamera");
+  _cameraNode = _sceneMgr->createSceneNode("nodeCamera");
+  _cameraNode->attachObject(_camera);
+   _sceneMgr->getRootSceneNode()->addChild(_cameraNode);
   createScene();
   _exitGame = false;
   paused=false;
@@ -49,37 +57,102 @@ void PlayState::resume()
 
 bool PlayState::frameStarted(const Ogre::FrameEvent& evt)
 {
+  std::cout << "nuevo frame " << std::endl;
   _deltaT = evt.timeSinceLastFrame;
-  return true;
+  moveCamera();
+ 
+   if ( keysArePressed[OIS::KC_ESCAPE]){
+    return false;
+  }
+   return true;
+ 
 }
 
 bool PlayState::frameEnded(const Ogre::FrameEvent& evt)
 {
+  if ( keysArePressed[OIS::KC_ESCAPE]){
+    return false;
+  }
   return true;
 }
 
 bool PlayState::keyPressed(const OIS::KeyEvent &e)
 {
+
+  std::cout << "presionando " << std::endl;
+  keysArePressed.erase(e.key);
+  keysArePressed[e.key] = true;
   if (e.key == OIS::KC_P) {
-    pushState(PauseState::getSingletonPtr());
+    // pushState(PauseState::getSingletonPtr());
   }
   else if (e.key == OIS::KC_G) {
-    game_over();
+    //    game_over();
   }
   else if (e.key == OIS::KC_W) {
-    win();
+    //    win();
   }
+
+
+
   return true;
+}
+/**
+ * Move the camera around the world if arrows are pressed
+ */
+void PlayState::moveCamera(){
+  
+ if (keysArePressed[OIS::KC_UP]){
+   _cameraNode->translate(Ogre::Vector3(0, 0,-CAMSPEED*_deltaT),Node::TS_LOCAL);
+  }
+ else if (keysArePressed[OIS::KC_DOWN]){
+   _cameraNode->translate(Ogre::Vector3(0, 0,CAMSPEED*_deltaT),Node::TS_LOCAL);
+  }
+  else if (keysArePressed[OIS::KC_RIGHT]){
+    _cameraNode->translate(Ogre::Vector3(CAMSPEED*_deltaT, 0, 0),Node::TS_LOCAL);
+  }
+  else if (keysArePressed[OIS::KC_LEFT]){
+    _cameraNode->translate(Ogre::Vector3(-CAMSPEED*_deltaT, 0, 0), Node::TS_LOCAL);
+  }
+  
+  
 }
  
 bool PlayState::keyReleased(const OIS::KeyEvent &e)
 {
+  keysArePressed.erase(e.key);
+  keysArePressed[e.key] = false;
   return true;
+
+
 }
+
+void PlayState::createFloor() {
+  SceneNode* floorNode = _sceneMgr->createSceneNode("floor");
+  Plane planeFloor;
+  planeFloor.normal = Vector3(0, 1, 0);
+  planeFloor.d = 2;
+  MeshManager::getSingleton().createPlane("FloorPlane",
+                                          ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
+                                          planeFloor, 200000, 200000, 20, 20,
+                                          true, 1, 9000, 9000,
+                                          Vector3::UNIT_Z);
+  Entity* entFloor = _sceneMgr->createEntity("floor", "FloorPlane");
+  entFloor->setCastShadows(false);
+  entFloor->setMaterialName("floor");  
+  floorNode->attachObject(entFloor);
+  _sceneMgr->getRootSceneNode()->addChild(floorNode);
+  floorNode->setPosition(Vector3(0,2,0));
+
+}
+
 
 bool PlayState::mouseMoved(const OIS::MouseEvent &e)
 {
+   _cameraNode->yaw(Radian(Degree(-CAMROTATESPEED * e.state.X.rel)), Node::TS_WORLD);
+  _cameraNode->pitch(Radian(Degree(-CAMROTATESPEED * e.state.Y.rel)), Node::TS_LOCAL);
   return true;
+
+
 }
 
 bool PlayState::mousePressed(const OIS::MouseEvent &e, OIS::MouseButtonID id)
@@ -110,13 +183,14 @@ PlayState::~PlayState()
 
 void PlayState::createScene()
 {
-  _sceneMgr->setAmbientLight(Ogre::ColourValue(0.5, 0.5, 0.5));
+    _sceneMgr->setAmbientLight(Ogre::ColourValue(0.5, 0.5, 0.5));
   _sceneMgr->setShadowTechnique(SHADOWTYPE_STENCIL_MODULATIVE);
   _sceneMgr->setShadowColour(ColourValue(0.5, 0.5, 0.5));
+  _sceneMgr->setSkyBox(true, "skybox");
   createLight();
   createMyGui();
   StaticGeometry* stage =   _sceneMgr->createStaticGeometry("SG");
-  Entity* entLevel = _sceneMgr->  createEntity("puesto.mesh");
+  Entity* entLevel = _sceneMgr->createEntity("puesto.mesh");
   
   entLevel->setCastShadows(true);
   stage->addEntity(entLevel, Vector3(0,0,0));
@@ -131,6 +205,8 @@ void PlayState::createMyGui()
 void PlayState::destroyMyGui()
 {
 }
+
+
 
 void PlayState::createLight()
   

@@ -56,12 +56,12 @@ void GameManager::start(GameState* state)
 bool GameManager::usarWiimote() 
 {
   if (_inputMgr)
-      if (_inputMgr->initialiseWiimote()) // Inicializar implica conectarse al wiimote. Si devuelve true es que nos hemos conectado.
+    /*      if (_inputMgr->initialiseWiimote()) // Inicializar implica conectarse al wiimote. Si devuelve true es que nos hemos conectado.
       {
           cout << "wiimote conectado" << endl;
          _inputMgr->addWiimoteListener(this,"GameManager");
          return true;
-      }
+	 }*/
   
   return false;
 
@@ -162,6 +162,7 @@ GameManager& GameManager::getSingleton ()
 // el evento en el estado actual.
 bool GameManager::frameStarted(const Ogre::FrameEvent& evt)
 {
+  std::cout <<"GameManager FrameStarted"  << std::endl;
   _inputMgr->capture();
   return _states.top()->frameStarted(evt);
 }
