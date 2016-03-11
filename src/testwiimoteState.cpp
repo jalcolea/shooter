@@ -113,6 +113,9 @@ bool testwiimoteState::mouseMoved (const OIS::MouseEvent &e)
 */
     
     _crosshair.get()->setActualHitPoint(Ogre::Real(xMouse/wWindow),Ogre::Real(yMouse/hWindow));
+    _nodeWeapon->lookAt(_nodeWeapon->getPosition().reflect(_crosshair.get()->getActualHitPoint()),Ogre::Node::TS_WORLD);
+    
+    
     
 
     return true;
@@ -121,7 +124,8 @@ bool testwiimoteState::mouseMoved (const OIS::MouseEvent &e)
 
 bool testwiimoteState::mousePressed (const OIS::MouseEvent &e, OIS::MouseButtonID id)
 { 
-    
+    if (id == OIS::MouseButtonID::MB_Left)
+        _crosshair.get()->setMaterialCrosshair("circle-02.png");
     
     return true;
 }
@@ -197,6 +201,7 @@ void testwiimoteState::createScene()
     //nodePistola->yaw(Ogre::Degree(-165));
     nodePistola->setPosition(Ogre::Vector3(3.25,-5.0,1.75));
     //nodePistola->lookAt(Ogre::Vector3(0.0,0.0,0.0),Ogre::Node::TransformSpace::TS_PARENT);
+    _nodeWeapon = nodePistola;
 
     Ogre::Light* light = _sceneMgr->createLight("Light1");
     light->setType(Ogre::Light::LT_DIRECTIONAL);
@@ -217,11 +222,8 @@ void testwiimoteState::createScene()
 //    //nodeCrossHairOut->scale(0.30,0.30,0);
 //    _sceneMgr->getRootSceneNode()->addChild(nodeCrossHairOut);
 //    nodeCrossHairOut->setPosition(0,0,0);
-//
 //    _nodeCrosshair = nodeCrossHairOut;
-    
-    
-    //_nodeCrosshair = createCrossHair("circle-01.png");
+//    _nodeCrosshair = createCrossHair("circle-01.png");
     
 }
 
