@@ -13,6 +13,7 @@
 #include <vector>
 #include "OgreUtil.h"
 #include "Wiimote.h"
+#include "Crosshair.h"
 
 using namespace std;
 using namespace Ogre;
@@ -24,7 +25,7 @@ class testwiimoteState : public Ogre::Singleton<testwiimoteState>, public GameSt
 {
     
 public:
-    testwiimoteState(){};
+    testwiimoteState() /*: _mouseray(new Ogre::Ray)*/ {};
     ~testwiimoteState(){};
 
     void enter ();
@@ -66,6 +67,7 @@ protected:
     int score;
     bool paused;
     Ogre::Real _deltaT;
+    unique_ptr<Crosshair> _crosshair;
 
 private:
   void createMyGui();
@@ -73,6 +75,8 @@ private:
   void createScene();
   void createLight();
   Ogre::SceneNode* createCrossHair(const std::string & crosshairImg);
+  std::unique_ptr<Ogre::Ray> _mouseray;// {new Ogre::Ray};
+  Ogre::Plane _plane;
   
   Ogre::SceneNode* _nodeCrosshair;
 

@@ -46,6 +46,7 @@
     <File Name="src/Wiimote.cpp"/>
     <File Name="src/Bluez_Util.cpp"/>
     <File Name="src/testwiimoteState.cpp"/>
+    <File Name="src/Crosshair.cpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="include">
     <File Name="include/GameManager.h"/>
@@ -65,6 +66,7 @@
     <File Name="include/Wiimote.h"/>
     <File Name="include/Bluez_Util.h"/>
     <File Name="include/testwiimoteState.h"/>
+    <File Name="include/Crosshair.h"/>
   </VirtualDirectory>
   <Settings Type="Executable">
     <GlobalSettings>
