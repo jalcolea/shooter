@@ -62,8 +62,8 @@ int main () {
   UNUSED_VARIABLE(winState);
   UNUSED_VARIABLE(looseState);
 
-  s->load_xml((char*)"sounds.xml");
-  r->loadFile((char*)"pacman_records.txt");
+  //s->load_xml((char*)"sounds.xml");
+  //r->loadFile((char*)"pacman_records.txt");
   try
     {
       // Inicializa el juego y transición al primer estado.

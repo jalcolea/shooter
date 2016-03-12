@@ -4,7 +4,7 @@ and may not be redistributed without written permission.*/
 //The headers
 #include "sounds.h"
 #include <iostream>
-
+#define SET_CHANNEL channel!=-1 
 using namespace std;
 sounds * sounds::singleton = NULL;
 
@@ -13,25 +13,6 @@ bool sounds::init()
     if( SDL_Init( SDL_INIT_EVERYTHING ) == -1 ) return false;
     if( Mix_OpenAudio( 22050, MIX_DEFAULT_FORMAT, 2, 4096 ) == -1 ) return false;
     SDL_WM_SetCaption( "Monitor Music", NULL );
-    return true;
-}
-
-bool sounds::load_files()
-{
-    //Load the music
-    //music[0] = Mix_LoadMUS( "beat.wav" );
-    //if( music == NULL ) return false;
-
-    //Load the sound effects
-  //  effect[0] = Mix_LoadWAV( "scratch.wav" );
-   // effect[1] = Mix_LoadWAV( "high.wav" );
-   // effect[2] = Mix_LoadWAV( "medium.wav" );
-   // effect[3] = Mix_LoadWAV( "low.wav" );
-
-    //If there was a problem loading the sound effects
-    //if( ( scratch == NULL ) || ( high == NULL ) || ( med == NULL ) || ( low == NULL ) ) return false;
-
-    //If everything loaded fine
     return true;
 }
 
@@ -46,18 +27,18 @@ void sounds::clean_up()
     SDL_Quit();
 };
 
-int sounds::halt_effects()
+int sounds::halt_effects( int ch)
 {
-  return Mix_HaltChannel(-1);
+  return Mix_HaltChannel(ch);
 }
-int sounds::play_effect(string id)
+int sounds::play_effect(string id,int ch)
 {
    Mix_Chunk * e = NULL;
    e= map_effect[id];
    if (e!=NULL)
-       return Mix_PlayChannel( -1, e, 0 );
+       return Mix_PlayChannel( (SET_CHANNEL)?channel:ch, e, 0 );
    else
-       return -1; //TBD
+       return -1; 
 }
 
 int sounds::playing_music()
@@ -65,7 +46,7 @@ int sounds::playing_music()
   return Mix_PlayingMusic();
 }
 
-int sounds::play_music(string id)
+int sounds::play_music(string id,int times)
 {
    cout << __FUNCTION__<< " " << id << endl;
    Mix_Music * e = NULL;
@@ -74,10 +55,9 @@ int sounds::play_music(string id)
 
    if (e!=NULL)
    {
-   cout << __FUNCTION__<<endl;
-      return Mix_PlayMusic(e, -1 );
+      return Mix_PlayMusic(e, times );
    }
-   else return -1; //TBD
+   else return -1; 
 }
 
 void sounds::pause_music()
@@ -104,14 +84,15 @@ int sounds::halt_music()
   return Mix_HaltMusic();
 }
 
-int sounds::halt_effect()
+int sounds::halt_effect(int ch)
 {
-    return Mix_HaltChannel(-1);
+    return Mix_HaltChannel((SET_CHANNEL)?channel:ch);
 }
 
 sounds::sounds()
 {
   init();
+  channel = -1;
 }
 
 sounds::~sounds()
@@ -127,7 +108,7 @@ bool sounds::load_xml (char * file)
     mxml_node_t *musics;
     mxml_node_t *node;
 
-    fp = fopen("sounds.xml", "r");
+    fp = fopen(file, "r");
     tree = mxmlLoadFile(NULL, fp, MXML_TEXT_CALLBACK);
     base_path = mxmlFindElement(tree, tree, "base_path", NULL,NULL,MXML_DESCEND);
     this->base_path= string(mxmlGetText(base_path,NULL));
@@ -190,4 +171,14 @@ sounds * sounds::getInstance()
     singleton = new sounds();
   }
   return singleton;
+}
+
+void sounds::set_channel (int ch)
+{
+  channel = ch;
+}
+
+void sounds::unset_channel ()
+{
+  channel = -1;
 }

@@ -153,10 +153,16 @@ void IntroState::createScene()
 
 void IntroState::destroyMyGui()
 {
+ MyGUI::LayoutManager::getInstance().unloadLayout(layout);
 }
 
 void IntroState::createMyGui()
 {
+    MyGUI::OgrePlatform *mp = new MyGUI::OgrePlatform();
+    mp->initialise(_root->getAutoCreatedWindow(), Ogre::Root::getSingleton().getSceneManager("SceneManager"));
+    MyGUI::Gui *mGUI = new MyGUI::Gui();
+    mGUI->initialise();
+  layout = MyGUI::LayoutManager::getInstance().loadLayout("shooter_intro.layout");
 }
 
 bool IntroState::WiimoteButtonDown(const wiimWrapper::WiimoteEvent &e)
