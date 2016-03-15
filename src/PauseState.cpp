@@ -14,11 +14,13 @@ template<> PauseState* Ogre::Singleton<PauseState>::msSingleton = 0;
 void PauseState::enter ()
 {
   _root = Ogre::Root::getSingletonPtr();
+  createScene();
   _exitGame = false;
 }
 
 void PauseState::exit()
 {
+  destroyMyGui();
 }
 
 void PauseState::pause()
@@ -31,6 +33,7 @@ void PauseState::resume()
 
 bool PauseState::frameStarted(const Ogre::FrameEvent& evt)
 {
+  _deltaT = evt.timeSinceLastFrame;
   return true;
 }
 
@@ -79,6 +82,21 @@ PauseState& PauseState::getSingleton ()
 { 
   assert(msSingleton);
   return *msSingleton;
+}
+
+void PauseState::destroyMyGui()
+{
+    MyGUI::LayoutManager::getInstance().unloadLayout(layout);
+}
+
+void PauseState::createMyGui()
+{
+  layout = MyGUI::LayoutManager::getInstance().loadLayout("shooter_pause.layout");
+}
+
+void PauseState::createScene()
+{
+ createMyGui();
 }
 
 bool PauseState::WiimoteButtonDown(const wiimWrapper::WiimoteEvent &e)
