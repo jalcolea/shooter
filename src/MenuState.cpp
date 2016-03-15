@@ -103,10 +103,12 @@ MenuState::~MenuState()
 
 void MenuState::destroyMyGui()
 {
+    MyGUI::LayoutManager::getInstance().unloadLayout(layout);
 }
 
 void MenuState::createMyGui()
 {
+  layout = MyGUI::LayoutManager::getInstance().loadLayout("shooter_main.layout");
 }
 
 void MenuState::createScene()

@@ -122,10 +122,23 @@ void RecordsState::createScene()
 
 void RecordsState::destroyMyGui()
 {
+  MyGUI::LayoutManager::getInstance().unloadLayout(layout);
 }
 
 void RecordsState::createMyGui()
 {
+//  string name="";
+//  char points_str [32];
+//  int points=0;
+  layout = MyGUI::LayoutManager::getInstance().loadLayout("shooter_records.layout");
+//  high_score_txt = MyGUI::Gui::getInstance().findWidget<MyGUI::EditBox>("high_score");
+//  score_positions_txt = MyGUI::Gui::getInstance().findWidget<MyGUI::TextBox>("score_positions");
+//  score_points_txt = MyGUI::Gui::getInstance().findWidget<MyGUI::TextBox>("score_points");
+//  score_names_txt = MyGUI::Gui::getInstance().findWidget<MyGUI::TextBox>("score_names");
+//  records::getInstance()->getBest(name,points);
+//  sprintf(points_str,"%d",points);
+//  high_score_txt->setCaption(points_str);
+
 }
 
 bool RecordsState::WiimoteButtonDown(const wiimWrapper::WiimoteEvent &e)
