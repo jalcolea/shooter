@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <MyGUI type="Layout" version="3.2.0">
-    <Widget type="ImageBox" skin="ImageBox" position_real="0 0 1 1" align="Stretch" layer="Wallpaper" name="start">
-        <Property key="ImageTexture" value="records.png"/>
+    <Widget type="ImageBox" skin="ImageBox" position_real="0.00390625 0 1 1" align="Stretch" layer="Wallpaper" name="start">
+        <Property key="ImageTexture" value="records_btn.png"/>
     </Widget>
 <!--
     <Widget type="EditBox" skin="EditBox" position="410 60 165 50" align="HStretch Top" layer="Main" name="high_score">
