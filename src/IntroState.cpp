@@ -42,8 +42,9 @@ void IntroState::enter()
     {
         _viewport = _root->getAutoCreatedWindow()->getViewport(0);
     }
-    
-    //Fondo a negro
+
+
+    //El fondo del pacman siempre es negro
     _viewport->setBackgroundColour(Ogre::ColourValue(0.0, 0.0, 0.0));
 
     //Configuramos la camara
@@ -64,7 +65,9 @@ void IntroState::enter()
 
 void IntroState::exit()
 {
-    destroyMyGui();
+    sounds::getInstance()->halt_music();
+    _sceneMgr->clearScene();
+    _root->getAutoCreatedWindow()->removeAllViewports();
 }
 
 void IntroState::pause()
@@ -163,6 +166,7 @@ void IntroState::createMyGui()
     MyGUI::Gui *mGUI = new MyGUI::Gui();
     mGUI->initialise();
   layout = MyGUI::LayoutManager::getInstance().loadLayout("shooter_intro.layout");
+  //MyGUI::PointerManager::getInstancePtr()->setVisible(true);
 }
 
 bool IntroState::WiimoteButtonDown(const wiimWrapper::WiimoteEvent &e)

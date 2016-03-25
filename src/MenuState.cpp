@@ -17,13 +17,18 @@ using namespace Ogre;
 void MenuState::enter ()
 {
   _root = Ogre::Root::getSingletonPtr();
+  _sceneMgr = _root->getSceneManager("SceneManager");
+  _camera = _sceneMgr->getCamera("IntroCamera");
+  _viewport = _root->getAutoCreatedWindow()->addViewport(_camera);
+  _viewport->setBackgroundColour(Ogre::ColourValue(0.0, 0.0, 1.0));
   createScene();
   _exitGame = false;
 }
 
 void MenuState::exit ()
 {
-  destroyMyGui();
+  _sceneMgr->clearScene();
+  _root->getAutoCreatedWindow()->removeAllViewports();
 }
 
 void MenuState::pause()
@@ -32,6 +37,8 @@ void MenuState::pause()
 
 void MenuState::resume()
 {
+   enter();
+  _viewport->setBackgroundColour(Ogre::ColourValue(0.0, 0.0, 1.0));
 }
 
 bool MenuState::frameStarted(const Ogre::FrameEvent& evt)
