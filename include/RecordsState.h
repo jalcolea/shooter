@@ -72,6 +72,7 @@ class RecordsState : public Ogre::Singleton<RecordsState>, public GameState
   bool _exitGame;
 
   MyGUI::VectorWidgetPtr layout;
+  MyGUI::Button* btn_back;
   
 private:
   private:
@@ -81,6 +82,8 @@ private:
   void createMyGui();
   void destroyMyGui();
   void loadRecords();
+  void notifyButtonPress(MyGUI::Widget* _widget);
+
   
 };
 

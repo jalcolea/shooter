@@ -50,6 +50,9 @@ void RecordsState::loadRecords()
 }
 void RecordsState::exit ()
 {
+ //_sceneMgr->clearScene();
+  _root->getAutoCreatedWindow()->removeAllViewports();
+
   destroyMyGui();
 }
 
@@ -91,6 +94,12 @@ bool RecordsState::mouseMoved(const OIS::MouseEvent &e)
 
 bool RecordsState::mousePressed(const OIS::MouseEvent &e, OIS::MouseButtonID id)
 {
+  int x = e.state.X.abs;
+  int y = e.state.Y.abs;
+  if (btn_back->_checkPoint(x,y))
+  {
+    popState();
+  }
   return true;
 }
 
@@ -131,6 +140,8 @@ void RecordsState::createMyGui()
 //  char points_str [32];
 //  int points=0;
   layout = MyGUI::LayoutManager::getInstance().loadLayout("shooter_records.layout");
+  btn_back = MyGUI::Gui::getInstance().findWidget<MyGUI::Button>("btn_back");
+  btn_back->eventMouseButtonClick = MyGUI::newDelegate(this, &RecordsState::notifyButtonPress);
 //  high_score_txt = MyGUI::Gui::getInstance().findWidget<MyGUI::EditBox>("high_score");
 //  score_positions_txt = MyGUI::Gui::getInstance().findWidget<MyGUI::TextBox>("score_positions");
 //  score_points_txt = MyGUI::Gui::getInstance().findWidget<MyGUI::TextBox>("score_points");
@@ -148,3 +159,10 @@ bool RecordsState::WiimoteButtonUp(const wiimWrapper::WiimoteEvent &e)
 bool RecordsState::WiimoteIRMove(const wiimWrapper::WiimoteEvent &e)
 {return true;}
 
+void RecordsState::notifyButtonPress(MyGUI::Widget* _widget)
+{
+  string name;
+  name = _widget->getName();
+
+  if (name=="btn_backº") popState();
+}
