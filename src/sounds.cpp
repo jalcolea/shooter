@@ -48,7 +48,6 @@ int sounds::playing_music()
 
 int sounds::play_music(string id,int times)
 {
-   cout << __FUNCTION__<< " " << id << endl;
    Mix_Music * e = NULL;
    e= map_music[id];
    cout << __FUNCTION__<<endl;
