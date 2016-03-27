@@ -29,6 +29,7 @@
 #include "MenuState.h"
 #include "ControlsState.h"
 #include "RecordsState.h"
+#include "CreditsState.h"
 #include "sounds.h"
 #include "records.h"
 #include "testwiimoteState.h"
@@ -50,6 +51,7 @@ int main () {
   WinState* winState = new WinState();
   LooseState* looseState = new LooseState();
   RecordsState * recordState = new RecordsState();
+  CreditsState * creditState = new CreditsState();
   testwiimoteState * testWiimote = new testwiimoteState();
   records * r = records::getInstance();
   sounds * s = sounds::getInstance();

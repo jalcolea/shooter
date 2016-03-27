@@ -4,6 +4,7 @@
 #include "PlayState.h"
 #include "ControlsState.h"
 #include "RecordsState.h"
+#include "CreditsState.h"
 #include "PauseState.h"
 #include "records.h"
 
@@ -61,7 +62,8 @@ bool MenuState::keyPressed(const OIS::KeyEvent &e)
   }
   else if (e.key == OIS::KC_C) {
     MyGUI::LayoutManager::getInstance().unloadLayout(layout);
-    pushState(ControlsState::getSingletonPtr());
+    //pushState(ControlsState::getSingletonPtr());
+    pushState(CreditsState::getSingletonPtr());
   }
   else if (e.key == OIS::KC_R) {
     MyGUI::LayoutManager::getInstance().unloadLayout(layout);
