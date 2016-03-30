@@ -60,11 +60,19 @@ bool PauseState::keyReleased(const OIS::KeyEvent &e)
 
 bool PauseState::mouseMoved(const OIS::MouseEvent &e)
 {
+
   return true;
 }
 
 bool PauseState::mousePressed(const OIS::MouseEvent &e, OIS::MouseButtonID id)
 {
+  int x = e.state.X.abs;
+  int y = e.state.Y.abs;
+  if (btn_resume->_checkPoint(x,y))
+  {
+cout << __FUNCTION__<<endl;
+    popState();
+  }
   return true;
 }
 
@@ -92,6 +100,8 @@ void PauseState::destroyMyGui()
 void PauseState::createMyGui()
 {
   layout = MyGUI::LayoutManager::getInstance().loadLayout("shooter_pause.layout");
+  btn_resume = MyGUI::Gui::getInstance().findWidget<MyGUI::Button>("btn_resume");
+
 }
 
 void PauseState::createScene()

@@ -71,6 +71,8 @@ class PauseState : public Ogre::Singleton<PauseState>, public GameState
   Ogre::Real _deltaT;
 
   MyGUI::VectorWidgetPtr layout;
+  MyGUI::Button* btn_resume;
+
   bool _exitGame;
 
   private:
