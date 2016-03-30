@@ -61,11 +61,13 @@ void IntroState::enter()
     createScene();
     _exitGame = false;
     _deltaT = 0;
+    sounds::getInstance()->play_music("begin");
+
 }
 
 void IntroState::exit()
 {
-    sounds::getInstance()->halt_music();
+    //sounds::getInstance()->halt_music();
     _sceneMgr->clearScene();
     _root->getAutoCreatedWindow()->removeAllViewports();
 }

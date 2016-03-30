@@ -24,6 +24,10 @@ void MenuState::enter ()
   _viewport->setBackgroundColour(Ogre::ColourValue(0.0, 0.0, 1.0));
   createScene();
   _exitGame = false;
+  //sounds::getInstance()->pause_music();
+  //sounds::getInstance()->play_effect("newstate");
+  //sleep(1);
+  //sounds::getInstance()->resume_music();
 }
 
 void MenuState::exit ()
@@ -50,7 +54,8 @@ bool MenuState::frameStarted(const Ogre::FrameEvent& evt)
 
 bool MenuState::frameEnded(const Ogre::FrameEvent& evt)
 {
-  return true;
+   if (_exitGame) return false;
+   else return true;
 }
 
 bool MenuState::keyPressed(const OIS::KeyEvent &e)
@@ -92,6 +97,20 @@ bool MenuState::mouseMoved(const OIS::MouseEvent &e)
 
 bool MenuState::mousePressed(const OIS::MouseEvent &e, OIS::MouseButtonID id)
 {
+  int x = e.state.X.abs;
+  int y = e.state.Y.abs;
+
+  if (btn_credits->_checkPoint(x,y))
+    pushState(CreditsState::getSingletonPtr());
+  else if (btn_records->_checkPoint(x,y))
+    pushState(RecordsState::getSingletonPtr());
+  else if (btn_play->_checkPoint(x,y))
+    pushState(PlayState::getSingletonPtr());
+  else if (btn_controls->_checkPoint(x,y))
+    pushState(ControlsState::getSingletonPtr());
+  else if (btn_exit->_checkPoint(x,y))
+   _exitGame = true;
+
   return true;
 }
 
@@ -123,6 +142,11 @@ void MenuState::destroyMyGui()
 void MenuState::createMyGui()
 {
   layout = MyGUI::LayoutManager::getInstance().loadLayout("shooter_main.layout");
+  btn_records = MyGUI::Gui::getInstance().findWidget<MyGUI::Button>("btn_records");
+  btn_credits = MyGUI::Gui::getInstance().findWidget<MyGUI::Button>("btn_credits");
+  btn_play = MyGUI::Gui::getInstance().findWidget<MyGUI::Button>("btn_play");
+  btn_controls = MyGUI::Gui::getInstance().findWidget<MyGUI::Button>("btn_controls");
+  btn_exit = MyGUI::Gui::getInstance().findWidget<MyGUI::Button>("btn_exit");
 }
 
 void MenuState::createScene()

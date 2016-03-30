@@ -64,7 +64,7 @@ int main () {
   UNUSED_VARIABLE(winState);
   UNUSED_VARIABLE(looseState);
 
-  //s->load_xml((char*)"sounds.xml");
+  s->load_xml((char*)"sounds.xml");
   //r->loadFile((char*)"pacman_records.txt");
   try
     {
