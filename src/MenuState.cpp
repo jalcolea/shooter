@@ -6,6 +6,8 @@
 #include "RecordsState.h"
 #include "CreditsState.h"
 #include "PauseState.h"
+#include "WinState.h"
+#include "LooseState.h"
 #include "records.h"
 
 
@@ -81,6 +83,14 @@ bool MenuState::keyPressed(const OIS::KeyEvent &e)
   else if (e.key == OIS::KC_ESCAPE) 
   {
     _exitGame = true;
+  }
+  else if (e.key == OIS::KC_W) {
+    MyGUI::LayoutManager::getInstance().unloadLayout(layout);
+    pushState(WinState::getSingletonPtr());
+  }
+  else if (e.key == OIS::KC_L) {
+    MyGUI::LayoutManager::getInstance().unloadLayout(layout);
+    pushState(LooseState::getSingletonPtr());
   }
   return true;
 }

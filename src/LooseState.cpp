@@ -14,27 +14,16 @@ template<> LooseState* Ogre::Singleton<LooseState>::msSingleton = 0;
 void LooseState::enter ()
 {
   _root = Ogre::Root::getSingletonPtr();
-  _exitGame = false;
   createScene();
-}
-
-void LooseState::createScene()
-{
-  createMyGui();
+  _exitGame = false;
 }
 
 void LooseState::exit()
 {
+ _root->getAutoCreatedWindow()->removeAllViewports();
   destroyMyGui();
 }
 
-void LooseState::createMyGui()
-{
-}
-
-void LooseState::destroyMyGui()
-{
-}
 void LooseState::pause()
 {
 }
@@ -45,6 +34,7 @@ void LooseState::resume()
 
 bool LooseState::frameStarted(const Ogre::FrameEvent& evt)
 {
+  _deltaT = evt.timeSinceLastFrame;
   return true;
 }
 
@@ -55,6 +45,12 @@ bool LooseState::frameEnded(const Ogre::FrameEvent& evt)
 
 bool LooseState::keyPressed(const OIS::KeyEvent &e) 
 {
+  // Tecla p --> Estado anterior.
+      if (e.key == OIS::KC_P)  // Con  P otra vez reanudamos el PlayState
+      {
+        popState();
+      }
+  
   return true;
 }
 
@@ -65,11 +61,19 @@ bool LooseState::keyReleased(const OIS::KeyEvent &e)
 
 bool LooseState::mouseMoved(const OIS::MouseEvent &e)
 {
+
   return true;
 }
 
 bool LooseState::mousePressed(const OIS::MouseEvent &e, OIS::MouseButtonID id)
 {
+  int x = e.state.X.abs;
+  int y = e.state.Y.abs;
+  if (btn_resume->_checkPoint(x,y))
+  {
+cout << __FUNCTION__<<endl;
+    popState();
+  }
   return true;
 }
 
@@ -87,6 +91,23 @@ LooseState& LooseState::getSingleton ()
 { 
   assert(msSingleton);
   return *msSingleton;
+}
+
+void LooseState::destroyMyGui()
+{
+    MyGUI::LayoutManager::getInstance().unloadLayout(layout);
+}
+
+void LooseState::createMyGui()
+{
+  layout = MyGUI::LayoutManager::getInstance().loadLayout("shooter_loose.layout");
+  btn_resume = MyGUI::Gui::getInstance().findWidget<MyGUI::Button>("btn_resume");
+
+}
+
+void LooseState::createScene()
+{
+ createMyGui();
 }
 
 bool LooseState::WiimoteButtonDown(const wiimWrapper::WiimoteEvent &e)

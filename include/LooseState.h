@@ -36,6 +36,7 @@ class LooseState : public Ogre::Singleton<LooseState>, public GameState
 {
  public:
   LooseState() {}
+  ~LooseState() {}
 
   void enter ();
   void exit ();
@@ -67,13 +68,17 @@ class LooseState : public Ogre::Singleton<LooseState>, public GameState
   Ogre::SceneManager* _sceneMgr;
   Ogre::Viewport* _viewport;
   Ogre::Camera* _camera;
+  Ogre::Real _deltaT;
+
   MyGUI::VectorWidgetPtr layout;
+  MyGUI::Button* btn_resume;
+
   bool _exitGame;
- 
+
   private:
     void createScene();
     void createMyGui();
-    void destroyMyGui(); 
+    void destroyMyGui();  
   
 };
 
