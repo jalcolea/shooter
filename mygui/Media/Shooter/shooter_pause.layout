@@ -3,6 +3,6 @@
     <Widget type="ImageBox" skin="ImageBox" position_real="0 0 1 1" align="Stretch" layer="Wallpaper" name="start">
         <Property key="ImageTexture" value="pause_btn.png"/>
     </Widget>
-    <Widget type="Button" skin="ButtonImage" position="915 660 90 85" name="btn_resume" layer="Main"/>
+    <Widget type="Button" skin="ButtonImage" position="915 635 90 85" layer="Main" name="btn_resume"/>
     <CodeGeneratorSettings/>
 </MyGUI>

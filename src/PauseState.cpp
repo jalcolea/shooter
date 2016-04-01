@@ -20,6 +20,7 @@ void PauseState::enter ()
 
 void PauseState::exit()
 {
+ _root->getAutoCreatedWindow()->removeAllViewports();
   destroyMyGui();
 }
 

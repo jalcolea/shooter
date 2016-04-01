@@ -164,5 +164,5 @@ void RecordsState::notifyButtonPress(MyGUI::Widget* _widget)
   string name;
   name = _widget->getName();
 
-  if (name=="btn_backº") popState();
+  if (name=="btn_back") popState();
 }
