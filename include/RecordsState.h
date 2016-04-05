@@ -73,6 +73,11 @@ class RecordsState : public Ogre::Singleton<RecordsState>, public GameState
 
   MyGUI::VectorWidgetPtr layout;
   MyGUI::Button* btn_back;
+//  MyGUI::EditBox* high_score_txt;
+//  MyGUI::TextBox* score_positions_txt;
+  MyGUI::TextBox* score_points_txt;
+  MyGUI::TextBox* score_names_txt;
+
   
 private:
   private:

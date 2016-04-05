@@ -6,6 +6,11 @@
 #include "MenuState.h"
 #include "records.h"
 
+#include "OgreTextAreaOverlayElement.h"
+#include "OgreStringConverter.h"
+#include <OgreOverlayManager.h>
+#include <OgreOverlayContainer.h>
+
 template<> RecordsState* Ogre::Singleton<RecordsState>::msSingleton = 0;
 
 using namespace std;
@@ -45,8 +50,8 @@ void RecordsState::loadRecords()
             result = records::getInstance()->getNext(name,points);
             cont++;
           }
-  //        score_names_txt->setCaption(tmp_users);
-  //        score_points_txt->setCaption(tmp_points);
+          score_names_txt->setCaption(tmp_users);
+          score_points_txt->setCaption(tmp_points);
 }
 void RecordsState::exit ()
 {
@@ -141,15 +146,14 @@ void RecordsState::createMyGui()
 //  int points=0;
   layout = MyGUI::LayoutManager::getInstance().loadLayout("shooter_records.layout");
   btn_back = MyGUI::Gui::getInstance().findWidget<MyGUI::Button>("btn_back");
-  btn_back->eventMouseButtonClick = MyGUI::newDelegate(this, &RecordsState::notifyButtonPress);
+//  btn_back->eventMouseButtonClick = MyGUI::newDelegate(this, &RecordsState::notifyButtonPress);
 //  high_score_txt = MyGUI::Gui::getInstance().findWidget<MyGUI::EditBox>("high_score");
 //  score_positions_txt = MyGUI::Gui::getInstance().findWidget<MyGUI::TextBox>("score_positions");
-//  score_points_txt = MyGUI::Gui::getInstance().findWidget<MyGUI::TextBox>("score_points");
-//  score_names_txt = MyGUI::Gui::getInstance().findWidget<MyGUI::TextBox>("score_names");
+  score_points_txt = MyGUI::Gui::getInstance().findWidget<MyGUI::TextBox>("score_points");
+  score_names_txt = MyGUI::Gui::getInstance().findWidget<MyGUI::TextBox>("score_names");
 //  records::getInstance()->getBest(name,points);
 //  sprintf(points_str,"%d",points);
 //  high_score_txt->setCaption(points_str);
-
 }
 
 bool RecordsState::WiimoteButtonDown(const wiimWrapper::WiimoteEvent &e)
