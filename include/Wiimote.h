@@ -10,11 +10,15 @@
 #include <wiimote.h>
 #include <wiimote_api.h>
 
+#define IR_X_MAX 1023
+#define IR_Y_MAX  767
 
 using namespace std;
 
 namespace wiimWrapper{  // Defino un namespace, no vaya a ser que nos de guerra de otro modo.
-    
+
+typedef array<wiimote_ir_t,4> valores_ir_t;
+
 class WiimoteEvent
 {
     public:
@@ -25,7 +29,6 @@ class WiimoteEvent
         // Prevención de copia (como en la libreria OIS)
         WiimoteEvent(const WiimoteEvent &);
         WiimoteEvent& operator=(WiimoteEvent);
-
 };
 
 class WiimoteListener
@@ -68,7 +71,6 @@ class Wiimote
 	    wiimote_keys_t _oldBits; // Estado de los botones anterior al momento en el que se dispara un evento ButtonUP o ButtonDOWN
 	    inline void setOldKeysBits();
 	    bool NuevosKeysBits();
-
 };
 
 } // Fin del namespace wiimWrapper

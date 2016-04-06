@@ -113,7 +113,7 @@ bool testwiimoteState::mouseMoved (const OIS::MouseEvent &e)
 */
     
     _crosshair.get()->setActualHitPoint(Ogre::Real(xMouse/wWindow),Ogre::Real(yMouse/hWindow));
-    _nodeWeapon->lookAt(_nodeWeapon->getPosition().reflect(_crosshair.get()->getActualHitPoint()),Ogre::Node::TS_WORLD);
+    //_nodeWeapon->lookAt(_nodeWeapon->getPosition().reflect(_crosshair.get()->getActualHitPoint()),Ogre::Node::TS_WORLD);
     
     
     
@@ -173,6 +173,18 @@ bool testwiimoteState::WiimoteIRMove(const WiimoteEvent & e)
     std::cout << "IR2: "<< e._wiimote.ir2.x << "," << e._wiimote.ir2.y << endl;    
     std::cout << "IR3: "<< e._wiimote.ir3.x << "," << e._wiimote.ir3.y << endl;
     std::cout << "IR4: "<< e._wiimote.ir4.x << "," << e._wiimote.ir4.y << endl;
+    
+    const Ogre::Real & width = _viewport->getActualWidth();
+    const Ogre::Real & height = _viewport->getActualHeight();
+    
+    size_t x = width - (e._wiimote.ir1.x * (width / IR_X_MAX)); // Restamos el resultado de la conversión a Width pq el wiimote tiene invertida la x.
+    size_t y = e._wiimote.ir1.y * (height / IR_Y_MAX);
+    
+    cout << "x calculada: " << x << endl;
+    cout << "y calculada: " << y << endl;
+    
+    
+    _crosshair.get()->setActualHitPoint(Ogre::Real(x/width),Ogre::Real(y/height));
     
     return true;
 }

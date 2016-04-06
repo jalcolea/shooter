@@ -80,8 +80,8 @@ size_t Wiimote::Update()
 
 
         if (NuevosValoresIR())
-            it->get()->WiimoteIRMove(*_wiimote);
-
+            it->get()->WiimoteIRMove(*_wiimote); 
+        
         setIRActual();
         setOldKeysBits();
 
@@ -187,3 +187,4 @@ bool Wiimote::AddWiimoteListener(shared_ptr<WiimoteListener> listener)
     _WiimoteListeners.push_back(listener);
     return true;
 }
+
