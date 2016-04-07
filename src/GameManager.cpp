@@ -162,7 +162,7 @@ GameManager& GameManager::getSingleton ()
 // el evento en el estado actual.
 bool GameManager::frameStarted(const Ogre::FrameEvent& evt)
 {
-  std::cout <<"GameManager FrameStarted"  << std::endl;
+
   _inputMgr->capture();
   return _states.top()->frameStarted(evt);
 }
