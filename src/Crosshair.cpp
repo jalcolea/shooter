@@ -7,13 +7,15 @@ Crosshair::~Crosshair()
 Ogre::SceneNode* Crosshair::createCrossHairManual(const std::string & crosshairImg)
 {
 
-    MaterialPtr material = MaterialManager::getSingleton().create("crosshair", "General",true);
-    material->getTechnique(0)->getPass(0)->createTextureUnitState(crosshairImg);
-    material->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
-    material->getTechnique(0)->getPass(0)->setDepthWriteEnabled(false);
-    material->getTechnique(0)->getPass(0)->setLightingEnabled(false);
-    material->getTechnique(0)->getPass(0)->setCullingMode(CullingMode::CULL_NONE);
-    material->getTechnique(0)->getPass(0)->setSceneBlending(Ogre::SBT_TRANSPARENT_ALPHA);
+//    MaterialPtr material = MaterialManager::getSingleton().create("crosshair", "General",true);
+//    material->getTechnique(0)->getPass(0)->createTextureUnitState(crosshairImg);
+//    material->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+//    material->getTechnique(0)->getPass(0)->setDepthWriteEnabled(false);
+//    material->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+//    material->getTechnique(0)->getPass(0)->setCullingMode(CullingMode::CULL_NONE);
+//    material->getTechnique(0)->getPass(0)->setSceneBlending(Ogre::SBT_TRANSPARENT_ALPHA);
+
+    setMaterialCrosshair(crosshairImg);
     
     // Creamos un objeto manual para el Crosshair
     ManualObject* crossHair= _sceneMgr->createManualObject("crossHair");
@@ -23,7 +25,7 @@ Ogre::SceneNode* Crosshair::createCrossHairManual(const std::string & crosshairI
     crossHair->setUseIdentityView(true);
      
     //Esto es como un wrapper de openGl
-    crossHair->begin("crosshair", RenderOperation::OT_TRIANGLE_STRIP);  // begin(nombreMaterial, tipoPrimitiva)
+    crossHair->begin(CROSSHAIR_MATERIAL_NAME, RenderOperation::OT_TRIANGLE_STRIP);  // begin(nombreMaterial, tipoPrimitiva)
         crossHair->position(-0.2, -0.2, 0.0);           //position crea un vértice en la posicion dada
         crossHair->textureCoord(0,1);                   //con textureCoord hacemos mapeado UV
         crossHair->position( 0.2, -0.2, 0.0);
@@ -39,7 +41,8 @@ Ogre::SceneNode* Crosshair::createCrossHairManual(const std::string & crosshairI
         crossHair->index(0);
     crossHair->end();
     
-    Ogre::Entity* entCrossHair = _sceneMgr->createEntity(crossHair->convertToMesh("crossHairMesh"));
+    //Ogre::Entity* entCrossHair = _sceneMgr->createEntity(crossHair->convertToMesh("crossHairMesh"));
+    _entCrossHair = _sceneMgr->createEntity(crossHair->convertToMesh("crossHairMesh"));
     //entCrossHair->setMaterial(material);
     
     // Uso de una Aligned Axis Box (AAB) infinita para estar siempre visible. O eso es 
@@ -52,7 +55,7 @@ Ogre::SceneNode* Crosshair::createCrossHairManual(const std::string & crosshairI
     crossHair->setRenderQueueGroup(RENDER_QUEUE_OVERLAY - 1);
     
     _nodeCrosshair = _sceneMgr->getRootSceneNode()->createChildSceneNode("CrossHair");
-    _nodeCrosshair->attachObject(entCrossHair);
+    _nodeCrosshair->attachObject(_entCrossHair);
     _nodeCrosshair->scale(2.0,2.0,2.0);
     
     return _nodeCrosshair;
@@ -82,7 +85,7 @@ void Crosshair::setActualHitPoint(Ogre::Real xMouse, Ogre::Real yMouse) // Valor
     
 }
 
-const Ogre::Vector3 & Crosshair::gettActualHitPoint()
+const Ogre::Vector3 & Crosshair::getActualHitPoint()
 {
     return _actualHitPoint;
 }
@@ -91,4 +94,19 @@ void Crosshair::setCamera(Camera* camera) // Si cambiamos la camara automáticam
 {
     _camera = camera;
     _plane = Ogre::Plane(_camera->getDerivedDirection(),Ogre::Vector3(0,0,0));
+}
+
+
+void Crosshair::setMaterialCrosshair(const string & crosshairImg)
+{
+    _material = MaterialManager::getSingleton().create(CROSSHAIR_MATERIAL_NAME, "General",false);
+    _material->getTechnique(0)->getPass(0)->createTextureUnitState(crosshairImg);
+    _material->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+    _material->getTechnique(0)->getPass(0)->setDepthWriteEnabled(false);
+    _material->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+    _material->getTechnique(0)->getPass(0)->setCullingMode(CullingMode::CULL_NONE);
+    _material->getTechnique(0)->getPass(0)->setSceneBlending(Ogre::SBT_TRANSPARENT_ALPHA);
+    
+    if (_entCrossHair)
+        _entCrossHair->setMaterial(_material);
 }

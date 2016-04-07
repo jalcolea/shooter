@@ -36,6 +36,7 @@ class WinState : public Ogre::Singleton<WinState>, public GameState
 {
  public:
   WinState() {}
+  ~WinState() {}
 
   void enter ();
   void exit ();
@@ -67,13 +68,18 @@ class WinState : public Ogre::Singleton<WinState>, public GameState
   Ogre::SceneManager* _sceneMgr;
   Ogre::Viewport* _viewport;
   Ogre::Camera* _camera;
-MyGUI::VectorWidgetPtr layout;
+  Ogre::Real _deltaT;
+
+  MyGUI::VectorWidgetPtr layout;
+  MyGUI::Button* btn_resume;
+
   bool _exitGame;
-  
+
   private:
     void createScene();
     void createMyGui();
     void destroyMyGui();  
+  
 };
 
 #endif

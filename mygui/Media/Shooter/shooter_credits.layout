@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<MyGUI type="Layout" version="3.2.0">
+    <Widget type="ImageBox" skin="ImageBox" position_real="0.00390625 0 1 1" align="Stretch" layer="Wallpaper" name="start">
+        <Property key="ImageTexture" value="credits_btn.png"/>
+    </Widget>
+    <Widget type="Button" skin="ButtonImage" position="20 640 100 130" align="Default" layer="Main" name="btn_back">
+    </Widget>
+    <CodeGeneratorSettings/>
+</MyGUI>

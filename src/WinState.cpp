@@ -14,25 +14,13 @@ template<> WinState* Ogre::Singleton<WinState>::msSingleton = 0;
 void WinState::enter ()
 {
   _root = Ogre::Root::getSingletonPtr();
-  _exitGame = false;
   createScene();
-}
-
-void WinState::createScene()
-{
-  createMyGui();
-}
-
-void WinState::createMyGui()
-{
-}
-
-void WinState::destroyMyGui()
-{
+  _exitGame = false;
 }
 
 void WinState::exit()
 {
+ _root->getAutoCreatedWindow()->removeAllViewports();
   destroyMyGui();
 }
 
@@ -46,6 +34,7 @@ void WinState::resume()
 
 bool WinState::frameStarted(const Ogre::FrameEvent& evt)
 {
+  _deltaT = evt.timeSinceLastFrame;
   return true;
 }
 
@@ -72,11 +61,19 @@ bool WinState::keyReleased(const OIS::KeyEvent &e)
 
 bool WinState::mouseMoved(const OIS::MouseEvent &e)
 {
+
   return true;
 }
 
 bool WinState::mousePressed(const OIS::MouseEvent &e, OIS::MouseButtonID id)
 {
+  int x = e.state.X.abs;
+  int y = e.state.Y.abs;
+  if (btn_resume->_checkPoint(x,y))
+  {
+cout << __FUNCTION__<<endl;
+    popState();
+  }
   return true;
 }
 
@@ -94,6 +91,23 @@ WinState& WinState::getSingleton ()
 { 
   assert(msSingleton);
   return *msSingleton;
+}
+
+void WinState::destroyMyGui()
+{
+    MyGUI::LayoutManager::getInstance().unloadLayout(layout);
+}
+
+void WinState::createMyGui()
+{
+  layout = MyGUI::LayoutManager::getInstance().loadLayout("shooter_win.layout");
+  btn_resume = MyGUI::Gui::getInstance().findWidget<MyGUI::Button>("btn_resume");
+
+}
+
+void WinState::createScene()
+{
+ createMyGui();
 }
 
 bool WinState::WiimoteButtonDown(const wiimWrapper::WiimoteEvent &e)

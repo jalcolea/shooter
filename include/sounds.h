@@ -20,6 +20,7 @@ class sounds {
     std::map <string,Mix_Music *> map_music;
     std::map <string,Mix_Chunk *> map_effect;
     static sounds * singleton;
+    int channel;
     void new_sound(mxml_node_t * node, int type);
     string base_path;
     bool init ();
@@ -29,20 +30,21 @@ class sounds {
     static sounds * getInstance();
     ~sounds(); 
 
-    bool load_xml (char * file);
-    bool load_files();
+    bool load_xml (char * file=(char*)"sounds.xml");
 
-    int play_effect(string id);
-    int halt_effects();
+    int halt_effects(int ch=-1);
+    int play_effect(string id, int ch=-1);
 
     int playing_music();
-    int play_music(string id);
+    int play_music(string id, int times=-1);
     void pause_music();
     int paused_music();
     void resume_music();
     int halt_music();
-    int halt_effect();
+    int halt_effect(int ch = -1);
     void print();
+    void set_channel (int ch);
+    void unset_channel ();
 
 };
 

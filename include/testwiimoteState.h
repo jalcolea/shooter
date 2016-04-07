@@ -77,8 +77,8 @@ private:
   Ogre::SceneNode* createCrossHair(const std::string & crosshairImg);
   std::unique_ptr<Ogre::Ray> _mouseray;// {new Ogre::Ray};
   Ogre::Plane _plane;
-  
   Ogre::SceneNode* _nodeCrosshair;
+  Ogre::SceneNode* _nodeWeapon;
 
 };
 

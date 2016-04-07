@@ -74,6 +74,12 @@ class MenuState : public Ogre::Singleton<MenuState>, public GameState
   
   MyGUI::EditBox* high_score_txt;  
   MyGUI::VectorWidgetPtr layout;
+  MyGUI::Button* btn_records;
+  MyGUI::Button* btn_credits;
+  MyGUI::Button* btn_play;
+  MyGUI::Button* btn_controls;
+  MyGUI::Button* btn_exit;
+
   Ogre::Real _deltaT;
 
   private:

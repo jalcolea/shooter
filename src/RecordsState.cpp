@@ -6,6 +6,11 @@
 #include "MenuState.h"
 #include "records.h"
 
+#include "OgreTextAreaOverlayElement.h"
+#include "OgreStringConverter.h"
+#include <OgreOverlayManager.h>
+#include <OgreOverlayContainer.h>
+
 template<> RecordsState* Ogre::Singleton<RecordsState>::msSingleton = 0;
 
 using namespace std;
@@ -45,11 +50,14 @@ void RecordsState::loadRecords()
             result = records::getInstance()->getNext(name,points);
             cont++;
           }
-  //        score_names_txt->setCaption(tmp_users);
-  //        score_points_txt->setCaption(tmp_points);
+          score_names_txt->setCaption(tmp_users);
+          score_points_txt->setCaption(tmp_points);
 }
 void RecordsState::exit ()
 {
+ //_sceneMgr->clearScene();
+  _root->getAutoCreatedWindow()->removeAllViewports();
+
   destroyMyGui();
 }
 
@@ -91,6 +99,12 @@ bool RecordsState::mouseMoved(const OIS::MouseEvent &e)
 
 bool RecordsState::mousePressed(const OIS::MouseEvent &e, OIS::MouseButtonID id)
 {
+  int x = e.state.X.abs;
+  int y = e.state.Y.abs;
+  if (btn_back->_checkPoint(x,y))
+  {
+    popState();
+  }
   return true;
 }
 
@@ -122,10 +136,24 @@ void RecordsState::createScene()
 
 void RecordsState::destroyMyGui()
 {
+  MyGUI::LayoutManager::getInstance().unloadLayout(layout);
 }
 
 void RecordsState::createMyGui()
 {
+//  string name="";
+//  char points_str [32];
+//  int points=0;
+  layout = MyGUI::LayoutManager::getInstance().loadLayout("shooter_records.layout");
+  btn_back = MyGUI::Gui::getInstance().findWidget<MyGUI::Button>("btn_back");
+//  btn_back->eventMouseButtonClick = MyGUI::newDelegate(this, &RecordsState::notifyButtonPress);
+//  high_score_txt = MyGUI::Gui::getInstance().findWidget<MyGUI::EditBox>("high_score");
+//  score_positions_txt = MyGUI::Gui::getInstance().findWidget<MyGUI::TextBox>("score_positions");
+  score_points_txt = MyGUI::Gui::getInstance().findWidget<MyGUI::TextBox>("score_points");
+  score_names_txt = MyGUI::Gui::getInstance().findWidget<MyGUI::TextBox>("score_names");
+//  records::getInstance()->getBest(name,points);
+//  sprintf(points_str,"%d",points);
+//  high_score_txt->setCaption(points_str);
 }
 
 bool RecordsState::WiimoteButtonDown(const wiimWrapper::WiimoteEvent &e)
@@ -135,3 +163,10 @@ bool RecordsState::WiimoteButtonUp(const wiimWrapper::WiimoteEvent &e)
 bool RecordsState::WiimoteIRMove(const wiimWrapper::WiimoteEvent &e)
 {return true;}
 
+void RecordsState::notifyButtonPress(MyGUI::Widget* _widget)
+{
+  string name;
+  name = _widget->getName();
+
+  if (name=="btn_back") popState();
+}

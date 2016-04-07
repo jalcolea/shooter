@@ -36,6 +36,7 @@ class PauseState : public Ogre::Singleton<PauseState>, public GameState
 {
  public:
   PauseState() {}
+  ~PauseState() {}
 
   void enter ();
   void exit ();
@@ -67,10 +68,15 @@ class PauseState : public Ogre::Singleton<PauseState>, public GameState
   Ogre::SceneManager* _sceneMgr;
   Ogre::Viewport* _viewport;
   Ogre::Camera* _camera;
+  Ogre::Real _deltaT;
+
   MyGUI::VectorWidgetPtr layout;
+  MyGUI::Button* btn_resume;
+
   bool _exitGame;
 
   private:
+    void createScene();
     void createMyGui();
     void destroyMyGui();  
   
