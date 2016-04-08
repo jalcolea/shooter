@@ -72,6 +72,7 @@ class WinState : public Ogre::Singleton<WinState>, public GameState
 
   MyGUI::VectorWidgetPtr layout;
   MyGUI::Button* btn_resume;
+  MyGUI::EditBox* user_name_txt;
 
   bool _exitGame;
 
@@ -79,6 +80,7 @@ class WinState : public Ogre::Singleton<WinState>, public GameState
     void createScene();
     void createMyGui();
     void destroyMyGui();  
+    void save_record();
   
 };
 

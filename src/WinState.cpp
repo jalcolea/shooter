@@ -2,6 +2,7 @@
 #include "IntroState.h"
 #include "MenuState.h"
 #include "PlayState.h"
+#include "records.h"
 
 #include <OgreOverlaySystem.h>
 #include <OgreOverlayElement.h>
@@ -43,14 +44,37 @@ bool WinState::frameEnded(const Ogre::FrameEvent& evt)
   return true;
 }
 
+void WinState::save_record()
+{
+        //records::getInstance()->add_record(user_name_txt->getCaption(),get_score());
+        records::getInstance()->add_record(user_name_txt->getCaption(),1000);
+        records::getInstance()->saveFile(NULL);
+        //sounds::getInstance()->play_effect("eat_ghost");
+        //user_name_txt->setVisible(false);
+}
+
 bool WinState::keyPressed(const OIS::KeyEvent &e) 
 {
-  // Tecla p --> Estado anterior.
-      if (e.key == OIS::KC_P)  // Con  P otra vez reanudamos el PlayState
+     MyGUI::UString txt = user_name_txt->getCaption();
+    if ((int)e.key==14 && txt.size()>0) 
+{
+txt.resize(txt.size()-1);
+}
+    else
+    {
+      if (((int)e.text >=65 && (int)e.text<=90) || ((int)e.text>=97 && (int)e.text<=122))
       {
-        popState();
+        if (txt.size()<3) txt.push_back(e.text);
       }
-  
+    }
+    user_name_txt->setCaption(txt);
+    if (e.key==OIS::KC_RETURN)
+    {
+        cout << "NEW RECORD TO SAVE" << endl;
+        save_record();
+        popState();
+    }
+
   return true;
 }
 
@@ -72,6 +96,7 @@ bool WinState::mousePressed(const OIS::MouseEvent &e, OIS::MouseButtonID id)
   if (btn_resume->_checkPoint(x,y))
   {
 cout << __FUNCTION__<<endl;
+    save_record();
     popState();
   }
   return true;
@@ -102,6 +127,7 @@ void WinState::createMyGui()
 {
   layout = MyGUI::LayoutManager::getInstance().loadLayout("shooter_win.layout");
   btn_resume = MyGUI::Gui::getInstance().findWidget<MyGUI::Button>("btn_resume");
+  user_name_txt = MyGUI::Gui::getInstance().findWidget<MyGUI::EditBox>("user_name");
 
 }
 
