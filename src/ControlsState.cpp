@@ -3,7 +3,6 @@
 #include "IntroState.h"
 #include "PlayState.h"
 #include "MenuState.h"
-#include <stdlib.h>
 #include "records.h"
 
 template<> ControlsState* Ogre::Singleton<ControlsState>::msSingleton = 0;
@@ -18,16 +17,11 @@ void ControlsState::enter ()
   _exitGame = false;
 }
 
-void ControlsState::destroyMyGui()
-{
-}
-
-void ControlsState::createMyGui()
-{
-}
-
 void ControlsState::exit ()
 {
+ //_sceneMgr->clearScene();
+  _root->getAutoCreatedWindow()->removeAllViewports();
+
   destroyMyGui();
 }
 
@@ -41,7 +35,6 @@ void ControlsState::resume()
 
 bool ControlsState::frameStarted(const Ogre::FrameEvent& evt)
 {
-  _deltaT = evt.timeSinceLastFrame;
   return true;
 }
 
@@ -54,6 +47,7 @@ bool ControlsState::frameEnded(const Ogre::FrameEvent& evt)
 bool ControlsState::keyPressed(const OIS::KeyEvent &e)
 {
   popState();
+  
   return true;
 }
 
@@ -69,6 +63,12 @@ bool ControlsState::mouseMoved(const OIS::MouseEvent &e)
 
 bool ControlsState::mousePressed(const OIS::MouseEvent &e, OIS::MouseButtonID id)
 {
+  int x = e.state.X.abs;
+  int y = e.state.Y.abs;
+  if (btn_back->_checkPoint(x,y))
+  {
+    popState();
+  }
   return true;
 }
 
@@ -92,9 +92,21 @@ ControlsState::~ControlsState()
 {
 }
 
+
 void ControlsState::createScene()
 {
- createMyGui();
+  createMyGui();
+}
+
+void ControlsState::destroyMyGui()
+{
+  MyGUI::LayoutManager::getInstance().unloadLayout(layout);
+}
+
+void ControlsState::createMyGui()
+{
+  layout = MyGUI::LayoutManager::getInstance().loadLayout("shooter_controls.layout");
+  btn_back = MyGUI::Gui::getInstance().findWidget<MyGUI::Button>("btn_back");
 }
 
 bool ControlsState::WiimoteButtonDown(const wiimWrapper::WiimoteEvent &e)

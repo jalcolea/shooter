@@ -67,6 +67,10 @@ bool MenuState::keyPressed(const OIS::KeyEvent &e)
     //MyGUI::LayoutManager::getInstance().unloadLayout(layout);
     pushState(PlayState::getSingletonPtr());
   }
+  else if (e.key == OIS::KC_K) {
+    MyGUI::LayoutManager::getInstance().unloadLayout(layout);
+    pushState(ControlsState::getSingletonPtr());
+  }
   else if (e.key == OIS::KC_C) {
     MyGUI::LayoutManager::getInstance().unloadLayout(layout);
     //pushState(ControlsState::getSingletonPtr());

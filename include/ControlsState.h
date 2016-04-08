@@ -29,10 +29,9 @@
 #include "MyGUI_OgrePlatform.h"
 
 
-
 using namespace std;
 using namespace Ogre;
-class ControlsState : public Ogre::Singleton<ControlsState>, public GameState 
+class ControlsState : public Ogre::Singleton<ControlsState>, public GameState
 {
  public:
   ControlsState () {}
@@ -59,10 +58,10 @@ class ControlsState : public Ogre::Singleton<ControlsState>, public GameState
     bool WiimoteIRMove(const wiimWrapper::WiimoteEvent &e);
 /*******************************************************************************/  
 
-
   // Heredados de Ogre::Singleton.
   static ControlsState& getSingleton ();
   static ControlsState* getSingletonPtr ();
+
 
  protected:
   Ogre::Root* _root;
@@ -71,8 +70,9 @@ class ControlsState : public Ogre::Singleton<ControlsState>, public GameState
   Ogre::Camera* _camera;
 
   bool _exitGame;
+
   MyGUI::VectorWidgetPtr layout;
-  Ogre::Real _deltaT;  
+  MyGUI::Button* btn_back;
   
 private:
   private:
@@ -81,6 +81,8 @@ private:
   void createScene();
   void createMyGui();
   void destroyMyGui();
+  void notifyButtonPress(MyGUI::Widget* _widget);
+
   
 };
 
