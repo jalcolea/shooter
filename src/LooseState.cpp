@@ -64,7 +64,7 @@ txt.resize(txt.size()-1);
     {
       if (((int)e.text >=65 && (int)e.text<=90) || ((int)e.text>=97 && (int)e.text<=122))
       {
-        if (txt.size()<3) txt.push_back(e.text);
+        if (txt.size()<5) txt.push_back(e.text);
       }
     }
     user_name_txt->setCaption(txt);
