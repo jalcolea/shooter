@@ -4,5 +4,15 @@
         <Property key="ImageTexture" value="loose_btn.png"/>
     </Widget>
     <Widget type="Button" skin="ButtonImage" position="915 635 90 85" layer="Main" name="btn_resume"/>
+    <Widget type="EditBox" skin="EditBox" position="470 500 205 110" layer="Main" name="user_name">
+        <Property key="FontName" value="Circus"/>
+        <Property key="TextAlign" value="Center"/>
+        <Property key="Colour" value="1 0 0"/>
+        <Property key="FontHeight" value="90"/>
+        <Property key="TextColour" value="1 1 1"/>
+        <Property key="Caption" value=""/>
+        <Property key="Alpha" value="0.8"/>
+    </Widget>
+
     <CodeGeneratorSettings/>
 </MyGUI>
