@@ -10,6 +10,7 @@
 #include "Shapes/OgreBulletCollisionsStaticPlaneShape.h"
 #include "Shapes/OgreBulletCollisionsSphereShape.h"
 #include "OgreBulletDynamicsWorld.h"
+#include "StandFactory.h"
 #include <string>
 #include <vector>
 #include "records.h"
@@ -57,7 +58,7 @@ void PlayState::resume()
 
 bool PlayState::frameStarted(const Ogre::FrameEvent& evt)
 {
-  std::cout << "nuevo frame " << std::endl;
+
   _deltaT = evt.timeSinceLastFrame;
   moveCamera();
  
@@ -189,13 +190,9 @@ void PlayState::createScene()
   _sceneMgr->setSkyBox(true, "skybox");
   createLight();
   createMyGui();
-  StaticGeometry* stage =   _sceneMgr->createStaticGeometry("SG");
-  Entity* entLevel = _sceneMgr->createEntity("puesto.mesh");
-  
-  entLevel->setCastShadows(true);
-  stage->addEntity(entLevel, Vector3(0,0,0));
-  stage->build();
-
+  createFloor();
+  StandFactory factory;
+  factory.buildFestival(_sceneMgr);
 }
 
 void PlayState::createMyGui()
