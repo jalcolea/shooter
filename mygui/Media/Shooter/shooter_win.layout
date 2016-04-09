@@ -3,7 +3,7 @@
     <Widget type="ImageBox" skin="ImageBox" position_real="0 0 1 1" align="Stretch" layer="Wallpaper" name="start">
         <Property key="ImageTexture" value="win_btn.png"/>
     </Widget>
-    <Widget type="EditBox" skin="WordWrapEmpty" position="420 500 305 110" layer="Main" name="user_name">
+    <Widget type="EditBox" skin="WordWrapEmpty" position="400 500 345 110" layer="Main" name="user_name">
         <Property key="FontName" value="Circus"/>
         <Property key="TextAlign" value="Center"/>
         <Property key="Colour" value="1 0 0"/>

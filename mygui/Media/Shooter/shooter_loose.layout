@@ -4,7 +4,7 @@
         <Property key="ImageTexture" value="loose_btn.png"/>
     </Widget>
     <Widget type="Button" skin="ButtonImage" position="915 635 90 85" layer="Main" name="btn_resume"/>
-    <Widget type="EditBox" skin="WordWrapEmpty" position="420 500 305 110" layer="Main" name="user_name">
+    <Widget type="EditBox" skin="WordWrapEmpty" position="400 500 345 110" layer="Main" name="user_name">
         <Property key="FontName" value="Circus"/>
         <Property key="TextAlign" value="Center"/>
         <Property key="Colour" value="1 0 0"/>
