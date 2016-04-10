@@ -9,12 +9,12 @@ enum StandTypes {LATAS,PORTERO};
 //Clase que pinta la feria. Patrón Factoria para generar puestos
 class StandFactory {
 private:
-  StandTypes _standsConf[2];
+  StandTypes _standsConf[1];
   std::vector<std::unique_ptr<Stand>> _stands;
 
 public:
 
-  StandFactory():_standsConf {LATAS,LATAS}{
+  StandFactory():_standsConf {LATAS}{
   };
   /**
    * Construye un Puesto

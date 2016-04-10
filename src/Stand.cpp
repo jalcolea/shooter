@@ -2,7 +2,7 @@
 
 void Stand::buildGame(){
 
-  StaticGeometry *stage = _sceneMgr->createStaticGeometry("SG");
+  StaticGeometry *stage = _sceneMgr->createStaticGeometry("Stand1");
   Entity* entStand = _sceneMgr->createEntity("puesto.mesh");
 
   entStand->setCastShadows(true);
