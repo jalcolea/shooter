@@ -4,9 +4,8 @@ template<> testwiimoteState* Ogre::Singleton<testwiimoteState>::msSingleton = 0;
  
 void testwiimoteState::enter()
 {
-  _root = Ogre::Root::getSingletonPtr();
-  
-      _root = Ogre::Root::getSingletonPtr();
+    _root = Ogre::Root::getSingletonPtr();
+    
     try
     {
         _sceneMgr = _root->getSceneManager("SceneManager");
@@ -53,7 +52,7 @@ void testwiimoteState::enter()
     //Plano para hacer rayos contra él desde la cámara y saber la equivalencia
     //de la posición del ratón con respecto al mundo 3d. Ha de ser paralelo, en cualquier
     //posición, a la cámara. 
-    //_plane = Ogre::Plane(_camera->getDerivedDirection(),Ogre::Vector3(0,0,0));
+    _plane = Ogre::Plane(_camera->getDerivedDirection(),Ogre::Vector3(0,0,0));
     
     createScene();
     _exitGame =  false;
