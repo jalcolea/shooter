@@ -13,7 +13,11 @@ protected:
   void startGame();
 
 public:
-  StandLatas( Vector3 position, SceneManager* sceneMgr);
+  StandLatas( Vector3 position, SceneManager* sceneMgr):Stand(position, sceneMgr){
+    
+  }
+
+
    
 };
 #endif

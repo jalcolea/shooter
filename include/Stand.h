@@ -10,20 +10,21 @@ using namespace Ogre;
 class Stand {
 
 private:
-
-  Vector3 _position;
-  SceneManager* _sceneMgr;
+  Stand(){};
 
 protected:
+  Vector3 _position;
+  SceneManager* _sceneMgr;
 
 
 public:
   Stand( Vector3 position, SceneManager* sceneMgr){
     _position = position;
     _sceneMgr = sceneMgr;
+
   }
   
-  Stand(){};
+
   virtual void buildGame();
   virtual void startGame(){};
 
