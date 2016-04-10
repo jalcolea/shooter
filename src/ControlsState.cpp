@@ -69,6 +69,10 @@ bool ControlsState::mousePressed(const OIS::MouseEvent &e, OIS::MouseButtonID id
   {
     popState();
   }
+  else if (btn_keyboard->_checkPoint(x,y)) text->setCaption("KEYBOARD, COMPLETAR");
+  else if (btn_mouse->_checkPoint(x,y)) text->setCaption("MOUSE, COMPLETAR");
+  else if (btn_wiimote->_checkPoint(x,y)) text->setCaption("WIIMOTE, COMPLETAR");
+  else text->setCaption("");
   return true;
 }
 
@@ -107,6 +111,10 @@ void ControlsState::createMyGui()
 {
   layout = MyGUI::LayoutManager::getInstance().loadLayout("shooter_controls.layout");
   btn_back = MyGUI::Gui::getInstance().findWidget<MyGUI::Button>("btn_back");
+  btn_keyboard = MyGUI::Gui::getInstance().findWidget<MyGUI::Button>("btn_keyboard");
+  btn_mouse = MyGUI::Gui::getInstance().findWidget<MyGUI::Button>("btn_mouse");
+  btn_wiimote = MyGUI::Gui::getInstance().findWidget<MyGUI::Button>("btn_wiimote");
+  text = MyGUI::Gui::getInstance().findWidget<MyGUI::EditBox>("text");
 }
 
 bool ControlsState::WiimoteButtonDown(const wiimWrapper::WiimoteEvent &e)
