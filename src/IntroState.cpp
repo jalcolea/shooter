@@ -68,6 +68,7 @@ void IntroState::enter()
 void IntroState::exit()
 {
     //sounds::getInstance()->halt_music();
+    destroyMyGui();
     _sceneMgr->clearScene();
     _root->getAutoCreatedWindow()->removeAllViewports();
 }
