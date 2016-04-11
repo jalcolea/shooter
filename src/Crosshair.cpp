@@ -1,19 +1,9 @@
 #include "Crosshair.h"
 
-Crosshair::~Crosshair()
-{
-}
+Crosshair::~Crosshair(){}
 
 Ogre::SceneNode* Crosshair::createCrossHairManual(const std::string & crosshairImg)
 {
-
-//    MaterialPtr material = MaterialManager::getSingleton().create("crosshair", "General",true);
-//    material->getTechnique(0)->getPass(0)->createTextureUnitState(crosshairImg);
-//    material->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
-//    material->getTechnique(0)->getPass(0)->setDepthWriteEnabled(false);
-//    material->getTechnique(0)->getPass(0)->setLightingEnabled(false);
-//    material->getTechnique(0)->getPass(0)->setCullingMode(CullingMode::CULL_NONE);
-//    material->getTechnique(0)->getPass(0)->setSceneBlending(Ogre::SBT_TRANSPARENT_ALPHA);
 
     setMaterialCrosshair(crosshairImg);
     
@@ -41,7 +31,6 @@ Ogre::SceneNode* Crosshair::createCrossHairManual(const std::string & crosshairI
         crossHair->index(0);
     crossHair->end();
     
-    //Ogre::Entity* entCrossHair = _sceneMgr->createEntity(crossHair->convertToMesh("crossHairMesh"));
     _entCrossHair = _sceneMgr->createEntity(crossHair->convertToMesh("crossHairMesh"));
     //entCrossHair->setMaterial(material);
     
