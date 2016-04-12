@@ -178,7 +178,10 @@ PlayState &PlayState::getSingleton() {
 
 PlayState::~PlayState() {}
 
-void PlayState::createScene() {
+
+void PlayState::createScene()
+{
+
   _sceneMgr->setAmbientLight(Ogre::ColourValue(0.5, 0.5, 0.5));
   _sceneMgr->setShadowTechnique(SHADOWTYPE_STENCIL_MODULATIVE);
   _sceneMgr->setShadowColour(ColourValue(0.5, 0.5, 0.5));

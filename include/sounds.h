@@ -34,6 +34,7 @@ class sounds {
 
     int halt_effects(int ch=-1);
     int play_effect(string id, int ch=-1);
+    int play_effect_loop(string id, int ch=-1);
 
     int playing_music();
     int play_music(string id, int times=-1);

@@ -14,12 +14,20 @@
 #include "OgreUtil.h"
 #include "Wiimote.h"
 #include "Crosshair.h"
+#include "sounds.h"
 
 using namespace std;
 using namespace Ogre;
 using namespace OgreBulletDynamics;
 using namespace OgreBulletCollisions;
 using namespace wiimWrapper;
+
+enum class AccionPuerta
+{
+    CERRAR = -1,
+    PARAR = 0,
+    ABRIR = 1
+};
 
 class testwiimoteState : public Ogre::Singleton<testwiimoteState>, public GameState
 {
@@ -69,17 +77,23 @@ protected:
     Ogre::Real _deltaT;
     unique_ptr<Crosshair> _crosshair;
 
+    void ActivaPuerta(AccionPuerta accion);
+    
 private:
   void createMyGui();
   void destroyMyGui();
   void createScene();
   void createLight();
-  Ogre::SceneNode* createCrossHair(const std::string & crosshairImg);
   std::unique_ptr<Ogre::Ray> _mouseray;// {new Ogre::Ray};
   Ogre::Plane _plane;
   Ogre::SceneNode* _nodeCrosshair;
   Ogre::SceneNode* _nodeWeapon;
-
+  Ogre::SceneNode* _nodeStand;
+  Ogre::SceneNode* _nodeEscudo;
+  Ogre::AnimationState* _animPuerta;
+  Ogre::Entity* _entStand;
+  AccionPuerta _sentidoAccionPuerta;
+  
 };
 
 #endif // TESTWIIMOTESTATE_H
