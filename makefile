@@ -63,11 +63,11 @@ $(EXEC): $(OBJS)
 $(DIROBJ)%.o: $(DIRSRC)%.cpp
 	$(CXX) $(CFLAGS) -c $< -o $@
 #	$(CXX) -MM $(CFLAGS) $*.cpp > $*.d
-	$(CXX) -MM $(CFLAGS) $< > $*.d
-	@mv -f $*.d $*.d.tmp
-	@sed -e 's|.*:|$*.o:|' < $*.d.tmp > $*.d
-	@sed -e 's/.*://' -e 's/\\$$//' < $*.d.tmp | fmt -1 | sed -e 's/^ *//' -e 's/$$/:/' >> $*.d
-	@rm -f $*.d.tmp
+	$(CXX) -MM $(CFLAGS) $< > $(DIROBJ)$*.d
+	@mv -f $(DIROBJ)$*.d $(DIROBJ)$*.d.tmp
+	@sed -e 's|.*:|$(DIROBJ)$*.o:|' < $(DIROBJ)$*.d.tmp > $(DIROBJ)$*.d
+	@sed -e 's/.*://' -e 's/\\$$//' < $(DIROBJ)$*.d.tmp | fmt -1 | sed -e 's/^ *//' -e 's/$$/:/' >> $(DIROBJ)$*.d
+	@rm -f $(DIROBJ)$*.d.tmp
     
 # Limpieza de temporales ---------------------------------------------
 clean:

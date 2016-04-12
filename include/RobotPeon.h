@@ -44,16 +44,16 @@ public:
       transform.setIdentity(); //This function put the variable of the object to default. The ctor of btTransform doesnt do it.
       transform.setOrigin(OgreBulletCollisions::OgreBtConverter::to(_posicion)); //Set the new position/origin
       _body->getBulletRigidBody()->setWorldTransform(transform); //Apply the btTransform to the body*/
-       
     };
     
     ~RobotPeon();
 
-public:
     virtual void anima(string nombreAnim, Real deltaT);
     virtual void mueve(Vector3 direccion, Real deltaT);
     
     TipoRobot getTipo() override;
+    
+private:
 
 };
 
