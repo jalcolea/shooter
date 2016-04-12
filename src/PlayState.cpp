@@ -43,6 +43,7 @@ void PlayState::enter() {
   //Activar Bullet
     AxisAlignedBox boundBox =  AxisAlignedBox (Ogre::Vector3 (-10000, -10000, -10000),Ogre::Vector3 (10000,  10000,  10000));
     _world = shared_ptr<OgreBulletDynamics::DynamicsWorld>(new DynamicsWorld(_sceneMgr, boundBox, Vector3(0, -9.81, 0), true,true, 15000));
+    
 
   _debugDrawer = new OgreBulletCollisions::DebugDrawer();
   _debugDrawer->setDrawWireframe(true);

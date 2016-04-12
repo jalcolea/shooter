@@ -54,12 +54,22 @@ dirs:
 $(EXEC): $(OBJS)
 	$(CXX)  -o $@ $^   $(LDLIBS)
 
+# pull in dependency info for *existing* .o files
+-include $(OBJS:.o=.d)
+
+
 # Compilación --------------------------------------------------------
 
 $(DIROBJ)%.o: $(DIRSRC)%.cpp
 	$(CXX) $(CFLAGS) -c $< -o $@
-
+#	$(CXX) -MM $(CFLAGS) $*.cpp > $*.d
+	$(CXX) -MM $(CFLAGS) $< > $*.d
+	@mv -f $*.d $*.d.tmp
+	@sed -e 's|.*:|$*.o:|' < $*.d.tmp > $*.d
+	@sed -e 's/.*://' -e 's/\\$$//' < $*.d.tmp | fmt -1 | sed -e 's/^ *//' -e 's/$$/:/' >> $*.d
+	@rm -f $*.d.tmp
+    
 # Limpieza de temporales ---------------------------------------------
 clean:
-	rm -f *.log $(EXEC) *~ $(DIRSRC)*~ $(DIRHEA)*~ 
+	rm -f *.log *.d $(EXEC) *~ $(DIRSRC)*~ $(DIRHEA)*~ 
 	rm -rf $(DIROBJ)
