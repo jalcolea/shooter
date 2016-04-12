@@ -2,7 +2,9 @@
 #define STAND_FACTORY
 
 #include "Stand.h"
+#include "OgreBulletDynamicsWorld.h"
 
+using namespace std;
 //Enumeración del tipo de puestos
 enum StandTypes {LATAS,PORTERO};
 
@@ -19,12 +21,12 @@ public:
   /**
    * Construye un Puesto
    */
-  std::unique_ptr<Stand> buildStand(StandTypes type,Vector3 position, SceneManager* sceneMgr);
+  std::unique_ptr<Stand> buildStand(StandTypes type,Vector3 position, SceneManager* sceneMgr,shared_ptr<OgreBulletDynamics::DynamicsWorld> world);
 
   /***
    * Construye la feria
    */ 
-   void buildFestival(SceneManager* sceneMgr);
+  void buildFestival(SceneManager* sceneMgr,shared_ptr<OgreBulletDynamics::DynamicsWorld> world);
 
 };
   
