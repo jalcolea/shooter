@@ -103,6 +103,7 @@ bool RecordsState::mousePressed(const OIS::MouseEvent &e, OIS::MouseButtonID id)
   int y = e.state.Y.abs;
   if (btn_back->_checkPoint(x,y))
   {
+    sounds::getInstance()->play_effect("push");
     popState();
   }
   return true;

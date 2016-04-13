@@ -97,8 +97,8 @@ bool LooseState::mousePressed(const OIS::MouseEvent &e, OIS::MouseButtonID id)
   int y = e.state.Y.abs;
   if (btn_resume->_checkPoint(x,y))
   {
-cout << __FUNCTION__<<endl;
     save_record();
+    sounds::getInstance()->play_effect("push");
     popState();
   }
   return true;
