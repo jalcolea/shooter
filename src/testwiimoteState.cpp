@@ -55,6 +55,19 @@ void testwiimoteState::enter()
     
     _sentidoAccionPuerta = AccionPuerta::PARAR;
     
+    sounds::getInstance()->play_music("robotsmusic");
+    
+    //Activacion de bullet RECUERDA QUITAR ESTO CUANDO ESTE ESTADO SEA LLAMADO
+    // HABRÁ QUE RECUPERAR LA INSTANCIA, NO CREARLA
+    AxisAlignedBox boundBox =  AxisAlignedBox (Ogre::Vector3 (-10000, -10000, -10000),Ogre::Vector3 (10000,  10000,  10000));
+    _world = shared_ptr<OgreBulletDynamics::DynamicsWorld>(new DynamicsWorld(_sceneMgr, boundBox, Vector3(0, -9.81, 0), true,true, 15000));
+    
+    std::vector<TipoRobot> tipos(2,TipoRobot::PEON);
+    RobotFactory robFact(Ogre::Vector3(0,0,0),Ogre::Vector3(0,0,0));
+    robFact.createRobotSet(_world,robFact.getDireccionInicial(),robFact.getPosicionInicial(),tipos,_sceneMgr);
+    
+
+    
     createScene();
     _exitGame =  false;
     _deltaT = 0;
@@ -75,13 +88,13 @@ bool testwiimoteState::keyPressed (const OIS::KeyEvent &e)
     if (e.key == OIS::KC_C)
     {
         ActivaPuerta(AccionPuerta::CERRAR);
-        sounds::getInstance()->play_effect("puerta");
+        sounds::getInstance()->play_effect("puerta",0);
     }
     
     if (e.key == OIS::KC_A)
     {
         ActivaPuerta(AccionPuerta::ABRIR);
-        sounds::getInstance()->play_effect("puerta");
+        sounds::getInstance()->play_effect("puerta",0);
         
     }
         
@@ -140,6 +153,8 @@ bool testwiimoteState::mouseReleased (const OIS::MouseEvent &e, OIS::MouseButton
 bool testwiimoteState::frameStarted (const Ogre::FrameEvent& evt)
 { 
     _deltaT = evt.timeSinceLastFrame;
+    
+    _world->stepSimulation(_deltaT);
     
     if (_animPuerta)
         _animPuerta->addTime(_deltaT * 0.5 * Ogre::Real(_sentidoAccionPuerta));
@@ -267,10 +282,12 @@ void testwiimoteState::ActivaPuerta(AccionPuerta accion)
     {
         case AccionPuerta::ABRIR:   _animPuerta->setTimePosition(0.0);
                                     _sentidoAccionPuerta = AccionPuerta::ABRIR; 
-                                    _nodeEscudo->setVisible(true); break;
+                                    _nodeEscudo->setVisible(true); 
+                                    sounds::getInstance()->play_effect_loop("escudo",1); break;
         case AccionPuerta::CERRAR:  _animPuerta->setTimePosition(_animPuerta->getLength());
                                     _sentidoAccionPuerta = AccionPuerta::CERRAR; 
-                                    _nodeEscudo->setVisible(false); break;
+                                    _nodeEscudo->setVisible(false); 
+                                    sounds::getInstance()->halt_effect(1); break;
         case AccionPuerta::PARAR:   _animPuerta->setEnabled(false);
                                     _sentidoAccionPuerta = AccionPuerta::PARAR; break;
         default:;

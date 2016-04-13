@@ -34,6 +34,7 @@
 #include <vector>
 #include "OgreUtil.h"
 #include "Wiimote.h"
+#include "constants.h"
 
 using namespace std;
 using namespace Ogre;
@@ -87,6 +88,8 @@ class PlayState : public Ogre::Singleton<PlayState>, public GameState
   Ogre::Camera* _camera;
   Ogre::SceneNode* _cameraNode;
   MyGUI::VectorWidgetPtr layout;
+  void checkCollisions();
+  
 
   bool _exitGame;
   int lives;
@@ -94,6 +97,11 @@ class PlayState : public Ogre::Singleton<PlayState>, public GameState
   bool paused;
   Ogre::Real _deltaT;
   std::map<OIS::KeyCode,bool> keysArePressed;
+  shared_ptr<DynamicsWorld> _world;
+  DebugDrawer* _debugDrawer;
+  RigidBody* _cameraBody;
+  CollisionShape* _cameraShape;
+
   
 
 private:

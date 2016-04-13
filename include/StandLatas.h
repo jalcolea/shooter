@@ -13,7 +13,8 @@ protected:
   void startGame();
 
 public:
-  StandLatas( Vector3 position, SceneManager* sceneMgr):Stand(position, sceneMgr){
+
+  StandLatas( Vector3 position, SceneManager* sceneMgr, std::string name,shared_ptr<OgreBulletDynamics::DynamicsWorld> world ):Stand(position, sceneMgr,name,world){
     
   }
 

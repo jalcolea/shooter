@@ -44,6 +44,17 @@ int sounds::play_effect(string id,int ch)
        return -1; 
 }
 
+int sounds::play_effect_loop(string id,int ch)
+{
+   Mix_Chunk * e = NULL;
+   e= map_effect[id];
+   if (e!=NULL)
+       return Mix_PlayChannel( (SET_CHANNEL)?channel:ch, e, -1);
+   else
+       return -1; 
+}
+
+
 int sounds::playing_music()
 {
   return Mix_PlayingMusic();

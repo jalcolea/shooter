@@ -15,6 +15,7 @@
 #include "Wiimote.h"
 #include "Crosshair.h"
 #include "sounds.h"
+#include "RobotFactory.h"
 
 using namespace std;
 using namespace Ogre;
@@ -93,6 +94,7 @@ private:
   Ogre::AnimationState* _animPuerta;
   Ogre::Entity* _entStand;
   AccionPuerta _sentidoAccionPuerta;
+  shared_ptr<DynamicsWorld> _world;
   
 };
 
