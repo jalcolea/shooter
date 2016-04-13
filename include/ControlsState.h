@@ -73,7 +73,6 @@ class ControlsState : public Ogre::Singleton<ControlsState>, public GameState
 
   MyGUI::VectorWidgetPtr layout;
   MyGUI::Button* btn_back;
-  MyGUI::Button* btn_keyboard;
   MyGUI::Button* btn_mouse;
   MyGUI::Button* btn_wiimote;
   MyGUI::EditBox* text;  

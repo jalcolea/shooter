@@ -4,9 +4,9 @@
         <Property key="ImageTexture" value="credits2.png"/>
     </Widget>
     <Widget type="Button" skin="ButtonImage" position="20 640 100 130" align="Default" layer="Main" name="btn_back"/>
-    <Widget type="EditBox" skin="WordWrapEmpty" position="645 740 580 120" layer="Main" name="edt_high_credits">
+    <Widget type="EditBox" skin="WordWrapEmpty" position="525 665 580 120" layer="Main" name="edt_high">
         <Property key="FontName" value="Circus"/>
-        <Property key="TextAlign" value="Center"/>
+        <Property key="TextAlign" value="Left"/>
         <Property key="FontHeight" value="60"/>
         <Property key="TextColour" value="1 0 0"/>
         <Property key="Caption" value=""/>

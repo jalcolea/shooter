@@ -70,9 +70,8 @@ bool ControlsState::mousePressed(const OIS::MouseEvent &e, OIS::MouseButtonID id
     sounds::getInstance()->play_effect("push");
     popState();
   }
-  else if (btn_keyboard->_checkPoint(x,y)) text->setCaption("KEYBOARD, COMPLETAR");
-  else if (btn_mouse->_checkPoint(x,y)) text->setCaption("MOUSE, COMPLETAR");
-  else if (btn_wiimote->_checkPoint(x,y)) text->setCaption("WIIMOTE, COMPLETAR");
+  else if (btn_mouse->_checkPoint(x,y)) text->setCaption("MOUSE Modo de control recomendado");
+  else if (btn_wiimote->_checkPoint(x,y)) text->setCaption("WIIMOTE Disponible solo en modo desarrollador");
   else text->setCaption("");
   return true;
 }
@@ -122,7 +121,6 @@ void ControlsState::createMyGui()
 {
   layout = MyGUI::LayoutManager::getInstance().loadLayout("shooter_controls.layout");
   btn_back = MyGUI::Gui::getInstance().findWidget<MyGUI::Button>("btn_back");
-  btn_keyboard = MyGUI::Gui::getInstance().findWidget<MyGUI::Button>("btn_keyboard");
   btn_mouse = MyGUI::Gui::getInstance().findWidget<MyGUI::Button>("btn_mouse");
   btn_wiimote = MyGUI::Gui::getInstance().findWidget<MyGUI::Button>("btn_wiimote");
   text = MyGUI::Gui::getInstance().findWidget<MyGUI::EditBox>("text");
