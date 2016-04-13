@@ -70,8 +70,16 @@ bool ControlsState::mousePressed(const OIS::MouseEvent &e, OIS::MouseButtonID id
     sounds::getInstance()->play_effect("push");
     popState();
   }
-  else if (btn_mouse->_checkPoint(x,y)) text->setCaption("MOUSE Modo de control recomendado");
-  else if (btn_wiimote->_checkPoint(x,y)) text->setCaption("WIIMOTE Disponible solo en modo desarrollador");
+  else if (btn_mouse->_checkPoint(x,y)) 
+  {
+    sounds::getInstance()->play_effect("push");
+    text->setCaption("MOUSE Modo de control recomendado");
+  }
+  else if (btn_wiimote->_checkPoint(x,y)) 
+  {
+    sounds::getInstance()->play_effect("push");
+    text->setCaption("WIIMOTE Disponible solo en modo desarrollador");
+  }
   else text->setCaption("");
   return true;
 }
