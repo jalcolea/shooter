@@ -101,6 +101,7 @@ bool IntroState::keyPressed(const OIS::KeyEvent &e)
     if (e.key == OIS::KC_SPACE)
     {
         changeState(MenuState::getSingletonPtr());
+        sounds::getInstance()->play_effect("push");
     }
     else if (e.key == OIS::KC_T)
     {
@@ -128,6 +129,8 @@ bool IntroState::mouseMoved(const OIS::MouseEvent &e)
 
 bool IntroState::mousePressed(const OIS::MouseEvent &e, OIS::MouseButtonID id)
 {
+    changeState(MenuState::getSingletonPtr());
+    sounds::getInstance()->play_effect("push");
     return true;
 }
 
