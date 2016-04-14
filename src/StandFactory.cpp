@@ -1,5 +1,6 @@
 #include "StandFactory.h"
 #include "StandLatas.h"
+#include "StandRobots.h"
 
 std::unique_ptr<Stand>
 StandFactory::buildStand(StandTypes type, Vector3 position,
@@ -35,5 +36,9 @@ vectorStand StandFactory::buildFestival(
 
     x = x + 10;
   }
+  
+  stands.push_back(unique_ptr<Stand>(new StandRobots(Vector3(x,0,0),sceneMgr,"StandRobots", world)));
+  stands.back()->buildGame();
+  
   return stands;
 }

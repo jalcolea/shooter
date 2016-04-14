@@ -26,11 +26,10 @@ Stand::Stand( Vector3 position, SceneManager* sceneMgr, std::string name,shared_
 
 void Stand::buildGame(){
 
-  
-  StaticGeometry *stage = _sceneMgr->createStaticGeometry( _name);
+  StaticGeometry *stage = _sceneMgr->createStaticGeometry(_name);
   Entity* entStand = _sceneMgr->createEntity("puesto.mesh");
   entStand->setQueryFlags(COL_STAND);
-  //Asociar forma y cuerpo rígido
+  //Asociar forma y cuerpo rÃ­gido
   OgreBulletCollisions::StaticMeshToShapeConverter trimeshConverter = OgreBulletCollisions::StaticMeshToShapeConverter(entStand);
   _shapeStand = trimeshConverter.createTrimesh();
   _rigidStand = new OgreBulletDynamics::RigidBody(_name, _world.get(), COL_STAND,  COL_CAMERA | COL_FLOOR | COL_ACTIVATOR | COL_CAN | COL_BALL);
@@ -123,6 +122,6 @@ bool Stand::frameEnded (const Ogre::FrameEvent& evt){
 }
   
 /* WIIMOTE *********************************************************************/  
-bool Stand::WiimoteButtonDown(const wiimWrapper::WiimoteEvent &e){};
-bool Stand::WiimoteButtonUp(const wiimWrapper::WiimoteEvent &e){};
-bool Stand::WiimoteIRMove(const wiimWrapper::WiimoteEvent &e){};
+bool Stand::WiimoteButtonDown(const wiimWrapper::WiimoteEvent &e){return true;};
+bool Stand::WiimoteButtonUp(const wiimWrapper::WiimoteEvent &e){return true;};
+bool Stand::WiimoteIRMove(const wiimWrapper::WiimoteEvent &e){return true;};
