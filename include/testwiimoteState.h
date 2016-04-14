@@ -9,13 +9,21 @@
 #include "MyGUI_OgrePlatform.h"
 #include "OgreBulletDynamicsRigidBody.h"
 #include "OgreBulletDynamicsWorld.h"
+#include "OgreBulletCollisionsShape.h"
 #include "Utils/OgreBulletCollisionsMeshToShapeConverter.h"
+#include "Shapes/OgreBulletCollisionsStaticPlaneShape.h"
+#include "Shapes/OgreBulletCollisionsTrimeshShape.h"
+#include "Shapes/OgreBulletCollisionsCylinderShape.h"
+
+
 #include <vector>
 #include "OgreUtil.h"
 #include "Wiimote.h"
 #include "Crosshair.h"
 #include "sounds.h"
 #include "RobotFactory.h"
+
+#define NOMBRE_STAND_ROBOTS "StandRobots"
 
 using namespace std;
 using namespace Ogre;
@@ -85,16 +93,27 @@ private:
   void destroyMyGui();
   void createScene();
   void createLight();
+  void createFloor();
   std::unique_ptr<Ogre::Ray> _mouseray;// {new Ogre::Ray};
   Ogre::Plane _plane;
   Ogre::SceneNode* _nodeCrosshair;
   Ogre::SceneNode* _nodeWeapon;
   Ogre::SceneNode* _nodeStand;
   Ogre::SceneNode* _nodeEscudo;
+  Ogre::SceneNode* _nodePuerta;
   Ogre::AnimationState* _animPuerta;
   Ogre::Entity* _entStand;
+  Ogre::Entity* _entPuerta;
   AccionPuerta _sentidoAccionPuerta;
   shared_ptr<DynamicsWorld> _world;
+  OgreBulletDynamics::RigidBody* _rigidStand;
+  OgreBulletCollisions::CollisionShape* _shapeStand;
+  string _name = NOMBRE_STAND_ROBOTS;
+  //OgreBulletCollisions::TriangleMeshCollisionShape* _shapeStand;
+  //OgreBulletCollisions::ConvexHullCollisionShape* _shapeStand;
+
+  DebugDrawer* _debugDrawer;
+
   
 };
 

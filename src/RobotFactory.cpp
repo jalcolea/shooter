@@ -28,9 +28,12 @@ void RobotFactory::createRobot(shared_ptr<DynamicsWorld> world, Vector3 direccio
 std::vector< unique_ptr<Robot> >* RobotFactory::createRobotSet(shared_ptr<DynamicsWorld> world, Vector3 direccion, Vector3 posicion, std::vector<TipoRobot>& tipos, SceneManager* sceneMgr)
 {
     size_t i = 0;
+    Vector3 pos = posicion;
     for (TipoRobot tipo : tipos)
-       createRobot(world,direccion,posicion,tipo,sceneMgr,std::to_string(++i));
-    
+    {
+       pos += Vector3(i,0,0);
+       createRobot(world,direccion,pos,tipo,sceneMgr,std::to_string(++i));
+    }
     return _robots;
 }
 

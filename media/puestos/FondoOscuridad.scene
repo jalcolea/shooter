@@ -1,0 +1,119 @@
+<scene exported_by="twsh" previous_export_time="1460543388.0105023" export_time="1460543398.4258487" formatVersion="1.0.1" >
+  <nodes >
+    <node name="Fondo" >
+      <position y="0.000000" x="0.000000" z="-0.000000" />
+      <rotation qx="0.000000" qw="1.000000" qy="0.000000" qz="-0.000000" />
+      <scale y="0.724577" x="1.000000" z="1.000000" />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <entity ghost="False" lock_rot_y="False" mass="1.0" mass_radius="1.0" lock_trans_z="False" damping_trans="0.03999999910593033" lock_trans_y="False" meshFile="Fondo.mesh" inertia_tensor="0.4000000059604645" physics_type="STATIC" velocity_min="0.0" lock_rot_x="False" lock_rot_z="False" anisotropic_friction="False" velocity_max="0.0" lock_trans_x="False" damping_rot="0.10000000149011612" friction_z="1.0" friction_x="1.0" name="Fondo" friction_y="1.0" actor="False" />
+    </node>
+    <node name="Lamp.002" >
+      <position y="2.654555" x="-6.590603" z="-3.340684" />
+      <rotation qx="0.169076" qw="0.570947" qy="0.755880" qz="-0.272171" />
+      <scale y="1.000000" x="1.000000" z="1.000000" />
+      <user_data value='&lt;bpy id prop: owner="OBLamp.002", name="cycles_visibility", address=0x7f8c1b057b68&gt;' name="cycles_visibility" type="IDPropertyGroup" />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <light shadow="true" powerScale="1.0" name="Lamp.002" type="point" >
+        <position y="2.654555" x="-6.590603" z="-3.340684" />
+        <lightAttenuation quadratic="0.0" linear="0.03333335240683057" constant="1.0" range="5000" />
+        <colourDiffuse b="1.0" g="1.0" r="1.0" />
+        <colourSpecular b="1.0" g="1.0" r="1.0" />
+        <colourShadow b="1.0" g="1.0" r="1.0" />
+      </light>
+    </node>
+    <node name="Lamp.001" >
+      <position y="4.632992" x="0.520925" z="-10.483362" />
+      <rotation qx="0.169076" qw="0.570947" qy="0.755880" qz="-0.272171" />
+      <scale y="1.000000" x="1.000000" z="1.000000" />
+      <user_data value='&lt;bpy id prop: owner="OBLamp.001", name="cycles_visibility", address=0x7f8c1b057a28&gt;' name="cycles_visibility" type="IDPropertyGroup" />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <light shadow="true" powerScale="1.0" name="Lamp.001" type="point" >
+        <position y="4.632992" x="0.520925" z="-10.483362" />
+        <lightAttenuation quadratic="0.0" linear="0.03333335240683057" constant="1.0" range="5000" />
+        <colourDiffuse b="1.0" g="1.0" r="1.0" />
+        <colourSpecular b="1.0" g="1.0" r="1.0" />
+        <colourShadow b="1.0" g="1.0" r="1.0" />
+      </light>
+    </node>
+    <node name="Point.001" >
+      <position y="0.867981" x="8.479699" z="-3.948494" />
+      <rotation qx="0.000000" qw="1.000000" qy="0.000000" qz="-0.000000" />
+      <scale y="1.000000" x="1.000000" z="1.000000" />
+      <user_data value='&lt;bpy id prop: owner="OBPoint.001", name="cycles_visibility", address=0x7f8c1b057de8&gt;' name="cycles_visibility" type="IDPropertyGroup" />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <light powerScale="1.0" name="Point.001" type="point" >
+        <position y="0.867981" x="8.479699" z="-3.948494" />
+        <lightAttenuation quadratic="0.0" linear="0.04" constant="1.0" range="5000" />
+        <colourDiffuse b="1.0" g="1.0" r="1.0" />
+        <colourSpecular b="1.0" g="1.0" r="1.0" />
+      </light>
+    </node>
+    <node name="Camera" >
+      <position y="10.179634" x="-0.483405" z="16.274624" />
+      <rotation qx="0.508435" qw="0.861037" qy="0.009041" qz="-0.005339" />
+      <scale y="1.000000" x="1.000000" z="1.000000" />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <camera projectionType="perspective" name="Camera.001" fov="0.5033799435163735" >
+        <clipping farPlaneDist="100.0" nearPlaneDist="0.10000000149011612" far="100.0" near="0.10000000149011612" />
+      </camera>
+    </node>
+    <node name="Point" >
+      <position y="3.533797" x="2.622562" z="3.334708" />
+      <rotation qx="0.000000" qw="1.000000" qy="0.000000" qz="-0.000000" />
+      <scale y="1.000000" x="1.000000" z="1.000000" />
+      <user_data value='&lt;bpy id prop: owner="OBPoint", name="cycles_visibility", address=0x7f8c1b057ca8&gt;' name="cycles_visibility" type="IDPropertyGroup" />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <light powerScale="1.0" name="Point" type="point" >
+        <position y="3.533797" x="2.622562" z="3.334708" />
+        <lightAttenuation quadratic="0.0" linear="0.04" constant="1.0" range="5000" />
+        <colourDiffuse b="1.0" g="1.0" r="1.0" />
+        <colourSpecular b="1.0" g="1.0" r="1.0" />
+      </light>
+    </node>
+    <node name="Lamp" >
+      <position y="4.632992" x="0.520925" z="11.948141" />
+      <rotation qx="0.169076" qw="0.570947" qy="0.755880" qz="-0.272171" />
+      <scale y="1.000000" x="1.000000" z="1.000000" />
+      <user_data value='&lt;bpy id prop: owner="OBLamp", name="cycles_visibility", address=0x7f8c1b0578e8&gt;' name="cycles_visibility" type="IDPropertyGroup" />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <light shadow="true" powerScale="1.0" name="Lamp" type="point" >
+        <position y="4.632992" x="0.520925" z="11.948141" />
+        <lightAttenuation quadratic="0.0" linear="0.03333335240683057" constant="1.0" range="5000" />
+        <colourDiffuse b="1.0" g="1.0" r="1.0" />
+        <colourSpecular b="1.0" g="1.0" r="1.0" />
+        <colourShadow b="1.0" g="1.0" r="1.0" />
+      </light>
+    </node>
+  </nodes>
+  <externals >
+    <item type="material" >
+      <file name="/home/twsh/desarrollo/codelite3/shooter/media/puestos/Oscuridad.material" />
+    </item>
+  </externals>
+  <environment >
+    <colourAmbient b="0.0" g="0.0" r="0.0" />
+    <colourDiffuse b="0.05087608844041824" g="0.05087608844041824" r="0.05087608844041824" />
+    <colourBackground b="0.05087608844041824" g="0.05087608844041824" r="0.05087608844041824" />
+  </environment>
+</scene>

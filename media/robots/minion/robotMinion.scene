@@ -1,106 +1,45 @@
-<scene formatVersion="1.0.1" export_time="1460495797.8751407" exported_by="twsh" previous_export_time="1459959963.6040258" >
+<scene previous_export_time="1460586308.3413608" export_time="1460586344.3813891" exported_by="twsh" formatVersion="1.0.1" >
   <nodes >
     <node name="ArmatureMinion" >
       <position z="-0.000000" y="0.000000" x="0.000000" />
-      <rotation qy="0.000000" qz="-0.000000" qx="0.000000" qw="1.000000" />
+      <rotation qy="0.000000" qx="0.000000" qz="-0.000000" qw="1.000000" />
       <scale z="1.000000" y="1.000000" x="1.000000" />
       <game >
         <sensors />
         <actuators />
       </game>
       <node name="RobotMinion" >
-        <position z="-0.000000" y="0.000000" x="0.000000" />
-        <rotation qy="0.000000" qz="-0.000000" qx="0.000000" qw="1.000000" />
+        <position z="-0.000000" y="-2.118000" x="0.000000" />
+        <rotation qy="0.000000" qx="0.000000" qz="-0.000000" qw="1.000000" />
         <scale z="1.000000" y="1.000000" x="1.000000" />
-        <user_data type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBRobotMinion", name="cycles_visibility", address=0x7f3bdcd02a68&gt;' name="cycles_visibility" />
-        <user_data type="IDPropertyGroup" value='&lt;bpy id prop: owner="OBRobotMinion", name="cycles", address=0x7f3bdcd02b08&gt;' name="cycles" />
+        <user_data value='&lt;bpy id prop: owner="OBRobotMinion", name="cycles_visibility", address=0x7fa33a03e168&gt;' name="cycles_visibility" type="IDPropertyGroup" />
+        <user_data value='&lt;bpy id prop: owner="OBRobotMinion", name="cycles", address=0x7fa33a03e208&gt;' name="cycles" type="IDPropertyGroup" />
         <game >
           <sensors />
           <actuators />
         </game>
-        <entity anisotropic_friction="False" friction_x="1.0" lock_rot_x="False" lock_trans_x="False" lock_trans_y="False" meshFile="RobotMinion.mesh" inertia_tensor="0.4000000059604645" mass_radius="1.0" damping_trans="0.03999999910593033" velocity_min="0.0" friction_y="1.0" physics_type="STATIC" ghost="False" lock_rot_z="False" velocity_max="0.0" actor="False" damping_rot="0.10000000149011612" lock_trans_z="False" mass="1.0" lock_rot_y="False" name="RobotMinion" friction_z="1.0" >
-          <user_data type="IDPropertyGroup" value='&lt;bpy id prop: owner="MERobotMinion", name="cycles", address=0x7f3bd84e3208&gt;' name="cycles" />
+        <entity lock_rot_x="False" damping_rot="0.10000000149011612" ghost="False" friction_x="1.0" damping_trans="0.03999999910593033" friction_z="1.0" velocity_min="0.0" lock_rot_z="False" mass_radius="1.0" lock_trans_x="False" lock_trans_y="False" actor="False" velocity_max="0.0" lock_rot_y="False" physics_type="STATIC" inertia_tensor="0.4000000059604645" anisotropic_friction="False" name="RobotMinion" mass="1.0" meshFile="RobotMinion.mesh" lock_trans_z="False" friction_y="1.0" >
+          <user_data value='&lt;bpy id prop: owner="MERobotMinion", name="cycles", address=0x7fa33a0cf1a8&gt;' name="cycles" type="IDPropertyGroup" />
         </entity>
       </node>
     </node>
     <node name="Camera" >
       <position z="8.759326" y="3.275325" x="-0.057194" />
-      <rotation qy="-0.008457" qz="0.006085" qx="0.583991" qw="0.811694" />
+      <rotation qy="-0.008457" qx="0.583991" qz="0.006085" qw="0.811694" />
       <scale z="1.000000" y="1.000000" x="1.000000" />
       <game >
         <sensors />
         <actuators />
       </game>
-      <camera fov="0.5565993180102228" projectionType="perspective" name="Camera" >
-        <clipping far="100.0" near="0.10000000149011612" nearPlaneDist="0.10000000149011612" farPlaneDist="100.0" />
+      <camera fov="0.5565993180102228" name="Camera" projectionType="perspective" >
+        <clipping farPlaneDist="100.0" far="100.0" nearPlaneDist="0.10000000149011612" near="0.10000000149011612" />
       </camera>
     </node>
   </nodes>
-  <externals >
-    <item type="material" >
-      <file name="/home/twsh/desarrollo/codelite3/shooter/media/robots/minion/PolishedHaematite.001.material" />
-    </item>
-    <item type="material" >
-      <file name="/home/twsh/desarrollo/codelite3/shooter/media/robots/minion/GlossyYellow.002.material" />
-    </item>
-    <item type="material" >
-      <file name="/home/twsh/desarrollo/codelite3/shooter/media/robots/minion/GalvanizedSteel.004.material" />
-    </item>
-    <item type="material" >
-      <file name="/home/twsh/desarrollo/codelite3/shooter/media/robots/minion/GalvanizedSteel.005.material" />
-    </item>
-    <item type="material" >
-      <file name="/home/twsh/desarrollo/codelite3/shooter/media/robots/minion/GlossyYellow.material" />
-    </item>
-    <item type="material" >
-      <file name="/home/twsh/desarrollo/codelite3/shooter/media/robots/minion/DullCoral.material" />
-    </item>
-    <item type="material" >
-      <file name="/home/twsh/desarrollo/codelite3/shooter/media/robots/minion/GalvanizedSteel.001.material" />
-    </item>
-    <item type="material" >
-      <file name="/home/twsh/desarrollo/codelite3/shooter/media/robots/minion/PolishedHaematite.002.material" />
-    </item>
-    <item type="material" >
-      <file name="/home/twsh/desarrollo/codelite3/shooter/media/robots/minion/GalvanizedSteel.008.material" />
-    </item>
-    <item type="material" >
-      <file name="/home/twsh/desarrollo/codelite3/shooter/media/robots/minion/GalvanizedSteel.009.material" />
-    </item>
-    <item type="material" >
-      <file name="/home/twsh/desarrollo/codelite3/shooter/media/robots/minion/GalvanizedSteel.010.material" />
-    </item>
-    <item type="material" >
-      <file name="/home/twsh/desarrollo/codelite3/shooter/media/robots/minion/GalvanizedSteel.007.material" />
-    </item>
-    <item type="material" >
-      <file name="/home/twsh/desarrollo/codelite3/shooter/media/robots/minion/GalvanizedSteel.006.material" />
-    </item>
-    <item type="material" >
-      <file name="/home/twsh/desarrollo/codelite3/shooter/media/robots/minion/DullCoral.001.material" />
-    </item>
-    <item type="material" >
-      <file name="/home/twsh/desarrollo/codelite3/shooter/media/robots/minion/GalvanizedSteel.material" />
-    </item>
-    <item type="material" >
-      <file name="/home/twsh/desarrollo/codelite3/shooter/media/robots/minion/GalvanizedSteel.002.material" />
-    </item>
-    <item type="material" >
-      <file name="/home/twsh/desarrollo/codelite3/shooter/media/robots/minion/GalvanizedSteel.003.material" />
-    </item>
-    <item type="material" >
-      <file name="/home/twsh/desarrollo/codelite3/shooter/media/robots/minion/GalvanizedSteel.011.material" />
-    </item>
-    <item type="material" >
-      <file name="/home/twsh/desarrollo/codelite3/shooter/media/robots/minion/BlasterBolt(Red).material" />
-    </item>
-    <item type="material" >
-      <file name="/home/twsh/desarrollo/codelite3/shooter/media/robots/minion/PolishedHaematite.material" />
-    </item>
-  </externals>
+  <externals />
   <environment >
-    <colourBackground g="0.017386237159371376" b="0.017386237159371376" r="0.017386237159371376" />
-    <colourAmbient g="0.0" b="0.0" r="0.0" />
-    <colourDiffuse g="0.017386237159371376" b="0.017386237159371376" r="0.017386237159371376" />
+    <colourAmbient g="0.0" r="0.0" b="0.0" />
+    <colourDiffuse g="0.017386237159371376" r="0.017386237159371376" b="0.017386237159371376" />
+    <colourBackground g="0.017386237159371376" r="0.017386237159371376" b="0.017386237159371376" />
   </environment>
 </scene>

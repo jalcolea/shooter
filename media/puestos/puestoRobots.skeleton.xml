@@ -20,8 +20,8 @@
     </bone>
   </bones>
   <bonehierarchy >
-    <boneparent bone="Puerta.L" parent="RootBone" />
-    <boneparent bone="Puerta.R" parent="RootBone" />
+    <boneparent parent="RootBone" bone="Puerta.L" />
+    <boneparent parent="RootBone" bone="Puerta.R" />
   </bonehierarchy>
   <animations >
     <animation length="0.5833333333333334" name="AbrirPuerta" >
