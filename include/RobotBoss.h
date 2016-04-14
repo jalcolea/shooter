@@ -12,12 +12,10 @@ public:
     ~RobotBoss();
 
 public:
-    virtual
-void anima(string nombreAnim, Real deltaT);
-    virtual
-TipoRobot getTipo();
-    virtual
-void mueve(Vector3 direccion, Real deltaT);
+
+    virtual void mueve(Vector3 direccion, Real deltaT);
+
+    virtual TipoRobot getTipo();
 };
 
 #endif // ROBOTBOSS_H

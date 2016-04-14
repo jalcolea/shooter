@@ -4,15 +4,14 @@ RobotBoss::~RobotBoss()
 {
 }
 
-void RobotBoss::anima(string nombreAnim, Real deltaT)
-{
-}
 
-TipoRobot RobotBoss::getTipo()
-{
-    return TipoRobot::BOSS;
+TipoRobot RobotBoss::getTipo() 
+{ 
+    return TipoRobot::PEON;
 }
 
 void RobotBoss::mueve(Vector3 direccion, Real deltaT)
 {
 }
+
+

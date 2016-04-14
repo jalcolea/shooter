@@ -95,6 +95,7 @@ private:
   void createLight();
   void createFloor();
   std::unique_ptr<Ogre::Ray> _mouseray;// {new Ogre::Ray};
+  RobotFactory _robFact;
   Ogre::Plane _plane;
   Ogre::SceneNode* _nodeCrosshair;
   Ogre::SceneNode* _nodeWeapon;

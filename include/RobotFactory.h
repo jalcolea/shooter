@@ -14,7 +14,7 @@ using namespace OgreBulletDynamics;
 class RobotFactory
 {
 public:
-    RobotFactory(Vector3 posicionInicial,Vector3 direccionInicial) : _posicionInicial(posicionInicial), _direccionInicial(direccionInicial)
+    RobotFactory(Ogre::Vector3 posicionInicial,Ogre::Vector3 direccionInicial) : _posicionInicial(posicionInicial), _direccionInicial(direccionInicial)
     {
         _robots = new std::vector< unique_ptr<Robot> >();
     };
@@ -31,6 +31,8 @@ public:
     
     inline Vector3 & getDireccionInicial() { return _direccionInicial; }
     inline Vector3 & getPosicionInicial() { return _posicionInicial; }
+    
+    inline std::vector< unique_ptr<Robot> >* getRobots(){ return _robots; };
     
 private:
     Vector3 _posicionInicial;

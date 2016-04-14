@@ -35,8 +35,11 @@ public:
 
     virtual TipoRobot getTipo() { return TipoRobot::UNKNOWN; }
     
-    virtual void anima(string nombreAnim, Real deltaT) = 0;
+    virtual void anima(Real deltaT, Real velocidad = 1);
     virtual void mueve(Vector3 direccion, Real deltaT) = 0;
+    virtual void setAnim(string nombreAnim, bool loop = false);
+    inline void startAnim() { _anim->setEnabled(true); }
+    inline void stopAnim() { _anim->setEnabled(false); }
         
 protected:
     shared_ptr<DynamicsWorld> _world;

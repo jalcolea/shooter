@@ -55,6 +55,7 @@
     <File Name="src/RobotFactory.cpp"/>
     <File Name="src/RobotPeon.cpp"/>
     <File Name="src/RobotBoss.cpp"/>
+    <File Name="src/Bala.cpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="include">
     <File Name="include/GameManager.h"/>
@@ -84,6 +85,7 @@
     <File Name="include/RobotFactory.h"/>
     <File Name="include/RobotPeon.h"/>
     <File Name="include/RobotBoss.h"/>
+    <File Name="include/Bala.h"/>
   </VirtualDirectory>
   <Settings Type="Executable">
     <GlobalSettings>

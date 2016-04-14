@@ -74,9 +74,15 @@ void testwiimoteState::enter()
 
 
     std::vector<TipoRobot> tipos(2,TipoRobot::PEON);
-    RobotFactory robFact(Ogre::Vector3(0,2,-1),Ogre::Vector3(0,0,0));
-    robFact.createRobotSet(_world,robFact.getDireccionInicial(),robFact.getPosicionInicial(),tipos,_sceneMgr);
     
+    _robFact = RobotFactory(Ogre::Vector3(0,2,-1),Ogre::Vector3(0,0,0));
+    auto robots = _robFact.createRobotSet(_world,_robFact.getDireccionInicial(),_robFact.getPosicionInicial(),tipos,_sceneMgr);
+    
+    for (auto it = robots->begin(); it != robots->end(); ++it)
+    {
+        (*it)->setAnim("Walk",true);
+        (*it)->startAnim();
+    }
 
     
     _exitGame =  false;
@@ -166,6 +172,12 @@ bool testwiimoteState::frameStarted (const Ogre::FrameEvent& evt)
     
     _world->stepSimulation(_deltaT);
     
+    for (auto it = _robFact.getRobots()->begin(); it != _robFact.getRobots()->end(); ++it)
+    {
+        (*it)->anima(_deltaT);
+    }
+
+    
     if (_animPuerta)
         _animPuerta->addTime(_deltaT * 0.5 * Ogre::Real(_sentidoAccionPuerta));
     
@@ -248,10 +260,10 @@ void testwiimoteState::createFloor() {
   floorNode->attachObject(entFloor);
   _sceneMgr->getRootSceneNode()->addChild(floorNode);
   
-  CollisionShape *shape = new StaticPlaneCollisionShape(Ogre::Vector3(0, 1, 0), 0);
+  CollisionShape *shape = new StaticPlaneCollisionShape(Ogre::Vector3(0, 1, 0), 1);
   RigidBody *rigidBodyPlane = new RigidBody("rigidBodyPlane", _world.get(),COL_FLOOR, COL_CAMERA | COL_ACTIVATOR | COL_STAND);
   rigidBodyPlane->setStaticShape(shape, 0.1, 0);
-  floorNode->setPosition(Vector3(0, 0, 0));
+  floorNode->setPosition(Vector3(0, -1, 0));
 }
 
 
