@@ -9,6 +9,7 @@
 #include "Shapes/OgreBulletCollisionsTrimeshShape.h"
 #include "Shapes/OgreBulletCollisionsStaticPlaneShape.h"
 #include "Shapes/OgreBulletCollisionsSphereShape.h"
+#include "Shapes/OgreBulletCollisionsBoxShape.h"
 #include "OgreBulletDynamicsWorld.h"
 #include "StandFactory.h"
 #include <string>
@@ -17,8 +18,8 @@
 #include "OgreUtil.h"
 #include <ctime>
 
-#define CAMSPEED 10
-#define CAMROTATESPEED 1
+#define CAMSPEED 20
+#define CAMROTATESPEED 0.1
 template <> PlayState *Ogre::Singleton<PlayState>::msSingleton = 0;
 
 using namespace std;
@@ -29,7 +30,9 @@ using namespace OgreBulletCollisions;
 void PlayState::enter() {
   _root = Ogre::Root::getSingletonPtr();
   _sceneMgr = _root->getSceneManager("SceneManager");
+
   _camera = _sceneMgr->getCamera("IntroCamera");
+  // _camera->setPosition(Vector3(0,0,5));
   _cameraNode = _sceneMgr->createSceneNode("nodeCamera");
   _camera->setPosition(Vector3::ZERO);
   _cameraNode->attachObject(_camera);
@@ -40,9 +43,12 @@ void PlayState::enter() {
   _exitGame = false;
   paused = false;
   _deltaT = 0;
-  //Activar Bullet
-    AxisAlignedBox boundBox =  AxisAlignedBox (Ogre::Vector3 (-10000, -10000, -10000),Ogre::Vector3 (10000,  10000,  10000));
-    _world = shared_ptr<OgreBulletDynamics::DynamicsWorld>(new DynamicsWorld(_sceneMgr, boundBox, Vector3(0, -9.81, 0), true,true, 15000));
+  // Activar Bullet
+  AxisAlignedBox boundBox =
+      AxisAlignedBox(Ogre::Vector3(-10000, -10000, -10000),
+                     Ogre::Vector3(10000, 10000, 10000));
+  _world = shared_ptr<OgreBulletDynamics::DynamicsWorld>(new DynamicsWorld(
+      _sceneMgr, boundBox, Vector3(0, -9.81, 0), true, true, 15000));
 
   _debugDrawer = new OgreBulletCollisions::DebugDrawer();
   _debugDrawer->setDrawWireframe(true);
@@ -50,12 +56,14 @@ void PlayState::enter() {
       "debugNode", Vector3::ZERO);
   node->attachObject(static_cast<SimpleRenderable *>(_debugDrawer));
   _world.get()->setDebugDrawer(_debugDrawer);
-  _world.get()->setShowDebugShapes (true);
-  _cameraBody = new RigidBody("cameraBody",_world.get(),COL_CAMERA, COL_ACTIVATOR | COL_STAND | COL_FLOOR);
-  _cameraShape = new SphereCollisionShape(2);
-  _cameraBody->setShape(_cameraNode,_cameraShape,1.0,1.0,1.0,Vector3(0,2,-10),Quaternion::IDENTITY);
+  //_world.get()->setShowDebugShapes(true);
+  _cameraBody = new RigidBody("cameraBody", _world.get(), COL_CAMERA,
+                              COL_ACTIVATOR | COL_STAND | COL_FLOOR);
 
-  
+  _cameraShape = new SphereCollisionShape(2);
+  _cameraBody->setShape(_cameraNode, _cameraShape, 0, 0, 0.5,
+                        Vector3(0, 2, 10), Quaternion::IDENTITY);
+  _cameraBody->getBulletRigidBody()->forceActivationState(DISABLE_DEACTIVATION);
   createScene();
 }
 
@@ -78,7 +86,6 @@ bool PlayState::frameStarted(const Ogre::FrameEvent &evt) {
     return false;
   }
   return true;
-  
 }
 
 bool PlayState::frameEnded(const Ogre::FrameEvent &evt) {
@@ -100,7 +107,7 @@ bool PlayState::keyPressed(const OIS::KeyEvent &e) {
   } else if (e.key == OIS::KC_W) {
     //    win();
   }
-
+ 
   return true;
 }
 /**
@@ -109,24 +116,34 @@ bool PlayState::keyPressed(const OIS::KeyEvent &e) {
 void PlayState::moveCamera() {
 
   if (keysArePressed[OIS::KC_UP]) {
-        _cameraNode->translate(Ogre::Vector3(0, 0, -CAMSPEED * _deltaT),
-                         Node::TS_LOCAL);
-    //_cameraBody->getBulletRigidBody()->setLinearVelocity();
-    _cameraBody->setLinearVelocity(Ogre::Vector3(10,0,0));
+    btQuaternion quat = _cameraBody->getBulletRigidBody()->getOrientation();
+    btVector3 aux(0, 0, -CAMSPEED);
+    aux = aux.rotate(quat.getAxis(), quat.getAngle());
+    _cameraBody->getBulletRigidBody()->setLinearVelocity(aux);
+
   } else if (keysArePressed[OIS::KC_DOWN]) {
-    _cameraNode->translate(Ogre::Vector3(0, 0, CAMSPEED * _deltaT),
-                           Node::TS_LOCAL);
+    btQuaternion quat = _cameraBody->getBulletRigidBody()->getOrientation();
+    btVector3 aux(0, 0, CAMSPEED);
+    aux = aux.rotate(quat.getAxis(), quat.getAngle());
+    _cameraBody->getBulletRigidBody()->setLinearVelocity(aux);
+
   } else if (keysArePressed[OIS::KC_RIGHT]) {
-    _cameraNode->translate(Ogre::Vector3(CAMSPEED * _deltaT, 0, 0),
-                           Node::TS_LOCAL);
+    btQuaternion quat = _cameraBody->getBulletRigidBody()->getOrientation();
+    btVector3 aux(CAMSPEED, 0, 0);
+    aux = aux.rotate(quat.getAxis(), quat.getAngle());
+    _cameraBody->getBulletRigidBody()->setLinearVelocity(aux);
+
   } else if (keysArePressed[OIS::KC_LEFT]) {
-    _cameraNode->translate(Ogre::Vector3(-CAMSPEED * _deltaT, 0, 0),
-                           Node::TS_LOCAL);
+    btQuaternion quat = _cameraBody->getBulletRigidBody()->getOrientation();
+    btVector3 aux(-CAMSPEED, 0, 0);
+    aux = aux.rotate(quat.getAxis(), quat.getAngle());
+
+    _cameraBody->getBulletRigidBody()->setLinearVelocity(aux);
   }
 }
 
 bool PlayState::keyReleased(const OIS::KeyEvent &e) {
-      _cameraBody->setLinearVelocity(Ogre::Vector3(0,0,0));
+  _cameraBody->setLinearVelocity(Ogre::Vector3(0, 0, 0));
   keysArePressed.erase(e.key);
   keysArePressed[e.key] = false;
   return true;
@@ -145,17 +162,45 @@ void PlayState::createFloor() {
   entFloor->setMaterialName("floor");
   floorNode->attachObject(entFloor);
   _sceneMgr->getRootSceneNode()->addChild(floorNode);
-  
-  CollisionShape *shape = new StaticPlaneCollisionShape (
-      Ogre::Vector3(0, 1, 0), 0);
-  RigidBody *rigidBodyPlane = new RigidBody("rigidBodyPlane", _world.get(),COL_FLOOR, COL_CAMERA | COL_ACTIVATOR);
-  rigidBodyPlane->setStaticShape(shape, 0.1, 0);
+
+  _floorShape = new StaticPlaneCollisionShape(Ogre::Vector3(0, 1, 0), 0);
+
+  _floorBody = new RigidBody("rigidBodyPlane", _world.get(), COL_FLOOR,
+                             COL_CAMERA | COL_ACTIVATOR);
+  _floorBody->setStaticShape(_floorShape, 0.5, 0.8);
   floorNode->setPosition(Vector3(0, 2, 0));
+  btCollisionShape *floorShape = _floorShape->getBulletShape();
+
 }
 
 bool PlayState::mouseMoved(const OIS::MouseEvent &e) {
-  _cameraNode->yaw(Radian(Degree(-CAMROTATESPEED * e.state.X.rel)),
-                   Node::TS_LOCAL);
+
+  btTransform transform;
+  transform.setIdentity();
+  transform.setOrigin(
+      _cameraBody->getBulletRigidBody()->getWorldTransform().getOrigin());
+
+  Ogre::Quaternion camQuat(0, 0, e.state.X.abs * -0.1, 0);
+
+  btQuaternion quat;
+
+  quat.setEuler(e.state.X.abs * -0.01, 0, 0);
+
+  transform.setRotation(quat);
+
+  //_cameraBody->setOrientation(camQuat);
+
+  _cameraBody->getBulletRigidBody()->setWorldTransform(transform);
+  //_cameraNode->setOrientation(camQuat);
+
+  /*
+if (e.state.X.rel > 100 || e.state.X.rel < 100) {
+std::cout << e.state.X.rel << std::endl;
+_cameraBody->setAngularVelocity(
+ Vector3(0, e.state.X.rel * -CAMROTATESPEED, 0));
+ }*/
+  //  _cameraNode->yaw(Radian(Degree(-CAMROTATESPEED * e.state.X.rel)),
+  //             Node::TS_LOCAL);
   //  _cameraNode->pitch(Radian(Degree(-CAMROTATESPEED * e.state.Y.rel)),
   //  Node::TS_LOCAL);
   return true;
@@ -178,9 +223,7 @@ PlayState &PlayState::getSingleton() {
 
 PlayState::~PlayState() {}
 
-
-void PlayState::createScene()
-{
+void PlayState::createScene() {
 
   _sceneMgr->setAmbientLight(Ogre::ColourValue(0.5, 0.5, 0.5));
   _sceneMgr->setShadowTechnique(SHADOWTYPE_STENCIL_MODULATIVE);
@@ -190,7 +233,7 @@ void PlayState::createScene()
   createMyGui();
   createFloor();
   StandFactory factory;
-  factory.buildFestival(_sceneMgr,_world);
+  _stands = factory.buildFestival(_sceneMgr, _world);
 }
 
 void PlayState::createMyGui() {}
@@ -237,38 +280,55 @@ bool PlayState::WiimoteIRMove(const wiimWrapper::WiimoteEvent &e) {
   return true;
 }
 
+void PlayState::checkCollisions() {
+  btCollisionShape *cameraShape = _cameraShape->getBulletShape();
+  btCollisionShape *floorShape = _floorShape->getBulletShape();
+  btCollisionWorld *collisionWorld = _world.get()->getBulletCollisionWorld();
+  btDynamicsWorld *dynamicWorld = _world.get()->getBulletDynamicsWorld();
 
+  int numManifolds = collisionWorld->getDispatcher()->getNumManifolds();
+  bool collide = false;
+  for (int i = 0; i < numManifolds; i++) {
+    btPersistentManifold *contactManifold =
+        collisionWorld->getDispatcher()->getManifoldByIndexInternal(i);
+    btCollisionObject *obA = (btCollisionObject *)contactManifold->getBody0();
+    btCollisionObject *obB = (btCollisionObject *)contactManifold->getBody1();
 
-void PlayState::checkCollisions()
-{
-    btCollisionWorld *collisionWorld = _world.get()->getBulletCollisionWorld();
-    btDynamicsWorld *dynamicWorld = _world.get()->getBulletDynamicsWorld();
+    btCollisionShape *shapeA = obA->getCollisionShape();
+    btCollisionShape *shapeB = obB->getCollisionShape();
 
-    int numManifolds = collisionWorld->getDispatcher()->getNumManifolds();
-    bool collide = false;
-    for (int i=0;i<numManifolds;i++)
-    {
-        btPersistentManifold* contactManifold =  collisionWorld->getDispatcher()->getManifoldByIndexInternal(i);
-        btCollisionObject* obA = (btCollisionObject *) contactManifold->getBody0();
-        btCollisionObject* obB = (btCollisionObject *) contactManifold->getBody1();
+    if (shapeA == cameraShape || shapeB == cameraShape) {
+      btCollisionShape *other = (shapeA == cameraShape ? shapeB : shapeA);
 
-        int numContacts = contactManifold->getNumContacts();
-        for (int j=0;j<numContacts;j++)
-        {
-            btManifoldPoint& pt = contactManifold->getContactPoint(j);
-            if (pt.getDistance()<0.f)
-            {
-                const btVector3& ptA = pt.getPositionWorldOnA();
-                const btVector3& ptB = pt.getPositionWorldOnB();
-                const btVector3& normalOnB = pt.m_normalWorldOnB;
-                collide = true;
-                std::cout << "Collision Body A: " << obA->getCollisionShape()->getName() << std::endl;
+      if (other != floorShape) {
 
-                std::cout << "Collision Body B: " << obB->getCollisionShape()->getName() << std::endl;
-            }
+        vectorStand::iterator it = std::find_if(
+            _stands.begin(), _stands.end(),
+            [other](unique_ptr<Stand> &stand) -> bool {
+              return stand.get()->getActivatorShape()->getBulletShape() ==
+                     other;
+            });
+        if (it != _stands.end()) {
+ 	  _cameraBody->setLinearVelocity(Vector3(0,0,0));
+	  pushState((*it).get());
+          std::cout << " Encontrado Stand" << (*it).get() << std::endl;
         }
+
+        /*
+
+        std::cout << floorShape <<" Floor"
+                      << obA->getCollisionShape()->getName() << std::endl;
+
+
+
+        std::cout << other <<" Collision Body A: "
+                      << obA->getCollisionShape()->getName() << std::endl;
+
+        std::cout << floorShape<< " Collision Body B: "
+                      << obB->getCollisionShape()->getName() << std::endl;
+
+        */
+      }
     }
-
-
-
+  }
 }

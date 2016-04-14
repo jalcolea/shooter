@@ -35,11 +35,13 @@
 #include "OgreUtil.h"
 #include "Wiimote.h"
 #include "constants.h"
+#include "Stand.h"
 
 using namespace std;
 using namespace Ogre;
 using namespace OgreBulletDynamics;
 using namespace OgreBulletCollisions;
+typedef std::vector<std::unique_ptr<Stand>> vectorStand;
 class PlayState : public Ogre::Singleton<PlayState>, public GameState
 {
  public:
@@ -80,6 +82,8 @@ class PlayState : public Ogre::Singleton<PlayState>, public GameState
   void  game_over ();
   void  win ();
   void handleCollision(btCollisionObject *body0, btCollisionObject *body1);
+  OgreBulletDynamics::RigidBody* getCameraBody(){return _cameraBody;};
+  
 
  protected:
   Ogre::Root* _root;
@@ -101,6 +105,9 @@ class PlayState : public Ogre::Singleton<PlayState>, public GameState
   DebugDrawer* _debugDrawer;
   RigidBody* _cameraBody;
   CollisionShape* _cameraShape;
+  vectorStand _stands;
+  CollisionShape* _floorShape;
+  RigidBody* _floorBody;
 
   
 

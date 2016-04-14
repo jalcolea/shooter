@@ -9,7 +9,9 @@ enum collisiontypes {
     COL_FLOOR = 2, 
     COL_ACTIVATOR =4, 
     COL_STAND = 8, 
-    COL_CAMERA = 16
+    COL_CAMERA = 16,
+    COL_CAN = 32,
+    COL_BALL = 64
 };
 
 
