@@ -12,15 +12,10 @@ enum collisiontypes {
     COL_STAND = 8, 
     COL_CAMERA = 16,
     COL_ROBOT = 32,
-<<<<<<< Updated upstream
     COL_CAN = 64,
     COL_BALL = 128
-
-
-=======
-    COL_BALA = 64,
-    COL_HIT_ZONE = 128 //<Para el plano del jugador, si colisiona con él, le quita vida
->>>>>>> Stashed changes
+    COL_BALA = 256,
+    COL_HIT_ZONE = 512 //<Para el plano del jugador, si colisiona con él, le quita vida
 };
 
 
