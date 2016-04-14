@@ -14,6 +14,7 @@
 #include "Shapes/OgreBulletCollisionsStaticPlaneShape.h"
 #include "Shapes/OgreBulletCollisionsTrimeshShape.h"
 #include "Shapes/OgreBulletCollisionsCylinderShape.h"
+#include "OgreBulletCollisionsRay.h"
 
 
 #include <vector>
@@ -22,6 +23,7 @@
 #include "Crosshair.h"
 #include "sounds.h"
 #include "RobotFactory.h"
+#include "Bala.h"
 
 #define NOMBRE_STAND_ROBOTS "StandRobots"
 
@@ -94,6 +96,7 @@ private:
   void createScene();
   void createLight();
   void createFloor();
+  RigidBody* pickBody (Vector3 &puntoColision, Ray &rayo, float x, float y);
   std::unique_ptr<Ogre::Ray> _mouseray;// {new Ogre::Ray};
   RobotFactory _robFact;
   Ogre::Plane _plane;
@@ -110,6 +113,7 @@ private:
   OgreBulletDynamics::RigidBody* _rigidStand;
   OgreBulletCollisions::CollisionShape* _shapeStand;
   string _name = NOMBRE_STAND_ROBOTS;
+  Bala* bala;
   //OgreBulletCollisions::TriangleMeshCollisionShape* _shapeStand;
   //OgreBulletCollisions::ConvexHullCollisionShape* _shapeStand;
 

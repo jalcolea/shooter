@@ -26,7 +26,7 @@ public:
       //_nodoRobot->showBoundingBox(true);
       _nodoRobot->translate(_posicion);
       _nodoRobot->setVisible(true);
-      _body = new RigidBody(_nombre,_world.get(),COL_ROBOT,COL_STAND | COL_FLOOR);
+      _body = new RigidBody(_nombre,_world.get(),COL_ROBOT,COL_STAND | COL_FLOOR | COL_BALA);
       cout << "center " << _entRobot->getBoundingBox().getCenter() << endl;
       _shape = new BoxCollisionShape(_entRobot->getBoundingBox().getHalfSize() * 0.2);
       cout << _entRobot->getBoundingBox().getSize() << endl;
@@ -41,7 +41,7 @@ public:
                       0.0,                           // Dynamic body restitution
                       1000.0,                        // Dynamic body friction
                       100,                           // Dynamic body mass   
-                      Vector3(0,1,0),               // Posicion inicial del shape
+                      Vector3(0,0,0),               // Posicion inicial del shape
                       Quaternion::IDENTITY);         // Orientacion del shape
       
       _body->setLinearVelocity(Vector3(0,0,0) * VELOCIDAD_PEON);
