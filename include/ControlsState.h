@@ -73,10 +73,11 @@ class ControlsState : public Ogre::Singleton<ControlsState>, public GameState
 
   MyGUI::VectorWidgetPtr layout;
   MyGUI::Button* btn_back;
-  MyGUI::Button* btn_keyboard;
   MyGUI::Button* btn_mouse;
   MyGUI::Button* btn_wiimote;
   MyGUI::EditBox* text;  
+  MyGUI::EditBox* edt_high;
+
 private:
   private:
   void mostrarFondo();
@@ -85,8 +86,7 @@ private:
   void createMyGui();
   void destroyMyGui();
   void notifyButtonPress(MyGUI::Widget* _widget);
-
-  
+  string get_high_score();
 };
 
 #endif

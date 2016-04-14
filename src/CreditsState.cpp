@@ -68,6 +68,7 @@ bool CreditsState::mousePressed(const OIS::MouseEvent &e, OIS::MouseButtonID id)
   int y = e.state.Y.abs;
   if (btn_back->_checkPoint(x,y))
   {
+    sounds::getInstance()->play_effect("push");
     popState();
   }
   return true;
@@ -104,11 +105,23 @@ void CreditsState::destroyMyGui()
   MyGUI::LayoutManager::getInstance().unloadLayout(layout);
 }
 
+string CreditsState::get_high_score()
+{
+  string recordname;
+  int recordpoints;
+  char msg [128];
+  records::getInstance()->getBest (recordname,recordpoints);
+  sprintf (msg,"%s %d",recordname.c_str(),recordpoints);
+  return string(msg);
+}
+
 void CreditsState::createMyGui()
 {
   layout = MyGUI::LayoutManager::getInstance().loadLayout("shooter_credits.layout");
   btn_back = MyGUI::Gui::getInstance().findWidget<MyGUI::Button>("btn_back");
   btn_back->eventMouseButtonClick = MyGUI::newDelegate(this, &CreditsState::notifyButtonPress);
+  edt_high = MyGUI::Gui::getInstance().findWidget<MyGUI::EditBox>("edt_high");
+  edt_high->setCaption(get_high_score());
 }
 
 bool CreditsState::WiimoteButtonDown(const wiimWrapper::WiimoteEvent &e)

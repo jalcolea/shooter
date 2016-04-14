@@ -79,6 +79,7 @@ class MenuState : public Ogre::Singleton<MenuState>, public GameState
   MyGUI::Button* btn_play;
   MyGUI::Button* btn_controls;
   MyGUI::Button* btn_exit;
+  MyGUI::EditBox* edt_high;
 
   Ogre::Real _deltaT;
 
@@ -86,6 +87,7 @@ class MenuState : public Ogre::Singleton<MenuState>, public GameState
   void createScene();
   void createMyGui();
   void destroyMyGui();
+  string get_high_score();
   
 };
 

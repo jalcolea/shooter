@@ -1,0 +1,35 @@
+// GlossyYellow.002 genrated by blender2ogre 0.6.0
+
+material GlossyYellow.002 
+{
+    receive_shadows on 
+
+    technique
+    {
+        pass GlossyYellow.002
+        {
+            ambient 1.0 0.465939998626709 0.03595000132918358 1.0
+            diffuse 0.800000011920929 0.3727520044558048 0.028760001491904275 1.0
+            specular 0.5 0.5 0.5 1.0 12.5
+            emissive 0.0 0.0 0.0 1.0
+
+            alpha_to_coverage off
+            colour_write on
+            cull_hardware clockwise
+            depth_check on
+            depth_func less_equal
+            depth_write on
+            illumination_stage 
+            light_clip_planes off
+            light_scissor off
+            lighting on
+            normalise_normals off
+            polygon_mode solid
+            scene_blend one zero
+            scene_blend_op add
+            shading gouraud
+            transparent_sorting on
+
+        }
+    }
+}

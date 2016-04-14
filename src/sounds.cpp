@@ -36,7 +36,10 @@ int sounds::play_effect(string id,int ch)
    Mix_Chunk * e = NULL;
    e= map_effect[id];
    if (e!=NULL)
+   {
+       Mix_Volume(ch,MIX_MAX_VOLUME/4);
        return Mix_PlayChannel( (SET_CHANNEL)?channel:ch, e, 0 );
+   }
    else
        return -1; 
 }
@@ -65,6 +68,7 @@ int sounds::play_music(string id,int times)
 
    if (e!=NULL)
    {
+      Mix_VolumeMusic(MIX_MAX_VOLUME/8); 
       return Mix_PlayMusic(e, times );
    }
    else return -1; 

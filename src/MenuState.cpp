@@ -26,10 +26,6 @@ void MenuState::enter ()
   _viewport->setBackgroundColour(Ogre::ColourValue(0.0, 0.0, 1.0));
   createScene();
   _exitGame = false;
-  //sounds::getInstance()->pause_music();
-  //sounds::getInstance()->play_effect("newstate");
-  //sleep(1);
-  //sounds::getInstance()->resume_music();
 }
 
 void MenuState::exit ()
@@ -73,7 +69,6 @@ bool MenuState::keyPressed(const OIS::KeyEvent &e)
   }
   else if (e.key == OIS::KC_C) {
     MyGUI::LayoutManager::getInstance().unloadLayout(layout);
-    //pushState(ControlsState::getSingletonPtr());
     pushState(CreditsState::getSingletonPtr());
   }
   else if (e.key == OIS::KC_R) {
@@ -115,15 +110,30 @@ bool MenuState::mousePressed(const OIS::MouseEvent &e, OIS::MouseButtonID id)
   int y = e.state.Y.abs;
 
   if (btn_credits->_checkPoint(x,y))
+  {
+    sounds::getInstance()->play_effect("push");
     pushState(CreditsState::getSingletonPtr());
+  }
   else if (btn_records->_checkPoint(x,y))
+  {
+    sounds::getInstance()->play_effect("push");
     pushState(RecordsState::getSingletonPtr());
+  }
   else if (btn_play->_checkPoint(x,y))
+  {
+    sounds::getInstance()->play_effect("push");
     pushState(PlayState::getSingletonPtr());
+  }
   else if (btn_controls->_checkPoint(x,y))
+  {
+    sounds::getInstance()->play_effect("push");
     pushState(ControlsState::getSingletonPtr());
+  }
   else if (btn_exit->_checkPoint(x,y))
+  {
+    sounds::getInstance()->play_effect("push");
    _exitGame = true;
+  }
 
   return true;
 }
@@ -153,6 +163,16 @@ void MenuState::destroyMyGui()
     MyGUI::LayoutManager::getInstance().unloadLayout(layout);
 }
 
+string MenuState::get_high_score()
+{
+  string recordname;
+  int recordpoints;
+  char msg [128];
+  records::getInstance()->getBest (recordname,recordpoints);
+  sprintf (msg,"%s %d",recordname.c_str(),recordpoints);
+  return string(msg);
+} 
+
 void MenuState::createMyGui()
 {
   layout = MyGUI::LayoutManager::getInstance().loadLayout("shooter_main.layout");
@@ -161,6 +181,8 @@ void MenuState::createMyGui()
   btn_play = MyGUI::Gui::getInstance().findWidget<MyGUI::Button>("btn_play");
   btn_controls = MyGUI::Gui::getInstance().findWidget<MyGUI::Button>("btn_controls");
   btn_exit = MyGUI::Gui::getInstance().findWidget<MyGUI::Button>("btn_exit");
+  edt_high = MyGUI::Gui::getInstance().findWidget<MyGUI::EditBox>("edt_high");
+  edt_high->setCaption(get_high_score()); 
 }
 
 void MenuState::createScene()

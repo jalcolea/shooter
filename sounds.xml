@@ -8,8 +8,8 @@
         <file>everything_is_awesome_cut.mp3</file>
       </sound>
       <sound>
-        <id>newstate</id>
-        <file>lego_fabuloso.wav</file>
+        <id>push</id>
+        <file>push.wav</file>
       </sound>
       <sound>
 	<id>puerta</id>

@@ -67,11 +67,19 @@ bool ControlsState::mousePressed(const OIS::MouseEvent &e, OIS::MouseButtonID id
   int y = e.state.Y.abs;
   if (btn_back->_checkPoint(x,y))
   {
+    sounds::getInstance()->play_effect("push");
     popState();
   }
-  else if (btn_keyboard->_checkPoint(x,y)) text->setCaption("KEYBOARD, COMPLETAR");
-  else if (btn_mouse->_checkPoint(x,y)) text->setCaption("MOUSE, COMPLETAR");
-  else if (btn_wiimote->_checkPoint(x,y)) text->setCaption("WIIMOTE, COMPLETAR");
+  else if (btn_mouse->_checkPoint(x,y)) 
+  {
+    sounds::getInstance()->play_effect("push");
+    text->setCaption("MOUSE Modo de control recomendado");
+  }
+  else if (btn_wiimote->_checkPoint(x,y)) 
+  {
+    sounds::getInstance()->play_effect("push");
+    text->setCaption("WIIMOTE Disponible solo en modo desarrollador");
+  }
   else text->setCaption("");
   return true;
 }
@@ -107,14 +115,25 @@ void ControlsState::destroyMyGui()
   MyGUI::LayoutManager::getInstance().unloadLayout(layout);
 }
 
+string ControlsState::get_high_score()
+{
+  string recordname;
+  int recordpoints;
+  char msg [128];
+  records::getInstance()->getBest (recordname,recordpoints);
+  sprintf (msg,"%s %d",recordname.c_str(),recordpoints);
+  return string(msg);
+}
+
 void ControlsState::createMyGui()
 {
   layout = MyGUI::LayoutManager::getInstance().loadLayout("shooter_controls.layout");
   btn_back = MyGUI::Gui::getInstance().findWidget<MyGUI::Button>("btn_back");
-  btn_keyboard = MyGUI::Gui::getInstance().findWidget<MyGUI::Button>("btn_keyboard");
   btn_mouse = MyGUI::Gui::getInstance().findWidget<MyGUI::Button>("btn_mouse");
   btn_wiimote = MyGUI::Gui::getInstance().findWidget<MyGUI::Button>("btn_wiimote");
   text = MyGUI::Gui::getInstance().findWidget<MyGUI::EditBox>("text");
+  edt_high = MyGUI::Gui::getInstance().findWidget<MyGUI::EditBox>("edt_high");
+  edt_high->setCaption(get_high_score());
 }
 
 bool ControlsState::WiimoteButtonDown(const wiimWrapper::WiimoteEvent &e)
