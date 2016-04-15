@@ -68,7 +68,7 @@ void StandRobots::enter()
     
     _debugDrawer = new OgreBulletCollisions::DebugDrawer();
     _debugDrawer->setDrawWireframe(true);
-    SceneNode *node = _sceneMgr->getRootSceneNode()->createChildSceneNode("debugNode", Vector3::ZERO);
+    SceneNode *node = _sceneMgr->getRootSceneNode()->createChildSceneNode("debugNodeStandRobots", Vector3::ZERO);
     node->attachObject(static_cast<SimpleRenderable *>(_debugDrawer));
     _world.get()->setDebugDrawer(_debugDrawer);
     _world.get()->setShowDebugShapes (true);
@@ -344,7 +344,7 @@ void StandRobots::createScene()
     _sceneMgr->getRootSceneNode()->addChild(_nodeWeapon);
     _nodeWeapon->setPosition(Ogre::Vector3(3.25,-5.0,18));
 
-    Ogre::Light* light = _sceneMgr->createLight("Light1");
+    Ogre::Light* light = _sceneMgr->createLight("LightWeaponStandRobots");
     light->setType(Ogre::Light::LT_DIRECTIONAL);
     light->setDirection(Ogre::Vector3(-1,-1,0));
     _nodeWeapon->attachObject(light);
@@ -353,7 +353,7 @@ void StandRobots::createScene()
     _crosshair.get()->createCrossHairManual("circle-01.png");
     
 
-    Ogre::Light* lightStand = _sceneMgr->createLight("LightStand");
+    Ogre::Light* lightStand = _sceneMgr->createLight("LightStandRobots");
     lightStand->setType(Ogre::Light::LT_POINT);
     
     

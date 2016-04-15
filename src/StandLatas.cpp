@@ -12,9 +12,9 @@ void StandLatas::enter() {
 
   reacomodateCamera();
   drawCans();
-  /*
+  
   _crosshair = unique_ptr<Crosshair>(new Crosshair(_sceneMgr,_camera));
-  _crosshair.get()->createCrossHairManual("circle-01.png");*/
+  _crosshair.get()->createCrossHairManual("circle-01.png");
   _rayScnQuery =_sceneMgr->createRayQuery(Ogre::Ray(), 0);
 
 
@@ -75,9 +75,9 @@ void StandLatas::drawCans() {
 }
 bool StandLatas::mouseMoved (const OIS::MouseEvent &e)
 { 
-    //cout << "Posicion raton: [" << e.state.X.abs << "," << e.state.Y.abs << "] Area del ratón: [" << e.state.width << "," << e.state.height << "]" << endl;
+    //cout << "Posicion raton: [" << e.state.X.abs << "," << e.state.Y.abs << "] Area del ratÃ³n: [" << e.state.width << "," << e.state.height << "]" << endl;
 
-    const size_t& xMouse = e.state.X.abs + 6;// por alguna razón que desconozco el ratón está desplazado -6 unidades
+    const size_t& xMouse = e.state.X.abs + 6;// por alguna razÃ³n que desconozco el ratÃ³n estÃ¡ desplazado -6 unidades
     const size_t& yMouse = e.state.Y.abs + 6;
     
     const size_t& xRel = e.state.X.rel;
@@ -86,7 +86,7 @@ bool StandLatas::mouseMoved (const OIS::MouseEvent &e)
     const Ogre::Real& wWindow = e.state.width;
     const Ogre::Real& hWindow = e.state.height;
 
-    //    _crosshair.get()->setActualHitPoint(Ogre::Real(xMouse/wWindow),Ogre::Real(yMouse/hWindow));
+        _crosshair.get()->setActualHitPoint(Ogre::Real(xMouse/wWindow),Ogre::Real(yMouse/hWindow));
     //_nodeWeapon->lookAt(_nodeWeapon->getPosition().reflect(_crosshair.get()->getActualHitPoint()),Ogre::Node::TS_WORLD);
     
   _mousex = e.state.X.abs;
