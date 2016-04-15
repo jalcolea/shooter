@@ -29,6 +29,7 @@ void Stand::buildGame(){
   
   StaticGeometry *stage = _sceneMgr->createStaticGeometry( _name);
   Entity* entStand = _sceneMgr->createEntity("puesto.mesh");
+  entStand->setQueryFlags(COL_STAND);
   //Asociar forma y cuerpo rígido
   OgreBulletCollisions::StaticMeshToShapeConverter trimeshConverter = OgreBulletCollisions::StaticMeshToShapeConverter(entStand);
   _shapeStand = trimeshConverter.createTrimesh();
