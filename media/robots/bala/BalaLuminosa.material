@@ -1,0 +1,35 @@
+// BalaLuminosa genrated by blender2ogre 0.6.0
+
+material BalaLuminosa 
+{
+    receive_shadows on 
+
+    technique
+    {
+        pass BalaLuminosa
+        {
+            ambient 0.016145318746566772 0.3763848543167114 0.8000000715255737 1.0
+            diffuse 0.016145318746566772 0.3763848543167114 0.8000000715255737 1.0
+            specular 0.0 0.0 0.0 1.0 12.5
+            emissive 0.032290637493133545 0.7527697086334229 1.6000001430511475 1.0
+
+            alpha_to_coverage off
+            colour_write on
+            cull_hardware clockwise
+            depth_check on
+            depth_func less_equal
+            depth_write on
+            illumination_stage 
+            light_clip_planes off
+            light_scissor off
+            lighting on
+            normalise_normals off
+            polygon_mode solid
+            scene_blend one zero
+            scene_blend_op add
+            shading gouraud
+            transparent_sorting on
+
+        }
+    }
+}

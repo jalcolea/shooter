@@ -75,7 +75,7 @@ void testwiimoteState::enter()
 
     std::vector<TipoRobot> tipos(2,TipoRobot::PEON);
     
-    _robFact = RobotFactory(Ogre::Vector3(0,2,-1),Ogre::Vector3(0,0,0));
+    _robFact = RobotFactory(Ogre::Vector3(0,0,0),Ogre::Vector3(0,0,0));
     auto robots = _robFact.createRobotSet(_world,_robFact.getDireccionInicial(),_robFact.getPosicionInicial(),tipos,_sceneMgr);
     
     for (auto it = robots->begin(); it != robots->end(); ++it)
@@ -83,7 +83,6 @@ void testwiimoteState::enter()
         (*it)->setAnim("Walk",true);
         (*it)->startAnim();
     }
-
     
     _exitGame =  false;
     _deltaT = 0;
@@ -151,11 +150,43 @@ bool testwiimoteState::mouseMoved (const OIS::MouseEvent &e)
     return true;
 }
 
+RigidBody* testwiimoteState::pickBody (Vector3 &puntoColision, Ray &rayo, float x, float y) {
+    rayo = _camera->getCameraToViewportRay (x, y);
+    CollisionClosestRayResultCallback cQuery = CollisionClosestRayResultCallback (rayo, _world.get(), 10000);
+    _world->launchRay(cQuery);
+    if (cQuery.doesCollide()) 
+    {
+        RigidBody* body = (RigidBody *) (cQuery.getCollidedObject());
+        puntoColision = cQuery.getCollisionPoint();
+        return body;
+    }
+    return NULL;
+}
+
 
 bool testwiimoteState::mousePressed (const OIS::MouseEvent &e, OIS::MouseButtonID id)
 { 
     if (id == OIS::MouseButtonID::MB_Left)
+    {
         _crosshair.get()->setMaterialCrosshair("circle-02.png");
+        
+        bala = new Bala(_world,Vector3(0,0,-1),Vector3(0,2,10),_sceneMgr);
+        
+        if (bala)
+        {
+            Vector3 puntoColision; Ray rayo; RigidBody* body;
+            body = pickBody(puntoColision,rayo,e.state.X.abs/float(_viewport->getActualWidth()),e.state.Y.abs/float(_viewport->getActualHeight()));
+            if (body)
+            {
+                body->enableActiveState();
+                Vector3 relPos(puntoColision - body->getCenterOfMassPosition());
+                Vector3 impulse (rayo.getDirection());
+                bala->shoot(impulse, 100, relPos);
+                
+            }
+            
+        }
+    }
     
     return true;
 }
@@ -295,7 +326,7 @@ void testwiimoteState::createScene()
     //Asociar forma y cuerpo rígido
     OgreBulletCollisions::StaticMeshToShapeConverter trimeshConverter = OgreBulletCollisions::StaticMeshToShapeConverter(_entStand);
     _shapeStand = trimeshConverter.createTrimesh();
-    _rigidStand = new OgreBulletDynamics::RigidBody(_name, _world.get(), COL_STAND, COL_CAMERA | COL_FLOOR | COL_ROBOT);
+    _rigidStand = new OgreBulletDynamics::RigidBody(_name, _world.get(), COL_STAND, COL_CAMERA | COL_FLOOR | COL_ROBOT | COL_BALA);
     _rigidStand->setStaticShape(_shapeStand, 1, 1);
     _entStand->setCastShadows(true);
     stage->addEntity(_entStand, Vector3::ZERO);

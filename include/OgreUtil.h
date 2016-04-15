@@ -14,8 +14,8 @@ enum collisiontypes {
     COL_ROBOT = 32,
     COL_CAN = 64,
     COL_BALL = 128
-
-
+    COL_BALA = 256,
+    COL_HIT_ZONE = 512 //<Para el plano del jugador, si colisiona con él, le quita vida
 };
 
 
