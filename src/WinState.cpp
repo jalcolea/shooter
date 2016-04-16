@@ -48,7 +48,7 @@ bool WinState::frameEnded(const Ogre::FrameEvent& evt)
 void WinState::save_record()
 {
         //records::getInstance()->add_record(user_name_txt->getCaption(),get_score());
-        records::getInstance()->add_record(user_name_txt->getCaption(),1000);
+        records::getInstance()->add_record(user_name_txt->getCaption(),points);
         records::getInstance()->saveFile(NULL);
         //sounds::getInstance()->play_effect("eat_ghost");
         //user_name_txt->setVisible(false);

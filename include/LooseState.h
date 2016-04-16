@@ -52,6 +52,8 @@ class LooseState : public Ogre::Singleton<LooseState>, public GameState
 
   bool frameStarted (const Ogre::FrameEvent& evt);
   bool frameEnded (const Ogre::FrameEvent& evt);
+  int getPoints(){return points;};
+  void setPoints(int p){points=p;};
 
 /* WIIMOTE *********************************************************************/  
     bool WiimoteButtonDown(const wiimWrapper::WiimoteEvent &e);
@@ -75,6 +77,7 @@ class LooseState : public Ogre::Singleton<LooseState>, public GameState
   MyGUI::EditBox* user_name_txt;
 
   bool _exitGame;
+  int points;
 
   private:
     void createScene();

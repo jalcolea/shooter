@@ -52,7 +52,8 @@ class WinState : public Ogre::Singleton<WinState>, public GameState
 
   bool frameStarted (const Ogre::FrameEvent& evt);
   bool frameEnded (const Ogre::FrameEvent& evt);
-
+  int getPoints(){return points;};
+  void setPoints(int p){points=p;}; 
 /* WIIMOTE *********************************************************************/  
     bool WiimoteButtonDown(const wiimWrapper::WiimoteEvent &e);
     bool WiimoteButtonUp(const wiimWrapper::WiimoteEvent &e);
@@ -73,15 +74,15 @@ class WinState : public Ogre::Singleton<WinState>, public GameState
   MyGUI::VectorWidgetPtr layout;
   MyGUI::Button* btn_resume;
   MyGUI::EditBox* user_name_txt;
+  int points;
 
   bool _exitGame;
-
   private:
     void createScene();
     void createMyGui();
     void destroyMyGui();  
     void save_record();
-  
+      
 };
 
 #endif
