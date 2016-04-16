@@ -64,8 +64,8 @@ class Wiimote
         unique_ptr<wiimote_t> _wiimote {new wiimote_t};
 	    unique_ptr<wiimote_report_t> _report {new wiimote_report_t};
 	    string _hci_address;
-	    vector< shared_ptr<WiimoteListener> > _WiimoteListeners;
-	    vector<wiimote_ir_t> _ir; // sirve para ir almacenando los valores IR y compararlos para ver si han cambiado y comunicárselo a un listener.
+  std::vector< shared_ptr<WiimoteListener> > _WiimoteListeners;
+  std::vector<wiimote_ir_t> _ir; // sirve para ir almacenando los valores IR y compararlos para ver si han cambiado y comunicárselo a un listener.
 	    inline void setIRActual(); // Aquí es donde actualizamos los valores IR actuales
 	    bool NuevosValoresIR();
 	    wiimote_keys_t _oldBits; // Estado de los botones anterior al momento en el que se dispara un evento ButtonUP o ButtonDOWN

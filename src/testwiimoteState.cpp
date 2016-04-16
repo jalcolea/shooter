@@ -42,7 +42,7 @@ void testwiimoteState::enter()
     double width = _viewport->getActualWidth();
     double height = _viewport->getActualHeight();
     _camera->setAspectRatio(width / height);
-    _camera->setPosition(Vector3(0, 0, 18));
+    _camera->setPosition(Vector3(0, 5, 18));
     _camera->lookAt(_sceneMgr->getRootSceneNode()->getPosition());
     _camera->lookAt(0,0,0);
     _camera->setNearClipDistance(0.1);
@@ -62,13 +62,28 @@ void testwiimoteState::enter()
     AxisAlignedBox boundBox =  AxisAlignedBox (Ogre::Vector3 (-10000, -10000, -10000),Ogre::Vector3 (10000,  10000,  10000));
     _world = shared_ptr<OgreBulletDynamics::DynamicsWorld>(new DynamicsWorld(_sceneMgr, boundBox, Vector3(0, -9.81, 0), true,true, 15000));
     
-    std::vector<TipoRobot> tipos(2,TipoRobot::PEON);
-    RobotFactory robFact(Ogre::Vector3(0,0,0),Ogre::Vector3(0,0,0));
-    robFact.createRobotSet(_world,robFact.getDireccionInicial(),robFact.getPosicionInicial(),tipos,_sceneMgr);
-    
+    _debugDrawer = new OgreBulletCollisions::DebugDrawer();
+    _debugDrawer->setDrawWireframe(true);
+    SceneNode *node = _sceneMgr->getRootSceneNode()->createChildSceneNode("debugNode", Vector3::ZERO);
+    node->attachObject(static_cast<SimpleRenderable *>(_debugDrawer));
+    _world.get()->setDebugDrawer(_debugDrawer);
+    _world.get()->setShowDebugShapes (true);
 
     
     createScene();
+
+
+    std::vector<TipoRobot> tipos(2,TipoRobot::PEON);
+    
+    _robFact = RobotFactory(Ogre::Vector3(0,0,0),Ogre::Vector3(0,0,0));
+    auto robots = _robFact.createRobotSet(_world,_robFact.getDireccionInicial(),_robFact.getPosicionInicial(),tipos,_sceneMgr);
+    
+    for (auto it = robots->begin(); it != robots->end(); ++it)
+    {
+        (*it)->setAnim("Walk",true);
+        (*it)->startAnim();
+    }
+    
     _exitGame =  false;
     _deltaT = 0;
 
@@ -135,11 +150,43 @@ bool testwiimoteState::mouseMoved (const OIS::MouseEvent &e)
     return true;
 }
 
+RigidBody* testwiimoteState::pickBody (Vector3 &puntoColision, Ray &rayo, float x, float y) {
+    rayo = _camera->getCameraToViewportRay (x, y);
+    CollisionClosestRayResultCallback cQuery = CollisionClosestRayResultCallback (rayo, _world.get(), 10000);
+    _world->launchRay(cQuery);
+    if (cQuery.doesCollide()) 
+    {
+        RigidBody* body = (RigidBody *) (cQuery.getCollidedObject());
+        puntoColision = cQuery.getCollisionPoint();
+        return body;
+    }
+    return NULL;
+}
+
 
 bool testwiimoteState::mousePressed (const OIS::MouseEvent &e, OIS::MouseButtonID id)
 { 
     if (id == OIS::MouseButtonID::MB_Left)
+    {
         _crosshair.get()->setMaterialCrosshair("circle-02.png");
+        
+        bala = new Bala(_world,Vector3(0,0,-1),Vector3(0,2,10),_sceneMgr);
+        
+        if (bala)
+        {
+            Vector3 puntoColision; Ray rayo; RigidBody* body;
+            body = pickBody(puntoColision,rayo,e.state.X.abs/float(_viewport->getActualWidth()),e.state.Y.abs/float(_viewport->getActualHeight()));
+            if (body)
+            {
+                body->enableActiveState();
+                Vector3 relPos(puntoColision - body->getCenterOfMassPosition());
+                Vector3 impulse (rayo.getDirection());
+                bala->shoot(impulse, 100, relPos);
+                
+            }
+            
+        }
+    }
     
     return true;
 }
@@ -155,6 +202,12 @@ bool testwiimoteState::frameStarted (const Ogre::FrameEvent& evt)
     _deltaT = evt.timeSinceLastFrame;
     
     _world->stepSimulation(_deltaT);
+    
+    for (auto it = _robFact.getRobots()->begin(); it != _robFact.getRobots()->end(); ++it)
+    {
+        (*it)->anima(_deltaT);
+    }
+
     
     if (_animPuerta)
         _animPuerta->addTime(_deltaT * 0.5 * Ogre::Real(_sentidoAccionPuerta));
@@ -224,8 +277,31 @@ void testwiimoteState::createMyGui(){}
 
 void testwiimoteState::destroyMyGui(){}
 
+void testwiimoteState::createFloor() {
+  SceneNode *floorNode = _sceneMgr->createSceneNode("floor");
+  Plane planeFloor;
+  planeFloor.normal = Vector3(0, 1, 0);
+  planeFloor.d = 2;
+  MeshManager::getSingleton().createPlane(
+      "FloorPlane", ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
+      planeFloor, 200000, 200000, 20, 20, true, 1, 9000, 9000, Vector3::UNIT_Z);
+  Entity *entFloor = _sceneMgr->createEntity("floor", "FloorPlane");
+  entFloor->setCastShadows(false);
+  entFloor->setMaterialName("floor");
+  floorNode->attachObject(entFloor);
+  _sceneMgr->getRootSceneNode()->addChild(floorNode);
+  
+  CollisionShape *shape = new StaticPlaneCollisionShape(Ogre::Vector3(0, 1, 0), 1);
+  RigidBody *rigidBodyPlane = new RigidBody("rigidBodyPlane", _world.get(),COL_FLOOR, COL_CAMERA | COL_ACTIVATOR | COL_STAND);
+  rigidBodyPlane->setStaticShape(shape, 0.1, 0);
+  floorNode->setPosition(Vector3(0, -1, 0));
+}
+
+
 void testwiimoteState::createScene()
 {
+    createFloor();
+    
     Ogre::Entity* entPistola =  _sceneMgr->createEntity("entPistola","m1911.mesh");
     _nodeWeapon = _sceneMgr->createSceneNode("nodePistola");
     _nodeWeapon->attachObject(entPistola);
@@ -243,33 +319,40 @@ void testwiimoteState::createScene()
 
     Ogre::Light* lightStand = _sceneMgr->createLight("LightStand");
     lightStand->setType(Ogre::Light::LT_POINT);
-
-//    StaticGeometry *stage = _sceneMgr->createStaticGeometry("SGstandRobots");
-    _nodeStand = _sceneMgr->createSceneNode("nodeStand");
-    _entStand = _sceneMgr->createEntity("entStandRobots","puestoRobots.mesh");
-    _entStand->setCastShadows(true);
-    _nodeStand->attachObject(_entStand);
-    _nodeStand->attachObject(lightStand);
-    _sceneMgr->getRootSceneNode()->addChild(_nodeStand);
-    _nodeStand->setPosition(0,-3,7);
-//    stage->addEntity(entStand, Vector3(0,-3,7));
-//    stage->build();
     
+    
+    StaticGeometry *stage = _sceneMgr->createStaticGeometry(_name);
+    _entStand = _sceneMgr->createEntity("entStandRobots","puestoRobots.mesh");
+    //Asociar forma y cuerpo rígido
+    OgreBulletCollisions::StaticMeshToShapeConverter trimeshConverter = OgreBulletCollisions::StaticMeshToShapeConverter(_entStand);
+    _shapeStand = trimeshConverter.createTrimesh();
+    _rigidStand = new OgreBulletDynamics::RigidBody(_name, _world.get(), COL_STAND, COL_CAMERA | COL_FLOOR | COL_ROBOT | COL_BALA);
+    _rigidStand->setStaticShape(_shapeStand, 1, 1);
+    _entStand->setCastShadows(true);
+    stage->addEntity(_entStand, Vector3::ZERO);
+    stage->build();
+    
+    _rigidStand->setDebugDisplayEnabled(true);
+
     
     //_camera->setPosition(Vector3(0, 0.5, 18));
     //_camera->lookAt(_nodeStand->getPosition());
     
-    _animPuerta = _entStand->getAnimationState("AbrirPuerta");
+    _entPuerta = _sceneMgr->createEntity("entPuerta","Puerta.mesh");
+    _nodePuerta = _sceneMgr->createSceneNode("nodePuerta");
+    _nodePuerta->attachObject(_entPuerta);
+    _sceneMgr->getRootSceneNode()->addChild(_nodePuerta);
+    _nodePuerta->translate(0,0,-0.01);
+    _animPuerta = _entPuerta->getAnimationState("AbrirPuerta");
     _animPuerta->setLoop(false);
     
     _nodeEscudo = _sceneMgr->createSceneNode("nodeEscudo");
     Ogre::Entity* entEscudo = _sceneMgr->createEntity("entEscudo","Escudo.mesh");
     _nodeEscudo->attachObject(entEscudo);
-    
-    _nodeStand->addChild(_nodeEscudo);
     _nodeEscudo->setVisible(false);
     _nodeEscudo->scale(5.0,2.0,0.0);
-    _nodeEscudo->translate(0,0,-5);
+    _sceneMgr->getRootSceneNode()->addChild(_nodeEscudo);
+    _nodeEscudo->translate(0,0,0.1);
     
     
 }

@@ -8,7 +8,7 @@
 
 using namespace std;
 
-typedef map<string,string> device_t;     // typedef para el mapa con clave = identificador bluetooth y valor = nombre del dispositivo bluetooth
+typedef std::map<string,string> device_t;     // typedef para el mapa con clave = identificador bluetooth y valor = nombre del dispositivo bluetooth
 
 class Bluez_Util
 {

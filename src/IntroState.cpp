@@ -2,7 +2,8 @@
 #include "IntroState.h"
 #include "PlayState.h"
 #include "MenuState.h"
-#include "testwiimoteState.h"
+//#include "testwiimoteState.h"
+#include "StandRobots.h"
 #include "MyGUI.h"
 #include "MyGUI_OgrePlatform.h"
 
@@ -103,11 +104,12 @@ bool IntroState::keyPressed(const OIS::KeyEvent &e)
         changeState(MenuState::getSingletonPtr());
         sounds::getInstance()->play_effect("push");
     }
-    else if (e.key == OIS::KC_T)
-    {
-        changeState(testwiimoteState::getSingletonPtr());
-        
-    }
+//    else if (e.key == OIS::KC_T)
+//    {
+//        changeState(testwiimoteState::getSingletonPtr());
+//        
+//    }
+    
     return true;
 
 }

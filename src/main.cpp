@@ -70,7 +70,6 @@ int main () {
     {
       // Inicializa el juego y transición al primer estado.
       game->start(IntroState::getSingletonPtr());
-      //game->start(testwiimoteState::getSingletonPtr());
     }
   catch (Ogre::Exception& e)
     {
