@@ -35,7 +35,7 @@ using namespace Ogre;
 class WinState : public Ogre::Singleton<WinState>, public GameState
 {
  public:
-  WinState() {}
+  WinState() {points=0;}
   ~WinState() {}
 
   void enter ();

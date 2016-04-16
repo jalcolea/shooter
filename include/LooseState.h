@@ -35,7 +35,7 @@ using namespace Ogre;
 class LooseState : public Ogre::Singleton<LooseState>, public GameState
 {
  public:
-  LooseState() {}
+  LooseState() {points=0;}
   ~LooseState() {}
 
   void enter ();
