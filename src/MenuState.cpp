@@ -9,7 +9,7 @@
 #include "WinState.h"
 #include "LooseState.h"
 #include "records.h"
-
+#include "Carrusel.h"
 
 //http://www.cplusplus.com/doc/tutorial/templates/          <--------Visita esta página para entender la linea justo debajo de esta
 template<> MenuState* Ogre::Singleton<MenuState>::msSingleton = 0;
@@ -90,6 +90,11 @@ bool MenuState::keyPressed(const OIS::KeyEvent &e)
   else if (e.key == OIS::KC_L) {
     MyGUI::LayoutManager::getInstance().unloadLayout(layout);
     pushState(LooseState::getSingletonPtr());
+  }
+  else if (e.key == OIS::KC_G) {
+    //MyGUI::LayoutManager::getInstance().unloadLayout(layout);
+    Carrusel c;
+    c.go();
   }
   return true;
 }
