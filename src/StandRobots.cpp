@@ -94,7 +94,7 @@ void StandRobots::enter()
 }
 
 void StandRobots::exit(){}
-void  StandRobots::pause(){}
+void StandRobots::pause(){}
 void StandRobots::resume(){}
 
 bool StandRobots::keyPressed (const OIS::KeyEvent &e)
@@ -139,6 +139,9 @@ bool StandRobots::mouseMoved (const OIS::MouseEvent &e)
     const size_t& xMouse = e.state.X.abs + 6;// por alguna razón que desconozco el ratón está desplazado -6 unidades
     const size_t& yMouse = e.state.Y.abs + 6;
     
+    _xMouse = xMouse;
+    _yMouse = yMouse;
+    
     const size_t& xRel = e.state.X.rel;
     const size_t& yRel = e.state.Y.rel;
 
@@ -167,27 +170,59 @@ RigidBody* StandRobots::pickBody (Vector3 &puntoColision, Ray &rayo, float x, fl
     return NULL;
 }
 
+Vector3 StandRobots::CalculaDireccionTiro()
+{
+      std::cout << "Disparando" << std::endl;
+  Vector3 dirShoot;
+//  _rayScnQuery->setSortByDistance(true);
+//  _rayScnQuery->setQueryMask(COL_STAND|COL_ROBOT);
+
+    Ogre::Ray ray  = _camera->
+                       getCameraToViewportRay(_xMouse/float(_viewport->getActualWidth()),
+                                              _yMouse/float(_viewport->getActualHeight()));
+    dirShoot = ray.getDirection();
+    /*  _rayScnQuery->setRay(ray);
+  Ogre::RaySceneQueryResult &result = _rayScnQuery->execute();
+  Ogre::RaySceneQueryResult::iterator it = result.begin();
+
+  for ( ; it != result.end(); it++) {
+    if ( it->movable ) {
+  std::cout << "Nombre ------->" <<it->movable->getName() << " Nombre Nodo ---->" << it->movable->getParentNode()->getName() << std::endl;
+ Vector3 pos = it->movable->getParentNode()->getPosition();
+ dirShoot = _cameraNode->getPosition() - pos;
+
+    }
+    }*/
+  std::cout << "Direccion "<< dirShoot << std::endl;
+  return dirShoot*10;
+
+}
+
 
 bool StandRobots::mousePressed (const OIS::MouseEvent &e, OIS::MouseButtonID id)
 { 
     if (id == OIS::MouseButtonID::MB_Left)
     {
-        _crosshair.get()->setMaterialCrosshair("circle-02.png");
-        
-        bala = new Bala(_world,Vector3(0,0,-1),Vector3(0,2,10),_sceneMgr);
-        
-        if (bala)
+        if (_numBalas)
         {
-            Vector3 puntoColision; Ray rayo; RigidBody* body;
-            body = pickBody(puntoColision,rayo,e.state.X.abs/float(_viewport->getActualWidth()),e.state.Y.abs/float(_viewport->getActualHeight()));
-            if (body)
-            {
-                body->enableActiveState();
-                Vector3 relPos(puntoColision - body->getCenterOfMassPosition());
-                Vector3 impulse (rayo.getDirection());
-                bala->shoot(impulse, 100, relPos);
-                
-            }
+            _crosshair.get()->setMaterialCrosshair("circle-02.png");
+            
+            bala = new Bala(_world,CalculaDireccionTiro(), _cameraNode->getPosition(),_sceneMgr,std::to_string(_numBalas));
+//            bala = new Bala(_world,Vector3(0,0,-1), _cameraNode->getPosition() + Vector3(0,0,-2),_sceneMgr,std::to_string(_numBalas));
+//            if (bala)
+//            {
+//                Vector3 puntoColision; Ray rayo; RigidBody* body;
+//                body = pickBody(puntoColision,rayo,e.state.X.abs/float(_viewport->getActualWidth()),e.state.Y.abs/float(_viewport->getActualHeight()));
+//                if (body)
+//                {
+//                    body->enableActiveState();
+//                    Vector3 relPos(puntoColision - body->getCenterOfMassPosition());
+//                    Vector3 impulse (rayo.getDirection());
+//                    bala->shoot(impulse, 1000, relPos);
+//                    
+//                }
+                --_numBalas;
+//            }
             
         }
     }
@@ -305,6 +340,8 @@ void StandRobots::buildGame()
     _nodePuerta->translate(_position + Vector3(0,0,-0.01));
     _animPuerta = _entPuerta->getAnimationState("AbrirPuerta");
     _animPuerta->setLoop(false);
+    
+    _numBalas = 100;
 
 }
 
@@ -388,10 +425,16 @@ void StandRobots::reacomodateCamera()
 
       _cameraBody->setOrientation(Ogre::Quaternion(Ogre::Radian(Ogre::Degree(0)), Vector3(0, 1, 0)));
       _cameraBody->getBulletRigidBody()->forceActivationState(DISABLE_SIMULATION);
-//      btTransform bt = _cameraBody->getBulletRigidBody()->getWorldTransform();
-//      bt.setOrigin(convert(_activatorPosition-Vector3(0,0,-10) ));
-//      _cameraBody->getBulletRigidBody()->setWorldTransform(bt);
-//      _cameraNode->translate(_activatorPosition-Vector3(0,0,2));
+      btTransform bt = _cameraBody->getBulletRigidBody()->getWorldTransform();
+      //bt.setOrigin(convert(_activatorPosition-Vector3(0,0,-10) ));
+      bt.setOrigin(convert(Vector3(0,1,-3)));
+      bt.setRotation(convert(_camera->getOrientation()));
+      _cameraBody->getBulletRigidBody()->setWorldTransform(bt);
+      //_cameraNode->translate(_activatorPosition-Vector3(0,0,2));
       _cameraNode->translate(Vector3(0, 1, -3));
+      _cameraNode->setDirection(Vector3(0,0,-1));
+      _camera->setPosition(0,1,-3);
+      _camera->setDirection(0,0,-1);
+      _crosshair->setCamera(_camera);
   
 }

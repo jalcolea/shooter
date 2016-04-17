@@ -170,7 +170,7 @@ bool testwiimoteState::mousePressed (const OIS::MouseEvent &e, OIS::MouseButtonI
     {
         _crosshair.get()->setMaterialCrosshair("circle-02.png");
         
-        bala = new Bala(_world,Vector3(0,0,-1),Vector3(0,2,10),_sceneMgr);
+        bala = new Bala(_world,Vector3(0,0,-1),Vector3(0,2,10),_sceneMgr,"test");
         
         if (bala)
         {

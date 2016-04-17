@@ -82,12 +82,15 @@ protected:
     Ogre::AnimationState* _animTiro;
 //    bool _exitGame;
     int lives;
+    int _xMouse,_yMouse;
 //    int score;
 //    bool paused;
 //    Ogre::Real _deltaT;
     unique_ptr<Crosshair> _crosshair;
+    //Ogre::RaySceneQuery* _rayScnQuery;
     void ActivaPuerta(AccionPuerta accion);
     void reacomodateCamera();
+    Vector3 CalculaDireccionTiro();
     
 private:
   void createMyGui();
@@ -108,6 +111,8 @@ private:
   Ogre::Entity* _entPuerta;
   AccionPuerta _sentidoAccionPuerta;
   Bala* bala;
+  size_t _numBalas;
+
 
   //DebugDrawer* _debugDrawer;
 

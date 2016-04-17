@@ -19,23 +19,24 @@ using namespace OgreBulletCollisions;
 class Bala
 {
 public:
-    Bala(shared_ptr<DynamicsWorld> world, Vector3 direccion, Vector3 posicion, SceneManager* sceneMgr) : 
+    Bala(shared_ptr<DynamicsWorld> world, Vector3 direccion, Vector3 posicion, SceneManager* sceneMgr, string nombre) : 
       _world(world),
       _direccion(direccion),
       _posicion(posicion),
-      _sceneMgr(sceneMgr)
+      _sceneMgr(sceneMgr),
+      _nombre(nombre)
     {
-      _direccion = Vector3(0,1,0);
-      _posicion = posicion;
+      //_direccion = Vector3(0,1,0);
+      //_posicion = posicion;
+      _posicion += Vector3(0,2,-3);
       _entBala =  _sceneMgr->createEntity(MESH_BALA);
       _nodoBala = _sceneMgr->createSceneNode();
       _nodoBala->attachObject(_entBala);
-      //_nodoBala->scale(0.1,0.1,0.1);
+      _nodoBala->scale(0.1,0.1,0.1);
       _sceneMgr->getRootSceneNode()->addChild(_nodoBala);
-      //_nodoRobot->showBoundingBox(true);
       _nodoBala->translate(_posicion);
       _nodoBala->setVisible(true);
-      _body = new RigidBody(_nombre,_world.get(),COL_BALA,COL_STAND | COL_FLOOR | COL_ROBOT | COL_HIT_ZONE) ;
+      _body = new RigidBody(_nombre,_world.get(),COL_BALA,COL_STAND | COL_FLOOR | COL_ROBOT) ;
       _shape = new CylinderCollisionShape(_entBala->getBoundingBox().getHalfSize() * 0.2);
       
     
@@ -46,10 +47,10 @@ public:
       _body->setShape(_nodoBala,                     // SceneNode que manejará Bullet
                       _shape,                        // Forma geométrica para manejar colisiones (o eso creo)
                       0.0,                           // Dynamic body restitution
-                      1000.0,                        // Dynamic body friction
-                      200,                           // Dynamic body mass   
-                      Vector3(0,0,0),                // Posicion inicial del shape
-                      Quaternion::IDENTITY);         // Orientacion del shape
+                      1.0,                        // Dynamic body friction
+                      1,                           // Dynamic body mass   
+                      _posicion,                     // Posicion inicial del shape
+                      Quaternion::ZERO);         // Orientacion del shape
       
       _body->setLinearVelocity(Vector3(0,0,0));
       _body->enableActiveState();
@@ -57,11 +58,9 @@ public:
       btTransform transform; //Declaration of the btTransform
       transform.setIdentity(); //This function put the variable of the object to default. The ctor of btTransform doesnt do it.
       transform = _body->getBulletRigidBody()->getWorldTransform();
-      transform.setOrigin(OgreBulletCollisions::OgreBtConverter::to(_posicion + Vector3(0,0.1,0))); //Set the new position/origin
+      //transform.setOrigin(OgreBulletCollisions::OgreBtConverter::to(_posicion + Vector3(0,0.1,0))); //Set the new position/origin
+      transform.setOrigin(OgreBulletCollisions::OgreBtConverter::to(_posicion)); //Set the new position/origin
       _body->getBulletRigidBody()->setWorldTransform(transform); //Apply the btTransform to the body*/
-        
-    
-        
         
     };
 
