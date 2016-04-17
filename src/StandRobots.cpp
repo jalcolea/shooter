@@ -288,7 +288,7 @@ void StandRobots::buildGame()
     OgreBulletCollisions::StaticMeshToShapeConverter trimeshConverter = OgreBulletCollisions::StaticMeshToShapeConverter(_entStand);
     _shapeStand = trimeshConverter.createTrimesh();
     _rigidStand = new OgreBulletDynamics::RigidBody(_name, _world.get(), COL_STAND, COL_CAMERA | COL_FLOOR | COL_ROBOT | COL_BALA);
-    _rigidStand->setStaticShape(_shapeStand, 1, 1);
+    _rigidStand->setStaticShape(_shapeStand, 1, 1,_position);
     _entStand->setCastShadows(true);
     //stage->addEntity(_entStand, Vector3::ZERO);
     stage->addEntity(_entStand, _position);
