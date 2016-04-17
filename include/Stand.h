@@ -53,6 +53,7 @@ public:
   
 
   inline OgreBulletCollisions::CollisionShape* getActivatorShape(){return _shapeActivator;};
+  virtual void checkCollisions(){};
   virtual void buildGame();
   virtual void startGame(){};
   

@@ -17,6 +17,8 @@
 #include "records.h"
 #include "OgreUtil.h"
 #include <ctime>
+#include "OgreOverlayManager.h"
+#include "OgreOverlaySystem.h"
 
 #define CAMSPEED 20
 #define CAMROTATESPEED 0.1
@@ -43,6 +45,9 @@ void PlayState::enter() {
   _exitGame = false;
   paused = false;
   _deltaT = 0;
+    std::cout << "OverlayManager " <<  new Ogre::OverlayManager() << "PlayState" << std::endl;
+  _sceneMgr->addRenderQueueListener(new Ogre::OverlaySystem());
+
 
   // Activar Bullet
   AxisAlignedBox boundBox =
