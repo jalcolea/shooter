@@ -58,7 +58,7 @@ void PlayState::enter() {
       "debugNode", Vector3::ZERO);
   node->attachObject(static_cast<SimpleRenderable *>(_debugDrawer));
   _world.get()->setDebugDrawer(_debugDrawer);
-  //_world.get()->setShowDebugShapes(true);
+  _world.get()->setShowDebugShapes(true);
   _cameraBody = new RigidBody("cameraBody", _world.get(), COL_CAMERA,
                               COL_ACTIVATOR | COL_STAND | COL_FLOOR);
 

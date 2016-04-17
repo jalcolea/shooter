@@ -8,28 +8,28 @@ StandRobots::~StandRobots()
 
 void StandRobots::enter()
 {
-    _root = Ogre::Root::getSingletonPtr();
-    
-    try
-    {
-        _sceneMgr = _root->getSceneManager("SceneManager");
-    }
-    catch (...)
-    {
-        cout << "SceneManager no existe, creándolo \n";
-        _sceneMgr = _root->createSceneManager(Ogre::ST_GENERIC, "SceneManager");
-    }
-
-    try
-    {
-        _camera = _sceneMgr->getCamera("IntroCamera");
-    }
-    catch (...)
-    {
-        cout << "IntroCamera no existe, creándola \n";
-        _camera = _sceneMgr->createCamera("IntroCamera");
-    }
-
+//    _root = Ogre::Root::getSingletonPtr();
+//    
+//    try
+//    {
+//        _sceneMgr = _root->getSceneManager("SceneManager");
+//    }
+//    catch (...)
+//    {
+//        cout << "SceneManager no existe, creándolo \n";
+//        _sceneMgr = _root->createSceneManager(Ogre::ST_GENERIC, "SceneManager");
+//    }
+//
+//    try
+//    {
+//        _camera = _sceneMgr->getCamera("IntroCamera");
+//    }
+//    catch (...)
+//    {
+//        cout << "IntroCamera no existe, creándola \n";
+//        _camera = _sceneMgr->createCamera("IntroCamera");
+//    }
+//
     try
     {
         _viewport = _root->getAutoCreatedWindow()->addViewport(_camera);
@@ -38,19 +38,19 @@ void StandRobots::enter()
     {
         _viewport = _root->getAutoCreatedWindow()->getViewport(0);
     }
-    
-    //Fondo del test a rojo
-    _viewport->setBackgroundColour(Ogre::ColourValue(1.0, 0.0, 0.0));
-
-    //Configuramos la camara
-    double width = _viewport->getActualWidth();
-    double height = _viewport->getActualHeight();
-    _camera->setAspectRatio(width / height);
-    _camera->setPosition(Vector3(0, 5, 18));
-    _camera->lookAt(_sceneMgr->getRootSceneNode()->getPosition());
-    _camera->lookAt(0,0,0);
-    _camera->setNearClipDistance(0.1);
-    _camera->setFarClipDistance(100);
+//    
+//    //Fondo del test a rojo
+//    _viewport->setBackgroundColour(Ogre::ColourValue(1.0, 0.0, 0.0));
+//
+//    //Configuramos la camara
+//    double width = _viewport->getActualWidth();
+//    double height = _viewport->getActualHeight();
+//    _camera->setAspectRatio(width / height);
+//    _camera->setPosition(Vector3(0, 5, 18));
+//    _camera->lookAt(_sceneMgr->getRootSceneNode()->getPosition());
+//    _camera->lookAt(0,0,0);
+//    _camera->setNearClipDistance(0.1);
+//    _camera->setFarClipDistance(100);
     
     //Plano para hacer rayos contra él desde la cámara y saber la equivalencia
     //de la posición del ratón con respecto al mundo 3d. Ha de ser paralelo, en cualquier
@@ -61,25 +61,25 @@ void StandRobots::enter()
     
     sounds::getInstance()->play_music("robotsmusic");
     
-    //Activacion de bullet RECUERDA QUITAR ESTO CUANDO ESTE ESTADO SEA LLAMADO
-    // HABRÁ QUE RECUPERAR LA INSTANCIA, NO CREARLA
-    AxisAlignedBox boundBox =  AxisAlignedBox (Ogre::Vector3 (-10000, -10000, -10000),Ogre::Vector3 (10000,  10000,  10000));
-    _world = shared_ptr<OgreBulletDynamics::DynamicsWorld>(new DynamicsWorld(_sceneMgr, boundBox, Vector3(0, -9.81, 0), true,true, 15000));
-    
-    _debugDrawer = new OgreBulletCollisions::DebugDrawer();
-    _debugDrawer->setDrawWireframe(true);
-    SceneNode *node = _sceneMgr->getRootSceneNode()->createChildSceneNode("debugNodeStandRobots", Vector3::ZERO);
-    node->attachObject(static_cast<SimpleRenderable *>(_debugDrawer));
-    _world.get()->setDebugDrawer(_debugDrawer);
-    _world.get()->setShowDebugShapes (true);
+//    //Activacion de bullet RECUERDA QUITAR ESTO CUANDO ESTE ESTADO SEA LLAMADO
+//    // HABRÁ QUE RECUPERAR LA INSTANCIA, NO CREARLA
+//    AxisAlignedBox boundBox =  AxisAlignedBox (Ogre::Vector3 (-10000, -10000, -10000),Ogre::Vector3 (10000,  10000,  10000));
+//    _world = shared_ptr<OgreBulletDynamics::DynamicsWorld>(new DynamicsWorld(_sceneMgr, boundBox, Vector3(0, -9.81, 0), true,true, 15000));
+//    
+//    _debugDrawer = new OgreBulletCollisions::DebugDrawer();
+//    _debugDrawer->setDrawWireframe(true);
+//    SceneNode *node = _sceneMgr->getRootSceneNode()->createChildSceneNode("debugNodeStandRobots", Vector3::ZERO);
+//    node->attachObject(static_cast<SimpleRenderable *>(_debugDrawer));
+//    _world.get()->setDebugDrawer(_debugDrawer);
+//    _world.get()->setShowDebugShapes (true);
 
     
     createScene();
 
 
-    std::vector<TipoRobot> tipos(2,TipoRobot::PEON);
+    std::vector<TipoRobot> tipos(5,TipoRobot::PEON);
     
-    _robFact = RobotFactory(Ogre::Vector3(0,0,0),Ogre::Vector3(0,0,0));
+    _robFact = RobotFactory(Ogre::Vector3(10,0,0),Ogre::Vector3(0,0,0));
     auto robots = _robFact.createRobotSet(_world,_robFact.getDireccionInicial(),_robFact.getPosicionInicial(),tipos,_sceneMgr);
     
     for (auto it = robots->begin(); it != robots->end(); ++it)
@@ -283,6 +283,7 @@ void StandRobots::buildGame()
     StaticGeometry *stage = nullptr;
     stage = _sceneMgr->createStaticGeometry(_name);
     _entStand = _sceneMgr->createEntity("ent" + _name,"puestoRobots.mesh");
+    _entStand->setQueryFlags(COL_STAND);
     //Asociar forma y cuerpo rígido
     OgreBulletCollisions::StaticMeshToShapeConverter trimeshConverter = OgreBulletCollisions::StaticMeshToShapeConverter(_entStand);
     _shapeStand = trimeshConverter.createTrimesh();
@@ -292,18 +293,16 @@ void StandRobots::buildGame()
     //stage->addEntity(_entStand, Vector3::ZERO);
     stage->addEntity(_entStand, _position);
     stage->build();
-    
     buildActivator();
 
-#if _DEBUG    
     _rigidStand->setDebugDisplayEnabled(true);
-#endif
 
     _entPuerta = _sceneMgr->createEntity("entPuerta","Puerta.mesh");
     _nodePuerta = _sceneMgr->createSceneNode("nodePuerta");
     _nodePuerta->attachObject(_entPuerta);
     _sceneMgr->getRootSceneNode()->addChild(_nodePuerta);
-    _nodePuerta->translate(10,0,-0.01);
+    //_nodePuerta->translate(10,0,-0.01);
+    _nodePuerta->translate(_position + Vector3(0,0,-0.01));
     _animPuerta = _entPuerta->getAnimationState("AbrirPuerta");
     _animPuerta->setLoop(false);
 
@@ -312,27 +311,6 @@ void StandRobots::buildGame()
 void StandRobots::createMyGui(){}
 
 void StandRobots::destroyMyGui(){}
-//
-//void StandRobots::createFloor() {
-//  SceneNode *floorNode = _sceneMgr->createSceneNode("floor");
-//  Plane planeFloor;
-//  planeFloor.normal = Vector3(0, 1, 0);
-//  planeFloor.d = 2;
-//  MeshManager::getSingleton().createPlane(
-//      "FloorPlane", ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-//      planeFloor, 200000, 200000, 20, 20, true, 1, 9000, 9000, Vector3::UNIT_Z);
-//  Entity *entFloor = _sceneMgr->createEntity("floor", "FloorPlane");
-//  entFloor->setCastShadows(false);
-//  entFloor->setMaterialName("floor");
-//  floorNode->attachObject(entFloor);
-//  _sceneMgr->getRootSceneNode()->addChild(floorNode);
-//  
-//  CollisionShape *shape = new StaticPlaneCollisionShape(Ogre::Vector3(0, 1, 0), 1);
-//  RigidBody *rigidBodyPlane = new RigidBody("rigidBodyPlane", _world.get(),COL_FLOOR, COL_CAMERA | COL_ACTIVATOR | COL_STAND);
-//  rigidBodyPlane->setStaticShape(shape, 0.1, 0);
-//  floorNode->setPosition(Vector3(0, -1, 0));
-//}
-
 
 void StandRobots::createScene()
 {
@@ -356,21 +334,6 @@ void StandRobots::createScene()
     Ogre::Light* lightStand = _sceneMgr->createLight("LightStandRobots");
     lightStand->setType(Ogre::Light::LT_POINT);
     
-    
-//    StaticGeometry *stage = _sceneMgr->createStaticGeometry(_name);
-//    _entStand = _sceneMgr->createEntity("entStandRobots","puestoRobots.mesh");
-//    //Asociar forma y cuerpo rígido
-//    OgreBulletCollisions::StaticMeshToShapeConverter trimeshConverter = OgreBulletCollisions::StaticMeshToShapeConverter(_entStand);
-//    _shapeStand = trimeshConverter.createTrimesh();
-//    _rigidStand = new OgreBulletDynamics::RigidBody(_name, _world.get(), COL_STAND, COL_CAMERA | COL_FLOOR | COL_ROBOT | COL_BALA);
-//    _rigidStand->setStaticShape(_shapeStand, 1, 1);
-//    _entStand->setCastShadows(true);
-//    stage->addEntity(_entStand, Vector3::ZERO);
-//    stage->build();
-//    
-//    _rigidStand->setDebugDisplayEnabled(true);
-
-    
     //_camera->setPosition(Vector3(0, 0.5, 18));
     //_camera->lookAt(_nodeStand->getPosition());
     
@@ -388,7 +351,8 @@ void StandRobots::createScene()
     _nodeEscudo->setVisible(false);
     _nodeEscudo->scale(5.0,2.0,0.0);
     _sceneMgr->getRootSceneNode()->addChild(_nodeEscudo);
-    _nodeEscudo->translate(0,0,0.1);
+    //_nodeEscudo->translate(0,0,0.1);
+    _nodeEscudo->translate(_position + Vector3(0,0,-5));
     
     
 }
@@ -419,3 +383,15 @@ void StandRobots::createLight()
 
 }
 
+void StandRobots::reacomodateCamera() 
+{
+
+      _cameraBody->setOrientation(Ogre::Quaternion(Ogre::Radian(Ogre::Degree(0)), Vector3(0, 1, 0)));
+      _cameraBody->getBulletRigidBody()->forceActivationState(DISABLE_SIMULATION);
+//      btTransform bt = _cameraBody->getBulletRigidBody()->getWorldTransform();
+//      bt.setOrigin(convert(_activatorPosition-Vector3(0,0,-10) ));
+//      _cameraBody->getBulletRigidBody()->setWorldTransform(bt);
+//      _cameraNode->translate(_activatorPosition-Vector3(0,0,2));
+      _cameraNode->translate(Vector3(0, 1, -3));
+  
+}

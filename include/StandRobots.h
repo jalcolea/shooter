@@ -69,7 +69,7 @@ public:
     bool WiimoteIRMove(const wiimWrapper::WiimoteEvent &e) override;
 /*******************************************************************************/  
 
-    virtual void buildGame();// override;
+    virtual void buildGame() override;
 
 
     // Heredados de Ogre::Singleton.
@@ -77,12 +77,8 @@ public:
 //    static StandRobots* getSingletonPtr ();
 
 protected:
-//    Ogre::Root* _root;
-//    Ogre::SceneManager* _sceneMgr;
     Ogre::Viewport* _viewport;
-//    Ogre::Camera* _camera;
     MyGUI::VectorWidgetPtr layout;
-    
     Ogre::AnimationState* _animTiro;
 //    bool _exitGame;
     int lives;
@@ -90,15 +86,14 @@ protected:
 //    bool paused;
 //    Ogre::Real _deltaT;
     unique_ptr<Crosshair> _crosshair;
-
     void ActivaPuerta(AccionPuerta accion);
+    void reacomodateCamera();
     
 private:
   void createMyGui();
   void destroyMyGui();
   void createScene();
   void createLight();
-//  void createFloor();
   RigidBody* pickBody (Vector3 &puntoColision, Ray &rayo, float x, float y);
   std::unique_ptr<Ogre::Ray> _mouseray;// {new Ogre::Ray};
   RobotFactory _robFact;
@@ -112,15 +107,9 @@ private:
   Ogre::Entity* _entStand;
   Ogre::Entity* _entPuerta;
   AccionPuerta _sentidoAccionPuerta;
-//  shared_ptr<DynamicsWorld> _world;
-//  OgreBulletDynamics::RigidBody* _rigidStand;
-//  OgreBulletCollisions::CollisionShape* _shapeStand;
-//  string _name = NOMBRE_STAND_ROBOTS;
   Bala* bala;
-  //OgreBulletCollisions::TriangleMeshCollisionShape* _shapeStand;
-  //OgreBulletCollisions::ConvexHullCollisionShape* _shapeStand;
 
-  DebugDrawer* _debugDrawer;
+  //DebugDrawer* _debugDrawer;
 
 };
 

@@ -26,32 +26,29 @@ public:
       //_nodoRobot->showBoundingBox(true);
       _nodoRobot->translate(_posicion);
       _nodoRobot->setVisible(true);
-      _body = new RigidBody(_nombre,_world.get(),COL_ROBOT,COL_STAND | COL_FLOOR | COL_BALA);
+      _body = new RigidBody(_nombre,_world.get(),COL_ROBOT, COL_FLOOR |  COL_STAND | COL_BALA);
       cout << "center " << _entRobot->getBoundingBox().getCenter() << endl;
       _shape = new BoxCollisionShape(_entRobot->getBoundingBox().getHalfSize() * 0.2);
       cout << _entRobot->getBoundingBox().getSize() << endl;
-      
-    
-#ifdef _DEBUG
       _body->showDebugShape(true);
-#endif
 
       _body->setShape(_nodoRobot,                    // SceneNode que manejará Bullet
                       _shape,                        // Forma geométrica para manejar colisiones (o eso creo)
                       0.0,                           // Dynamic body restitution
                       1000.0,                        // Dynamic body friction
                       100,                           // Dynamic body mass   
-                      Vector3(0,0,0),               // Posicion inicial del shape
+                      //Vector3(10,0,0),               // Posicion inicial del shape
+                      _posicion,               // Posicion inicial del shape
                       Quaternion::IDENTITY);         // Orientacion del shape
       
-      _body->setLinearVelocity(Vector3(0,0,0) * VELOCIDAD_PEON);
+      //_body->setLinearVelocity(Vector3(0,0,0) * VELOCIDAD_PEON);
       _body->enableActiveState();
       
       btTransform transform; //Declaration of the btTransform
       transform.setIdentity(); //This function put the variable of the object to default. The ctor of btTransform doesnt do it.
       transform = _body->getBulletRigidBody()->getWorldTransform();
-      transform.setOrigin(OgreBulletCollisions::OgreBtConverter::to(_posicion + Vector3(0,2,0))); //Set the new position/origin
-      _body->getBulletRigidBody()->setWorldTransform(transform); //Apply the btTransform to the body*/
+      transform.setOrigin(OgreBulletCollisions::OgreBtConverter::to(_posicion + Vector3(0,1,0))); //Set the new position/origin
+      _body->getBulletRigidBody()->setWorldTransform(transform); //Apply the btTransform to the body
 
     };
     
