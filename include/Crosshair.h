@@ -20,7 +20,7 @@ public:
                                                         _actualHitPoint(Ogre::Vector3(0,0,0)),
                                                         _entCrossHair(nullptr)
     {
-        _plane = Ogre::Plane(_camera->getDerivedDirection(),Ogre::Vector3(0,0,0));
+        _plane = Ogre::Plane(_camera->getDerivedDirection(),Ogre::Vector3(0,0,-4));
     };
     
     ~Crosshair();

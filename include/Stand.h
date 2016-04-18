@@ -40,6 +40,7 @@ protected:
   shared_ptr<OgreBulletDynamics::DynamicsWorld>_world;
   OgreBulletDynamics::RigidBody *_rigidActivator;
   OgreBulletCollisions::CollisionShape *_shapeActivator;
+  bool  _activatorActive = true;
 
 
 
@@ -53,6 +54,8 @@ public:
   
 
   inline OgreBulletCollisions::CollisionShape* getActivatorShape(){return _shapeActivator;};
+  inline  bool getActivatorActive(){return _activatorActive;};
+  virtual void checkCollisions(){};
   virtual void buildGame();
   virtual void startGame(){};
   

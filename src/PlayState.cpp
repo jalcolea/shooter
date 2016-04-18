@@ -17,6 +17,8 @@
 #include "records.h"
 #include "OgreUtil.h"
 #include <ctime>
+#include "OgreOverlayManager.h"
+#include "OgreOverlaySystem.h"
 
 #define CAMSPEED 20
 #define CAMROTATESPEED 0.1
@@ -42,7 +44,11 @@ void PlayState::enter() {
 
   _exitGame = false;
   paused = false;
+  
   _deltaT = 0;
+    std::cout << "OverlayManager " <<  new Ogre::OverlayManager() << "PlayState" << std::endl;
+  _sceneMgr->addRenderQueueListener(new Ogre::OverlaySystem());
+
 
   // Activar Bullet
   AxisAlignedBox boundBox =
@@ -53,12 +59,12 @@ void PlayState::enter() {
 
 
   _debugDrawer = new OgreBulletCollisions::DebugDrawer();
-  _debugDrawer->setDrawWireframe(true);
+  //  _debugDrawer->setDrawWireframe(true);
   SceneNode *node = _sceneMgr->getRootSceneNode()->createChildSceneNode(
       "debugNode", Vector3::ZERO);
   node->attachObject(static_cast<SimpleRenderable *>(_debugDrawer));
   _world.get()->setDebugDrawer(_debugDrawer);
-  _world.get()->setShowDebugShapes(true);
+  //_world.get()->setShowDebugShapes(true);
   _cameraBody = new RigidBody("cameraBody", _world.get(), COL_CAMERA,
                               COL_ACTIVATOR | COL_STAND | COL_FLOOR);
 
@@ -308,12 +314,12 @@ void PlayState::checkCollisions() {
             _stands.begin(), _stands.end(),
             [other](unique_ptr<Stand> &stand) -> bool {
               return stand.get()->getActivatorShape()->getBulletShape() ==
-                     other;
+		other && stand.get()->getActivatorActive();
             });
         if (it != _stands.end()) {
  	  _cameraBody->setLinearVelocity(Vector3(0,0,0));
 	  pushState((*it).get());
-          std::cout << " Encontrado Stand" << (*it).get() << std::endl;
+
         }
 
         /*

@@ -8,6 +8,7 @@ Ogre::SceneNode* Crosshair::createCrossHairManual(const std::string & crosshairI
     setMaterialCrosshair(crosshairImg);
     
     // Creamos un objeto manual para el Crosshair
+    
     ManualObject* crossHair= _sceneMgr->createManualObject("crossHair");
      
     // Matriz identidad para que se vea en 2D

@@ -27,6 +27,11 @@
         <id>escudo</id>
         <file>SciFiDrone.wav</file>
       </sound>
+       <sound>
+        <id>can</id>
+        <file>can.wav</file>
+      </sound>
+
     </effects>
 
 </sounds_library>

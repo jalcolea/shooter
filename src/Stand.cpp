@@ -19,6 +19,7 @@ Stand::Stand( Vector3 position, SceneManager* sceneMgr, std::string name,shared_
     _camera = sceneMgr->getCamera("IntroCamera");
     _cameraNode = sceneMgr->getSceneNode("nodeCamera");
     _cameraBody = PlayState::getSingleton().getCameraBody();
+    _activatorActive = true;
     startGame();
 
 
@@ -56,22 +57,6 @@ void Stand::buildActivator(){
   _rigidActivator = new OgreBulletDynamics::RigidBody(str.str(), _world.get(),COL_ACTIVATOR, COL_STAND  | COL_FLOOR | COL_CAMERA);
   _shapeActivator = new OgreBulletCollisions::CylinderCollisionShape(Vector3(0.5,0.05,0.05),Vector3::UNIT_Y);
   _rigidActivator->setShape(_activator, _shapeActivator, 0,1,1000,_activatorPosition,Quaternion::IDENTITY);
-  /*
-   SceneNode* stackCanNode = _sceneMgr->createSceneNode("canStack");
-  SceneNode* canNode =_sceneMgr->createSceneNode("lata1");
-  Entity* canEnt = _sceneMgr->createEntity("lata.mesh");
-  canNode->attachObject(canEnt);
-  canNode->setPosition(_activatorPosition+Vector3(0,2,2));
-  canNode->scale(Vector3(0.2,0.2,0.2));
-  stackCanNode->addChild(canNode);
-  _sceneMgr->getRootSceneNode()->addChild(stackCanNode);
-  
-    OgreBulletDynamics::RigidBody* _rigidCan = new OgreBulletDynamics::RigidBody("lataca", _world.get(),COL_ACTIVATOR, COL_STAND  | COL_FLOOR | COL_CAMERA);
-  OgreBulletCollisions::CollisionShape* _shapeCan = new OgreBulletCollisions::CylinderCollisionShape(Vector3(0.1,0.25,0.25),Vector3::UNIT_Y);
-  _rigidCan->setShape(canNode, _shapeCan, 0,1,10,_position+ Vector3(0,2.2,-0.5),Quaternion::IDENTITY);
-  */
-
-  
 }
 
 
@@ -111,11 +96,15 @@ bool Stand::frameStarted (const Ogre::FrameEvent& evt){
   if (keysArePressed[OIS::KC_ESCAPE]) {
     return false;
   }
+  checkCollisions();
 
   return true;
 
 }
 bool Stand::frameEnded (const Ogre::FrameEvent& evt){
+  _deltaT = evt.timeSinceLastFrame;
+  _world.get()->stepSimulation(evt.timeSinceLastFrame);
+
   return true;
 
 
