@@ -40,6 +40,7 @@ public:
     virtual void setAnim(string nombreAnim, bool loop = false);
     inline void startAnim() { _anim->setEnabled(true); }
     inline void stopAnim() { _anim->setEnabled(false); }
+    inline btRigidBody* getBulletRigidBody(){ return _body->getBulletRigidBody()?_body->getBulletRigidBody():nullptr; }
         
 protected:
     shared_ptr<DynamicsWorld> _world;

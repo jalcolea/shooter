@@ -28,6 +28,10 @@
 
 #define NOMBRE_STAND_ROBOTS "StandRobots"
 #define CADENCIA_DE_TIRO 0.25
+#define OLEADAS  3
+#define NUM_ROBOTS_INICIAL 6
+#define RETRASO_INICIO 3.0;
+
 
 using namespace std;
 using namespace Ogre;
@@ -81,14 +85,10 @@ protected:
     Ogre::Viewport* _viewport;
     MyGUI::VectorWidgetPtr layout;
     Ogre::AnimationState* _animTiro;
-//    bool _exitGame;
     int lives;
     int _xMouse,_yMouse;
-//    int score;
-//    bool paused;
-//    Ogre::Real _deltaT;
     unique_ptr<Crosshair> _crosshair;
-    //Ogre::RaySceneQuery* _rayScnQuery;
+    std::vector<btRigidBody*> _robotBodys;
     void ActivaPuerta(AccionPuerta accion);
     void reacomodateCamera();
     void resetCamera();
@@ -100,6 +100,7 @@ private:
   void destroyMyGui();
   void createScene();
   void createLight();
+  void createOleada();
   RigidBody* pickBody (Vector3 &puntoColision, Ray &rayo, float x, float y);
   RigidBody* _bodyEscudo;
   std::unique_ptr<Ogre::Ray> _mouseray;// {new Ogre::Ray};
@@ -117,6 +118,11 @@ private:
   Bala* bala;
   size_t _numBalas;
   Real _lapsusTime;
+  Real _retrasoInicio;
+  size_t _oleada;
+  size_t _numRobots;
+  bool _inicio;
+  
 
 
   //DebugDrawer* _debugDrawer;

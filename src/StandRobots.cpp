@@ -9,28 +9,6 @@ StandRobots::~StandRobots()
 
 void StandRobots::enter()
 {
-//    _root = Ogre::Root::getSingletonPtr();
-//    
-//    try
-//    {
-//        _sceneMgr = _root->getSceneManager("SceneManager");
-//    }
-//    catch (...)
-//    {
-//        cout << "SceneManager no existe, creándolo \n";
-//        _sceneMgr = _root->createSceneManager(Ogre::ST_GENERIC, "SceneManager");
-//    }
-//
-//    try
-//    {
-//        _camera = _sceneMgr->getCamera("IntroCamera");
-//    }
-//    catch (...)
-//    {
-//        cout << "IntroCamera no existe, creándola \n";
-//        _camera = _sceneMgr->createCamera("IntroCamera");
-//    }
-//
     try
     {
         _viewport = _root->getAutoCreatedWindow()->addViewport(_camera);
@@ -39,19 +17,6 @@ void StandRobots::enter()
     {
         _viewport = _root->getAutoCreatedWindow()->getViewport(0);
     }
-//    
-//    //Fondo del test a rojo
-//    _viewport->setBackgroundColour(Ogre::ColourValue(1.0, 0.0, 0.0));
-//
-//    //Configuramos la camara
-//    double width = _viewport->getActualWidth();
-//    double height = _viewport->getActualHeight();
-//    _camera->setAspectRatio(width / height);
-//    _camera->setPosition(Vector3(0, 5, 18));
-//    _camera->lookAt(_sceneMgr->getRootSceneNode()->getPosition());
-//    _camera->lookAt(0,0,0);
-//    _camera->setNearClipDistance(0.1);
-//    _camera->setFarClipDistance(100);
     
     //Plano para hacer rayos contra él desde la cámara y saber la equivalencia
     //de la posición del ratón con respecto al mundo 3d. Ha de ser paralelo, en cualquier
@@ -62,36 +27,30 @@ void StandRobots::enter()
     
     sounds::getInstance()->play_music("robotsmusic");
     
-//    //Activacion de bullet RECUERDA QUITAR ESTO CUANDO ESTE ESTADO SEA LLAMADO
-//    // HABRÁ QUE RECUPERAR LA INSTANCIA, NO CREARLA
-//    AxisAlignedBox boundBox =  AxisAlignedBox (Ogre::Vector3 (-10000, -10000, -10000),Ogre::Vector3 (10000,  10000,  10000));
-//    _world = shared_ptr<OgreBulletDynamics::DynamicsWorld>(new DynamicsWorld(_sceneMgr, boundBox, Vector3(0, -9.81, 0), true,true, 15000));
-//    
-//    _debugDrawer = new OgreBulletCollisions::DebugDrawer();
-//    _debugDrawer->setDrawWireframe(true);
-//    SceneNode *node = _sceneMgr->getRootSceneNode()->createChildSceneNode("debugNodeStandRobots", Vector3::ZERO);
-//    node->attachObject(static_cast<SimpleRenderable *>(_debugDrawer));
-//    _world.get()->setDebugDrawer(_debugDrawer);
-//    _world.get()->setShowDebugShapes (true);
-
+    _retrasoInicio = RETRASO_INICIO;
+     
     
     createScene();
-
-
-    std::vector<TipoRobot> tipos(5,TipoRobot::PEON);
     
-    _robFact = RobotFactory(Ogre::Vector3(10,0,0),Ogre::Vector3(0,0,0));
-    auto robots = _robFact.createRobotSet(_world,_robFact.getDireccionInicial(),_robFact.getPosicionInicial(),tipos,_sceneMgr);
-    
-    for (auto it = robots->begin(); it != robots->end(); ++it)
-    {
-        (*it)->setAnim("Walk",true);
-        (*it)->startAnim();
-    }
+    createOleada();
+
+//    _robotBodys.clear();
+//    std::vector<TipoRobot> tipos(_numRobots,TipoRobot::PEON);
+//    
+//    _robFact = RobotFactory(Ogre::Vector3(10,0,0),Ogre::Vector3(0,0,0));
+//    auto robots = _robFact.createRobotSet(_world,_robFact.getDireccionInicial(),_robFact.getPosicionInicial(),tipos,_sceneMgr);
+//    
+//    for (auto it = robots->begin(); it != robots->end(); ++it)
+//    {
+//        (*it)->setAnim("Walk",true);
+//        (*it)->startAnim();
+//        _robotBodys.push_back((*it)->getBulletRigidBody());
+//    }
     
     _exitGame =  false;
     _deltaT = 0;
     _lapsusTime = CADENCIA_DE_TIRO;
+    _inicio = true;
     
     reacomodateCamera();
 
@@ -190,29 +149,15 @@ RigidBody* StandRobots::pickBody (Vector3 &puntoColision, Ray &rayo, float x, fl
 
 Vector3 StandRobots::CalculaDireccionTiro()
 {
-      std::cout << "Disparando" << std::endl;
-  Vector3 dirShoot;
-//  _rayScnQuery->setSortByDistance(true);
-//  _rayScnQuery->setQueryMask(COL_STAND|COL_ROBOT);
+    std::cout << "Disparando" << std::endl;
+    Vector3 dirShoot;
 
     Ogre::Ray ray  = _camera->
                        getCameraToViewportRay(_xMouse/float(_viewport->getActualWidth()),
                                               _yMouse/float(_viewport->getActualHeight()));
     dirShoot = ray.getDirection();
-    /*  _rayScnQuery->setRay(ray);
-  Ogre::RaySceneQueryResult &result = _rayScnQuery->execute();
-  Ogre::RaySceneQueryResult::iterator it = result.begin();
-
-  for ( ; it != result.end(); it++) {
-    if ( it->movable ) {
-  std::cout << "Nombre ------->" <<it->movable->getName() << " Nombre Nodo ---->" << it->movable->getParentNode()->getName() << std::endl;
- Vector3 pos = it->movable->getParentNode()->getPosition();
- dirShoot = _cameraNode->getPosition() - pos;
-
-    }
-    }*/
-  std::cout << "Direccion "<< dirShoot << std::endl;
-  return dirShoot*10;
+    std::cout << "Direccion "<< dirShoot << std::endl;
+    return dirShoot*10;
 
 }
 
@@ -223,13 +168,13 @@ bool StandRobots::mousePressed (const OIS::MouseEvent &e, OIS::MouseButtonID id)
     {
         if (_numBalas)
         {
-            //_crosshair.get()->setMaterialCrosshair("circle-02.png");
             if (_lapsusTime <= 0)
             {    
                 bala = new Bala(_world,CalculaDireccionTiro(), _cameraNode->getPosition(),_sceneMgr,std::to_string(_numBalas));
                 Vector3 dir = CalculaDireccionTiro();
                 Vector3 rel(0,0,0);
                 bala->shoot(dir,2,rel);
+                sounds::getInstance()->play_effect("laser");
                 --_numBalas;
                 _lapsusTime = CADENCIA_DE_TIRO;
             }
@@ -251,16 +196,31 @@ bool StandRobots::frameStarted (const Ogre::FrameEvent& evt)
     
     _world->stepSimulation(_deltaT);
     
+    checkCollisions();
+    
     _lapsusTime -= _deltaT;
     
     for (auto it = _robFact.getRobots()->begin(); it != _robFact.getRobots()->end(); ++it)
     {
         (*it)->anima(_deltaT);
+        if (_inicio)
+        {
+            _retrasoInicio -= _deltaT;
+            if (_retrasoInicio <= 0)
+            {
+                _inicio = false;
+                ActivaPuerta(AccionPuerta::CERRAR);
+            }
+        }
+//        else
+//            (*it)->getBulletRigidBody()->setLinearVelocity(convert(Vector3(0,0.1,0.75)));
     }
 
+        
     
     if (_animPuerta)
         _animPuerta->addTime(_deltaT * 0.5 * Ogre::Real(_sentidoAccionPuerta));
+        
     
     
     if (_exitGame)
@@ -347,7 +307,22 @@ void StandRobots::buildGame()
     _animPuerta = _entPuerta->getAnimationState("AbrirPuerta");
     _animPuerta->setLoop(false);
     
+//    RigidBody* bodyPuerta = new RigidBody("bodyPuerta",_world.get(),  COL_PUERTA, COL_ROBOT | COL_FLOOR | COL_BALA);
+//    BoxCollisionShape* shapePuerta = new BoxCollisionShape(_entPuerta->getBoundingBox().getSize());
+//    bodyPuerta->showDebugShape(true);
+//    bodyPuerta->setShape(_nodePuerta,                    // SceneNode que manejará Bullet
+//                  shapePuerta,                        // Forma geométrica para manejar colisiones (o eso creo)
+//                  0.0,                           // Dynamic body restitution
+//                  0,                        // Dynamic body friction
+//                  0,                           // Dynamic body mass   
+//                  //_position + Vector3(0,0,-0.01),                    // Posicion inicial del shape
+//                  _nodePuerta->getPosition(),
+//                  Quaternion::IDENTITY);         // Orientacion del shape
+    
     _numBalas = 100;
+    
+    _numRobots = NUM_ROBOTS_INICIAL;
+    _oleada = 0;
 
 }
 
@@ -497,9 +472,7 @@ void StandRobots::resetCamera()
       _cameraNode->setPosition(Vector3(_activatorPosition.x,1.5,_activatorPosition.z+1));
       _cameraNode->setOrientation(Ogre::Quaternion(Ogre::Radian(Ogre::Degree(0)), Vector3(0, 1, 0)));
       _cameraBody->getBulletRigidBody()->setLinearVelocity(convert(Vector3(0,0,0)));
-      _cameraBody->getBulletRigidBody()->forceActivationState(ACTIVE_TAG);
-
-
+      _cameraBody->getBulletRigidBody()->forceActivationState(DISABLE_DEACTIVATION);
 
 }
 
@@ -507,52 +480,75 @@ void StandRobots::resetCamera()
 void StandRobots::checkCollisions() 
 {
 
-//    btCollisionWorld *collisionWorld = _world.get()->getBulletCollisionWorld();
-//    btDynamicsWorld *dynamicWorld = _world.get()->getBulletDynamicsWorld();
-//
-//    int numManifolds = collisionWorld->getDispatcher()->getNumManifolds();
-//    bool collide = false;
-//    for (int i = 0; i < numManifolds; i++) 
-//    {
-//        btPersistentManifold *contactManifold = collisionWorld->getDispatcher()->getManifoldByIndexInternal(i);
-//        btCollisionObject *obA = (btCollisionObject *)contactManifold->getBody0();
-//        btCollisionObject *obB = (btCollisionObject *)contactManifold->getBody1();
-//
-//        std::vector<btRigidBody*>::iterator it = std::find_if(_canBodys.begin(), _canBodys.end(),
-//                            [contactManifold](btRigidBody* canBody)->bool 
-//                            {
-//                                return contactManifold->getBody0()->getCollisionShape() == canBody->getCollisionShape() ||
-//                                       contactManifold->getBody1()->getCollisionShape() == canBody->getCollisionShape();
-//                            });
-//
-//
-//        if (it != _canBodys.end() && getCollisionForce(contactManifold)> MIN_FORCE_SOUND) 
-//        {
-//          sounds::getInstance()->play_effect("can");
-//        }
-//    }
-//
-//    deleteFallenCans();
-//
-//    if(_loadingShoot)
-//    {
-//        double width = 0.1+ _timeLoadingShoot/0.001;
-//        if(width<1000)
-//        {
-//            _panel->setWidth(width);
-//            _timeLoadingShoot += _deltaT;
-//        }
-//    }
-//
-//    if(_numBolas == 0)
-//    {
-//        _timeWithoutBalls += _deltaT;
-//
-//        if(_timeWithoutBalls > MAX_TIME_NO_BALLS)
-//        {
-//          endGame();
-//        }
-//    }
 
+
+    
+    btCollisionWorld *collisionWorld = _world.get()->getBulletCollisionWorld();
+    btDynamicsWorld *dynamicWorld = _world.get()->getBulletDynamicsWorld();
+
+    int numManifolds = collisionWorld->getDispatcher()->getNumManifolds();
+    bool collide = false;
+    for (int i = 0; i < numManifolds; i++) 
+    {
+        btPersistentManifold *contactManifold = collisionWorld->getDispatcher()->getManifoldByIndexInternal(i);
+        
+        //Sacamos la lista de robotBodys que están colisionando con algo
+        std::vector<btRigidBody*>::iterator it = std::find_if(_robotBodys.begin(), _robotBodys.end(),
+                            [contactManifold](btRigidBody* robotBody)->bool 
+                            {
+                                return contactManifold->getBody0()->getCollisionShape() == robotBody->getCollisionShape() ||
+                                       contactManifold->getBody1()->getCollisionShape() == robotBody->getCollisionShape();
+                            });
+
+        //Si it tiene más de 0 elementos, es que hay 1 o más robotBodys colisionando.
+        if (it != _robotBodys.end()) 
+        {
+            // Ahora discernimos cual de la pareja de bodys que colisionan es el robot y cual es otro body
+            // Si el body0 es el robot, devolvemos body0, de lo contrario el body1 (sino es burro, es burra)
+            const btCollisionObject* robotBody = (contactManifold->getBody0() == (*it)) ? contactManifold->getBody0() : contactManifold->getBody1();
+            // Del mismo modo nos guardamos el otro body, el que no sea un robotbody.
+            const btCollisionObject* otherObject = (robotBody == contactManifold->getBody0()) ? contactManifold->getBody1():contactManifold->getBody0();
+            
+            if (!strcmp(otherObject->getCollisionShape()->getName(),"CylinderZ")) //Si la colision es con un cilindro, es una bala
+            {
+                //cout << "colision con una bala" << endl;
+                sounds::getInstance()->play_effect("robotHit");
+                //_world->getBulletDynamicsWorld()->removeCollisionObject((btCollisionObject*)otherObject);
+            }
+            else // Si no, pues será el escenario.
+            {
+                //cout << "colision con escenario" << endl;
+                Quaternion quat = convert((*it)->getOrientation());
+                if (Math::Abs((int)quat.getPitch().valueDegrees()) == 90) //Si lo han tumbao, se muere
+                {
+                    cout << "estoy tumbadito" << endl;
+                    _world->getBulletDynamicsWorld()->removeCollisionObject((btCollisionObject*)otherObject);
+                }
+            }
+            
+        }
+    }
+}
+
+void StandRobots::createOleada()
+{
+    _robotBodys.clear();
+    std::vector<TipoRobot> tipos(_numRobots,TipoRobot::PEON);
+    
+    _robFact = RobotFactory(Ogre::Vector3(10,0,0),Ogre::Vector3(0,0,0));
+    auto robots = _robFact.createRobotSet(_world,_robFact.getDireccionInicial(),_robFact.getPosicionInicial(),tipos,_sceneMgr);
+    
+    for (auto it = robots->begin(); it != robots->end(); ++it)
+    {
+        (*it)->setAnim("Walk",true);
+        (*it)->startAnim();
+        _robotBodys.push_back((*it)->getBulletRigidBody());
+//        (*it)->getBulletRigidBody()->setLinearFactor(btVector3(0,1,1));
+//        (*it)->getBulletRigidBody()->setAngularFactor(btVector3(1,0,0));
+        //(*it)->getBulletRigidBody()->setAngularVelocity(convert(Vector3(0,0,0)));
+        //(*it)->getBulletRigidBody()->setAngularVelocity(convert(Vector3(0,0,0)));
+        //(*it)->getBulletRigidBody()->setLinearVelocity(convert(Vector3(0,0,1.5)));
+    }
+    
 }
 

@@ -31,6 +31,15 @@
         <id>can</id>
         <file>can.wav</file>
       </sound>
+      <sound>
+        <id>laser</id>
+        <file>laser.wav</file>
+      </sound>	
+      <sound>
+        <id>robotHit</id>
+        <file>laser2.wav</file>
+      </sound>	
+ 
 
     </effects>
 

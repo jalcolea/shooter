@@ -35,7 +35,7 @@ public:
       _sceneMgr->getRootSceneNode()->addChild(_nodoBala);
       _nodoBala->translate(_posicion);
       _nodoBala->setVisible(true);
-      _body = new RigidBody(_nombre,_world.get(),COL_BALA,COL_STAND | COL_FLOOR | COL_ROBOT | COL_ESCUDO) ;
+      _body = new RigidBody(_nombre,_world.get(),COL_BALA,COL_STAND | COL_FLOOR | COL_ROBOT | COL_ESCUDO | COL_PUERTA) ;
       _shape = new CylinderCollisionShape(_entBala->getBoundingBox().getHalfSize() * ESCALA,Vector3::UNIT_Z);
     
 #ifdef _DEBUG

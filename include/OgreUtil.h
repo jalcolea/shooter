@@ -16,7 +16,8 @@ enum collisiontypes {
     COL_BALL = 128,
     COL_BALA = 256,
     COL_HIT_ZONE = 512, //<Para el plano del jugador, si colisiona con él, le quita vida
-    COL_ESCUDO = 1024
+    COL_ESCUDO = 1024,
+    COL_PUERTA = 2048
 };
 
 

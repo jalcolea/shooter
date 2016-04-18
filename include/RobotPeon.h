@@ -14,8 +14,9 @@ public:
 
     RobotPeon(shared_ptr<DynamicsWorld> world, Vector3 direccion, Vector3 posicion, SceneManager* sceneMgr, string nombre) : Robot(world,direccion,posicion,sceneMgr)
     {
-      _direccion = Vector3(0,1,0);
-      _posicion = posicion;
+      //_direccion = Vector3(0,1,0);
+      //_posicion = posicion;
+      _posicion += Vector3(0,0.2,0);
       _nombre = nombre;
       _anim = nullptr;
       _entRobot =  _sceneMgr->createEntity(_nombre+"ent",MESH_PEON);
@@ -26,7 +27,7 @@ public:
       //_nodoRobot->showBoundingBox(true);
       _nodoRobot->translate(_posicion);
       _nodoRobot->setVisible(true);
-      _body = new RigidBody(_nombre,_world.get(),COL_ROBOT, COL_FLOOR |  COL_STAND | COL_BALA);
+      _body = new RigidBody(_nombre,_world.get(),COL_ROBOT, COL_FLOOR |  COL_STAND | COL_BALA | COL_PUERTA);
       cout << "center " << _entRobot->getBoundingBox().getCenter() << endl;
       Vector3 caja = _entRobot->getBoundingBox().getHalfSize();
       caja.x*=0.1;
@@ -40,7 +41,7 @@ public:
       _body->setShape(_nodoRobot,                    // SceneNode que manejará Bullet
                       _shape,                        // Forma geométrica para manejar colisiones (o eso creo)
                       0.0,                           // Dynamic body restitution
-                      1000.0,                        // Dynamic body friction
+                      0,                        // Dynamic body friction
                       10,                           // Dynamic body mass   
                       _posicion,                    // Posicion inicial del shape
                       Quaternion::IDENTITY);         // Orientacion del shape
@@ -48,11 +49,11 @@ public:
       //_body->setLinearVelocity(Vector3(0,0,0) * VELOCIDAD_PEON);
       _body->enableActiveState();
       
-      btTransform transform; //Declaration of the btTransform
-      transform.setIdentity(); //This function put the variable of the object to default. The ctor of btTransform doesnt do it.
-      transform = _body->getBulletRigidBody()->getWorldTransform();
-      transform.setOrigin(OgreBulletCollisions::OgreBtConverter::to(_posicion + Vector3(0,1,0))); //Set the new position/origin
-      _body->getBulletRigidBody()->setWorldTransform(transform); //Apply the btTransform to the body
+//      btTransform transform; //Declaration of the btTransform
+//      transform.setIdentity(); //This function put the variable of the object to default. The ctor of btTransform doesnt do it.
+//      transform = _body->getBulletRigidBody()->getWorldTransform();
+//      transform.setOrigin(OgreBulletCollisions::OgreBtConverter::to(_posicion + Vector3(0,0.1,0))); //Set the new position/origin
+//      _body->getBulletRigidBody()->setWorldTransform(transform); //Apply the btTransform to the body
 
     };
     
