@@ -90,6 +90,7 @@ void StandRobots::enter()
     
     _exitGame =  false;
     _deltaT = 0;
+    _lapsusTime = CADENCIA_DE_TIRO;
 
 }
 
@@ -205,25 +206,16 @@ bool StandRobots::mousePressed (const OIS::MouseEvent &e, OIS::MouseButtonID id)
     {
         if (_numBalas)
         {
-            _crosshair.get()->setMaterialCrosshair("circle-02.png");
-            
-            bala = new Bala(_world,CalculaDireccionTiro(), _cameraNode->getPosition(),_sceneMgr,std::to_string(_numBalas));
-//            bala = new Bala(_world,Vector3(0,0,-1), _cameraNode->getPosition() + Vector3(0,0,-2),_sceneMgr,std::to_string(_numBalas));
-//            if (bala)
-//            {
-//                Vector3 puntoColision; Ray rayo; RigidBody* body;
-//                body = pickBody(puntoColision,rayo,e.state.X.abs/float(_viewport->getActualWidth()),e.state.Y.abs/float(_viewport->getActualHeight()));
-//                if (body)
-//                {
-//                    body->enableActiveState();
-//                    Vector3 relPos(puntoColision - body->getCenterOfMassPosition());
-//                    Vector3 impulse (rayo.getDirection());
-//                    bala->shoot(impulse, 1000, relPos);
-//                    
-//                }
+            //_crosshair.get()->setMaterialCrosshair("circle-02.png");
+            if (_lapsusTime <= 0)
+            {    
+                bala = new Bala(_world,CalculaDireccionTiro(), _cameraNode->getPosition(),_sceneMgr,std::to_string(_numBalas));
+                Vector3 dir = CalculaDireccionTiro();
+                Vector3 rel(0,0,0);
+                bala->shoot(dir,2,rel);
                 --_numBalas;
-//            }
-            
+                _lapsusTime = CADENCIA_DE_TIRO;
+            }
         }
     }
     
@@ -241,6 +233,8 @@ bool StandRobots::frameStarted (const Ogre::FrameEvent& evt)
     _deltaT = evt.timeSinceLastFrame;
     
     _world->stepSimulation(_deltaT);
+    
+    _lapsusTime -= _deltaT;
     
     for (auto it = _robFact.getRobots()->begin(); it != _robFact.getRobots()->end(); ++it)
     {
@@ -260,6 +254,9 @@ bool StandRobots::frameStarted (const Ogre::FrameEvent& evt)
 
 bool StandRobots::frameEnded (const Ogre::FrameEvent& evt)
 { 
+    _deltaT = evt.timeSinceLastFrame;
+    _world->stepSimulation(_deltaT);
+    
     return true;
 }
 
@@ -300,17 +297,6 @@ bool StandRobots::WiimoteIRMove(const WiimoteEvent & e)
     
     return true;
 }
-
-//StandRobots& StandRobots::getSingleton()
-//{
-//    return *msSingleton;
-//}
-//
-//StandRobots* StandRobots::getSingletonPtr()
-//{ 
-//    assert(msSingleton);
-//    return msSingleton;
-//}
 
 void StandRobots::buildGame() 
 {
@@ -387,9 +373,27 @@ void StandRobots::createScene()
     _nodeEscudo->attachObject(entEscudo);
     _nodeEscudo->setVisible(false);
     _nodeEscudo->scale(5.0,2.0,0.0);
+    Vector3 caja = entEscudo->getBoundingBox().getHalfSize();
+    caja.x *= 5; caja.y *= 2; // Escalamos para la cáscara de bullet para el escudo y que coincida con él
     _sceneMgr->getRootSceneNode()->addChild(_nodeEscudo);
-    //_nodeEscudo->translate(0,0,0.1);
     _nodeEscudo->translate(_position + Vector3(0,0,-5));
+    //_shape = new BoxCollisionShape(entEscudo->getBoundingBox().getHalfSize() * 0.2);
+    BoxCollisionShape* shapeEscudo = new BoxCollisionShape(caja);
+    _bodyEscudo = new RigidBody("Escudo",_world.get(),COL_ESCUDO,  COL_BALA);
+    _bodyEscudo->setShape(_nodeEscudo,            // SceneNode que manejará Bullet
+                  shapeEscudo,                   // Forma geométrica para manejar colisiones (o eso creo)
+                  0.0,                           // Dynamic body restitution
+                  1.0,                           // Dynamic body friction
+                  0,                             // Dynamic body mass   
+                  _position + Vector3(0,0,-5),   // Posicion inicial del shape 5 ARRIBA Y 5 ATRAS
+                  Quaternion::IDENTITY);         // Orientacion del shape
+    
+    
+    Entity* entFondo = _sceneMgr->createEntity("entFondo","Fondo.mesh");
+    SceneNode* nodeFondo = _sceneMgr->createSceneNode("nodoFondo");
+    nodeFondo->attachObject(entFondo);
+    _sceneMgr->getRootSceneNode()->addChild(nodeFondo);
+    nodeFondo->translate(_position + Vector3(0,0,-0.01));
     
     
 }
@@ -398,16 +402,26 @@ void StandRobots::ActivaPuerta(AccionPuerta accion)
 {
     _animPuerta->setEnabled(true);
  
+    btTransform transform;
+    transform.setIdentity();
+    transform = _bodyEscudo->getBulletRigidBody()->getWorldTransform();
+    
     switch (accion)
     {
         case AccionPuerta::ABRIR:   _animPuerta->setTimePosition(0.0);
                                     _sentidoAccionPuerta = AccionPuerta::ABRIR; 
                                     _nodeEscudo->setVisible(true); 
-                                    sounds::getInstance()->play_effect_loop("escudo",1); break;
+                                    sounds::getInstance()->play_effect_loop("escudo",1); 
+                                    transform.setOrigin(convert(_position + Vector3(0,0,-5)));
+                                    _bodyEscudo->getBulletRigidBody()->setWorldTransform(transform);
+                                    break;
         case AccionPuerta::CERRAR:  _animPuerta->setTimePosition(_animPuerta->getLength());
                                     _sentidoAccionPuerta = AccionPuerta::CERRAR; 
                                     _nodeEscudo->setVisible(false); 
-                                    sounds::getInstance()->halt_effect(1); break;
+                                    sounds::getInstance()->halt_effect(1); 
+                                    transform.setOrigin(convert(_position + Vector3(0,5,-5)));
+                                    _bodyEscudo->getBulletRigidBody()->setWorldTransform(transform);
+                                    break;
         case AccionPuerta::PARAR:   _animPuerta->setEnabled(false);
                                     _sentidoAccionPuerta = AccionPuerta::PARAR; break;
         default:;

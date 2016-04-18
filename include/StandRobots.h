@@ -27,6 +27,7 @@
 #include "Bala.h"
 
 #define NOMBRE_STAND_ROBOTS "StandRobots"
+#define CADENCIA_DE_TIRO 0.25
 
 using namespace std;
 using namespace Ogre;
@@ -98,6 +99,7 @@ private:
   void createScene();
   void createLight();
   RigidBody* pickBody (Vector3 &puntoColision, Ray &rayo, float x, float y);
+  RigidBody* _bodyEscudo;
   std::unique_ptr<Ogre::Ray> _mouseray;// {new Ogre::Ray};
   RobotFactory _robFact;
   Ogre::Plane _plane; // Para manejar el crosshair
@@ -112,6 +114,7 @@ private:
   AccionPuerta _sentidoAccionPuerta;
   Bala* bala;
   size_t _numBalas;
+  Real _lapsusTime;
 
 
   //DebugDrawer* _debugDrawer;
