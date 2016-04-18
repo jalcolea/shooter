@@ -10,8 +10,11 @@
 #include "OgreOverlayElement.h"
 #include "OgreOverlayContainer.h"
 #include "OgreTextAreaOverlayElement.h"
+#include "Carrusel.h"
 
-#define NUM_BOLAS 4
+#define NUM_BOLAS 3
+#define MIN_FORCE_SOUND 2
+#define MAX_TIME_NO_BALLS 3
 using namespace Ogre;
 using namespace std;
 
@@ -32,6 +35,10 @@ void StandLatas::enter() {
   _ballStack = _sceneMgr->createSceneNode("ballStack");
   _sceneMgr->getRootSceneNode()->addChild(_ballStack);
   drawHud();
+   Carrusel c;
+   c.go();
+    _timeWithoutBalls=0;
+
 
 
 
@@ -87,6 +94,7 @@ void StandLatas::drawCans() {
       drawCan(startPosition + Vector3(x, (numRows - i) * height, 0), str.str());
     }
   }
+  _timeWithoutBalls = 0;
 }
 
 /**
@@ -189,6 +197,8 @@ Vector3 StandLatas::calculateDirShoot() {
 
   _ballBodys.push_back(rigidBall->getBulletRigidBody());
   _numBolas--;
+
+
   
 
   stringstream str2;
@@ -310,7 +320,7 @@ void StandLatas::checkCollisions() {
             });
 
 	
-        if (it != _canBodys.end() && getCollisionForce(contactManifold)> 10) {
+        if (it != _canBodys.end() && getCollisionForce(contactManifold)> MIN_FORCE_SOUND) {
 	 
 	          sounds::getInstance()->play_effect("can");
 
@@ -324,11 +334,19 @@ void StandLatas::checkCollisions() {
 
   if(_loadingShoot){
 
-    std::cout << "Pinta de gañan " << (0.1 +(_timeLoadingShoot/10)) << std::endl;
+
     double width = 0.1+ _timeLoadingShoot/0.001;
     if(width<1000){
     _panel->setWidth(width);
     _timeLoadingShoot += _deltaT;
+    }
+  }
+
+  if(_numBolas == 0){
+    _timeWithoutBalls += _deltaT;
+    
+    if(_timeWithoutBalls > MAX_TIME_NO_BALLS){
+      endGame();
     }
   }
 
@@ -391,4 +409,18 @@ void StandLatas::paintBallsHud(){
 
 }
 
+void StandLatas::endGame(){
 
+  //Pedir Record
+
+  _activatorActive = false;
+  std::cout <<"End Game" << std::endl;
+  _cameraBody->getBulletRigidBody()->forceActivationState(DISABLE_DEACTIVATION);
+  _cameraBody->getBulletRigidBody()->setLinearVelocity(convert(Vector3(0,0,0)));
+   _cameraBody->getBulletRigidBody()->setAngularVelocity(convert(Vector3(0,0,0)));
+   _cameraBody->getBulletRigidBody()->clearForces();
+   // _cameraNode->translate(Vector3(0, -1, 3));
+  popState();
+
+
+}

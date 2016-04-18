@@ -19,6 +19,7 @@ Stand::Stand( Vector3 position, SceneManager* sceneMgr, std::string name,shared_
     _camera = sceneMgr->getCamera("IntroCamera");
     _cameraNode = sceneMgr->getSceneNode("nodeCamera");
     _cameraBody = PlayState::getSingleton().getCameraBody();
+    _activatorActive = true;
     startGame();
 
 
@@ -101,6 +102,9 @@ bool Stand::frameStarted (const Ogre::FrameEvent& evt){
 
 }
 bool Stand::frameEnded (const Ogre::FrameEvent& evt){
+  _deltaT = evt.timeSinceLastFrame;
+  _world.get()->stepSimulation(evt.timeSinceLastFrame);
+
   return true;
 
 

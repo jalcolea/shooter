@@ -30,6 +30,7 @@ protected:
   SceneNode * _ballStack;
   bool _loadingShoot;
   double _timeLoadingShoot;
+  double _timeWithoutBalls;
   Ogre::OverlayContainer* _panel;
 
   
@@ -48,6 +49,7 @@ public:
   void deleteFallenCans();
   void drawHud();
   void paintBallsHud();
+  void endGame();
   
 
   StandLatas( Vector3 position, SceneManager* sceneMgr, std::string name,shared_ptr<OgreBulletDynamics::DynamicsWorld> world ):Stand(position, sceneMgr,name,world){

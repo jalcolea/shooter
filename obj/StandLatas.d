@@ -492,7 +492,7 @@ obj/StandLatas.o: src/StandLatas.cpp include/StandLatas.h include/Stand.h \
  /usr/include/OGRE/Overlay/OgreOverlayElement.h \
  /usr/include/OGRE/Overlay/OgreTextAreaOverlayElement.h \
  /usr/include/OGRE/Overlay/OgreFont.h /usr/include/OGRE/OgreMaterial.h \
- /usr/include/OGRE/OgreCommon.h
+ /usr/include/OGRE/OgreCommon.h include/Carrusel.h
 src/StandLatas.cpp:
 include/StandLatas.h:
 include/Stand.h:
@@ -1070,3 +1070,4 @@ include/OgreUtil.h:
 /usr/include/OGRE/Overlay/OgreFont.h:
 /usr/include/OGRE/OgreMaterial.h:
 /usr/include/OGRE/OgreCommon.h:
+include/Carrusel.h:
