@@ -79,7 +79,10 @@ void PlayState::exit() { destroyMyGui(); }
 
 void PlayState::pause() { paused = true; }
 
-void PlayState::resume() { paused = false; }
+void PlayState::resume()
+{ 
+    paused = false; 
+}
 
 bool PlayState::frameStarted(const Ogre::FrameEvent &evt) {
 

@@ -6,6 +6,7 @@
 #include <Ogre.h>
 #include <string>
 #include <vector>
+#include "OgreUtil.h"
 
 using namespace std;
 using namespace Ogre;

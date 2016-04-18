@@ -91,7 +91,9 @@ protected:
     //Ogre::RaySceneQuery* _rayScnQuery;
     void ActivaPuerta(AccionPuerta accion);
     void reacomodateCamera();
+    void resetCamera();
     Vector3 CalculaDireccionTiro();
+    void checkCollisions();
     
 private:
   void createMyGui();

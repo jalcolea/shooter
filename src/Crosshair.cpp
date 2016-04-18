@@ -1,6 +1,11 @@
 #include "Crosshair.h"
 
-Crosshair::~Crosshair(){}
+Crosshair::~Crosshair()
+{
+    OgreUtil::destroyAllAttachedMovableObjects(this->_nodeCrosshair);
+    OgreUtil::destroySceneNode(_nodeCrosshair);
+    _sceneMgr->destroyManualObject("crossHair");
+}
 
 Ogre::SceneNode* Crosshair::createCrossHairManual(const std::string & crosshairImg)
 {

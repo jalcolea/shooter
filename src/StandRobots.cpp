@@ -4,6 +4,7 @@ template<> StandRobots* Ogre::Singleton<StandRobots>::msSingleton = 0;
 
 StandRobots::~StandRobots()
 {
+    cout << "ME HAN MATAO :D" << endl;
 }
 
 void StandRobots::enter()
@@ -91,10 +92,26 @@ void StandRobots::enter()
     _exitGame =  false;
     _deltaT = 0;
     _lapsusTime = CADENCIA_DE_TIRO;
+    
+    reacomodateCamera();
 
 }
 
-void StandRobots::exit(){}
+void StandRobots::exit()
+{
+    _activatorActive = false;
+    _crosshair.reset();
+    resetCamera();
+    ActivaPuerta(AccionPuerta::CERRAR);
+    OgreUtil::destroyAllAttachedMovableObjects(_nodeEscudo);
+    OgreUtil::destroyAllAttachedMovableObjects(_nodeWeapon);
+    OgreUtil::destroySceneNode(_nodeEscudo);
+    OgreUtil::destroySceneNode(_nodeWeapon);
+    OgreUtil::destroyAllAttachedMovableObjects(_sceneMgr->getSceneNode("nodoFondo"));
+    OgreUtil::destroySceneNode(_sceneMgr->getSceneNode("nodoFondo"));
+
+}
+
 void StandRobots::pause(){}
 void StandRobots::resume(){}
 
@@ -247,7 +264,10 @@ bool StandRobots::frameStarted (const Ogre::FrameEvent& evt)
     
     
     if (_exitGame)
-        return false;
+    {
+        popState();
+    }
+        
     
     return true;
 }
@@ -379,7 +399,7 @@ void StandRobots::createScene()
     _nodeEscudo->translate(_position + Vector3(0,0,-5));
     //_shape = new BoxCollisionShape(entEscudo->getBoundingBox().getHalfSize() * 0.2);
     BoxCollisionShape* shapeEscudo = new BoxCollisionShape(caja);
-    _bodyEscudo = new RigidBody("Escudo",_world.get(),COL_ESCUDO,  COL_BALA);
+    _bodyEscudo = new RigidBody("Escudo",_world.get(), COL_ESCUDO, COL_BALA);
     _bodyEscudo->setShape(_nodeEscudo,            // SceneNode que manejará Bullet
                   shapeEscudo,                   // Forma geométrica para manejar colisiones (o eso creo)
                   0.0,                           // Dynamic body restitution
@@ -395,7 +415,7 @@ void StandRobots::createScene()
     _sceneMgr->getRootSceneNode()->addChild(nodeFondo);
     nodeFondo->translate(_position + Vector3(0,0,-0.01));
     
-    
+    ActivaPuerta(AccionPuerta::ABRIR);
 }
 
 void StandRobots::ActivaPuerta(AccionPuerta accion)
@@ -437,18 +457,102 @@ void StandRobots::createLight()
 void StandRobots::reacomodateCamera() 
 {
 
+//      _cameraNode->translate(Vector3(0, 1, -2));
+//      _cameraNode->setDirection(Vector3(0,0,-1));
+//      _cameraNode->setOrientation(Quaternion::IDENTITY);
+//      _camera->setPosition(0,1,-2);
+//      _camera->setDirection(0,0,-1);
+//      _camera->lookAt(_position + Vector3(0,1,0));
+//      _cameraNode->lookAt(_position + Vector3(0,1,0),Node::TS_LOCAL);
+//      cout << "camara mirando a " << _position << endl;
+//      btTransform bt;
+//      bt.setIdentity();  
+//      bt = _cameraBody->getBulletRigidBody()->getWorldTransform();
+//      bt.setRotation(convert(_cameraNode->getOrientation()));  
+
       _cameraBody->setOrientation(Ogre::Quaternion(Ogre::Radian(Ogre::Degree(0)), Vector3(0, 1, 0)));
+      _cameraBody->setPosition(Vector3(_activatorPosition.x,1.5,_activatorPosition.z));
       _cameraBody->getBulletRigidBody()->forceActivationState(DISABLE_SIMULATION);
-      btTransform bt = _cameraBody->getBulletRigidBody()->getWorldTransform();
-      //bt.setOrigin(convert(_activatorPosition-Vector3(0,0,-10) ));
-      bt.setOrigin(convert(Vector3(0,1,-3)));
-      bt.setRotation(convert(_camera->getOrientation()));
-      _cameraBody->getBulletRigidBody()->setWorldTransform(bt);
-      //_cameraNode->translate(_activatorPosition-Vector3(0,0,2));
-      _cameraNode->translate(Vector3(0, 1, -3));
-      _cameraNode->setDirection(Vector3(0,0,-1));
-      _camera->setPosition(0,1,-3);
-      _camera->setDirection(0,0,-1);
+      _camera->setPosition(Vector3(_activatorPosition.x-_position.x,1.5,_activatorPosition.z));
+      _camera->setOrientation(Ogre::Quaternion(Ogre::Radian(Ogre::Degree(0)), Vector3(0, 1, 0)));
+      _cameraNode->setPosition(Vector3(_activatorPosition.x,1.5,_activatorPosition.z));
+      _cameraNode->setOrientation(Ogre::Quaternion(Ogre::Radian(Ogre::Degree(0)), Vector3(0, 1, 0)));
+
+//      bt.setOrigin(convert(_activatorPosition-Vector3(0,0,-10) ));
+//      bt.setOrigin(convert(Vector3(_activatorPosition.x,1,-3)));
+//      bt.setRotation(convert(Ogre::Quaternion(Ogre::Radian(Ogre::Degree(0)), Vector3::UNIT_Y)));
+//      _cameraBody->getBulletRigidBody()->setWorldTransform(bt);
+      
       _crosshair->setCamera(_camera);
+
   
 }
+
+void StandRobots::resetCamera()
+{
+      _cameraBody->setOrientation(Ogre::Quaternion(Ogre::Radian(Ogre::Degree(0)), Vector3(0, 1, 0)));
+      _cameraBody->setPosition(Vector3(_activatorPosition.x,1.5,_activatorPosition.z+1));
+      _camera->setPosition(Vector3(_activatorPosition.x-_position.x,1.5,_activatorPosition.z+1));
+      _camera->setOrientation(Ogre::Quaternion(Ogre::Radian(Ogre::Degree(0)), Vector3(0, 1, 0)));
+      _cameraNode->setPosition(Vector3(_activatorPosition.x,1.5,_activatorPosition.z+1));
+      _cameraNode->setOrientation(Ogre::Quaternion(Ogre::Radian(Ogre::Degree(0)), Vector3(0, 1, 0)));
+      _cameraBody->getBulletRigidBody()->setLinearVelocity(convert(Vector3(0,0,0)));
+      _cameraBody->getBulletRigidBody()->forceActivationState(ACTIVE_TAG);
+
+
+
+}
+
+
+void StandRobots::checkCollisions() 
+{
+
+//    btCollisionWorld *collisionWorld = _world.get()->getBulletCollisionWorld();
+//    btDynamicsWorld *dynamicWorld = _world.get()->getBulletDynamicsWorld();
+//
+//    int numManifolds = collisionWorld->getDispatcher()->getNumManifolds();
+//    bool collide = false;
+//    for (int i = 0; i < numManifolds; i++) 
+//    {
+//        btPersistentManifold *contactManifold = collisionWorld->getDispatcher()->getManifoldByIndexInternal(i);
+//        btCollisionObject *obA = (btCollisionObject *)contactManifold->getBody0();
+//        btCollisionObject *obB = (btCollisionObject *)contactManifold->getBody1();
+//
+//        std::vector<btRigidBody*>::iterator it = std::find_if(_canBodys.begin(), _canBodys.end(),
+//                            [contactManifold](btRigidBody* canBody)->bool 
+//                            {
+//                                return contactManifold->getBody0()->getCollisionShape() == canBody->getCollisionShape() ||
+//                                       contactManifold->getBody1()->getCollisionShape() == canBody->getCollisionShape();
+//                            });
+//
+//
+//        if (it != _canBodys.end() && getCollisionForce(contactManifold)> MIN_FORCE_SOUND) 
+//        {
+//          sounds::getInstance()->play_effect("can");
+//        }
+//    }
+//
+//    deleteFallenCans();
+//
+//    if(_loadingShoot)
+//    {
+//        double width = 0.1+ _timeLoadingShoot/0.001;
+//        if(width<1000)
+//        {
+//            _panel->setWidth(width);
+//            _timeLoadingShoot += _deltaT;
+//        }
+//    }
+//
+//    if(_numBolas == 0)
+//    {
+//        _timeWithoutBalls += _deltaT;
+//
+//        if(_timeWithoutBalls > MAX_TIME_NO_BALLS)
+//        {
+//          endGame();
+//        }
+//    }
+
+}
+
