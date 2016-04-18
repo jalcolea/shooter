@@ -1,0 +1,35 @@
+// MaterialMarron.055 genrated by blender2ogre 0.6.0
+
+material MaterialMarron.055 
+{
+    receive_shadows on 
+
+    technique
+    {
+        pass MaterialMarron.055
+        {
+            ambient 0.14240117371082306 0.029144635424017906 0.0031465431675314903 1.0
+            diffuse 0.11392094066621272 0.023315708686645453 0.00251723457153491 1.0
+            specular 0.006912440061569214 0.006912440061569214 0.006912440061569214 1.0 12.5
+            emissive 0.0 0.0 0.0 1.0
+
+            alpha_to_coverage off
+            colour_write on
+            cull_hardware clockwise
+            depth_check on
+            depth_func less_equal
+            depth_write on
+            illumination_stage 
+            light_clip_planes off
+            light_scissor off
+            lighting on
+            normalise_normals off
+            polygon_mode solid
+            scene_blend one zero
+            scene_blend_op add
+            shading gouraud
+            transparent_sorting on
+
+        }
+    }
+}

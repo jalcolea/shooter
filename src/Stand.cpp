@@ -30,6 +30,7 @@ void Stand::buildGame(){
   StaticGeometry *stage = _sceneMgr->createStaticGeometry(_name);
   Entity* entStand = _sceneMgr->createEntity("puesto.mesh");
   entStand->setQueryFlags(COL_STAND);
+  entStand->setCastShadows(true);
   //Asociar forma y cuerpo rígido
   OgreBulletCollisions::StaticMeshToShapeConverter trimeshConverter = OgreBulletCollisions::StaticMeshToShapeConverter(entStand);
   _shapeStand = trimeshConverter.createTrimesh();
@@ -102,8 +103,7 @@ bool Stand::frameStarted (const Ogre::FrameEvent& evt){
 
 }
 bool Stand::frameEnded (const Ogre::FrameEvent& evt){
-  _deltaT = evt.timeSinceLastFrame;
-  _world.get()->stepSimulation(evt.timeSinceLastFrame);
+
 
   return true;
 

@@ -169,7 +169,7 @@ void PlayState::createFloor() {
       "FloorPlane", ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
       planeFloor, 200000, 200000, 20, 20, true, 1, 9000, 9000, Vector3::UNIT_Z);
   Entity *entFloor = _sceneMgr->createEntity("floor", "FloorPlane");
-  entFloor->setCastShadows(false);
+  entFloor->setCastShadows(true);
   entFloor->setMaterialName("floor");
   floorNode->attachObject(entFloor);
   _sceneMgr->getRootSceneNode()->addChild(floorNode);
@@ -234,15 +234,33 @@ PlayState &PlayState::getSingleton() {
 
 PlayState::~PlayState() {}
 
+void PlayState::createForest(){
+
+  StaticGeometry *stage = _sceneMgr->createStaticGeometry("Forest");
+  Entity* entForest = _sceneMgr->createEntity("trees.mesh");
+  entForest->setQueryFlags(COL_STAND);
+  entForest->setCastShadows(true);
+  //Asociar forma y cuerpo rígido
+  OgreBulletCollisions::StaticMeshToShapeConverter trimeshConverter = OgreBulletCollisions::StaticMeshToShapeConverter(entForest);
+  OgreBulletCollisions::CollisionShape *shapeForest = trimeshConverter.createTrimesh();
+  OgreBulletDynamics::RigidBody* rigidForest = new OgreBulletDynamics::RigidBody("Forest", _world.get(), COL_STAND,  COL_CAMERA | COL_FLOOR | COL_ACTIVATOR | COL_CAN | COL_BALL);
+  rigidForest->setStaticShape(shapeForest, 1, 1, Vector3(0,0,0), Quaternion::IDENTITY);
+
+  entForest->setCastShadows(true);
+  stage->addEntity(entForest, Vector3(0,0,0));
+  stage->build();
+}
 void PlayState::createScene() {
 
   _sceneMgr->setAmbientLight(Ogre::ColourValue(0.5, 0.5, 0.5));
   _sceneMgr->setShadowTechnique(SHADOWTYPE_STENCIL_MODULATIVE);
   _sceneMgr->setShadowColour(ColourValue(0.5, 0.5, 0.5));
+  _sceneMgr->setShadowFarDistance(100);
   _sceneMgr->setSkyBox(true, "skybox");
   createLight();
   createMyGui();
   createFloor();
+  createForest();
   StandFactory factory;
   _stands = factory.buildFestival(_sceneMgr, _world);
 }
@@ -257,9 +275,9 @@ void PlayState::createLight()
   _sceneMgr->setShadowTextureCount(2);
   _sceneMgr->setShadowTextureSize(512);
   Light *light = _sceneMgr->createLight("Light1");
-  light->setPosition(0, 12, 0);
+  light->setPosition(30, 30, 0);
   light->setType(Light::LT_SPOTLIGHT);
-  light->setDirection(Vector3(0, -1, 0));
+  light->setDirection(Vector3(-1, -1, 0));
   light->setSpotlightInnerAngle(Degree(60.0f));
   light->setSpotlightOuterAngle(Degree(80.0f));
   light->setSpotlightFalloff(0.0f);

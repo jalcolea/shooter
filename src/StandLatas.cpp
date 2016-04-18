@@ -39,6 +39,14 @@ void StandLatas::enter() {
    c.go();
     _timeWithoutBalls=0;
 
+    Ogre::Light* light = _sceneMgr->createLight("LightStandLatas");
+    light->setType(Ogre::Light::LT_DIRECTIONAL);
+    light->setDirection(Ogre::Vector3(0,0,-1));
+    light->setPosition(_cameraNode->getPosition());
+    light->setCastShadows(true);
+
+    
+
 
 
 
@@ -55,9 +63,11 @@ void StandLatas::drawCan(Vector3 position, string name) {
  
   Entity *canEnt = _sceneMgr->createEntity("lata.mesh");
   canEnt->setQueryFlags(COL_CAN);
+  canEnt->setCastShadows(true);
   canNode->attachObject(canEnt);
   canNode->setPosition(_activatorPosition + Vector3(0, 2, 2));
   canNode->scale(Vector3(0.2, 0.2, 0.2));
+  
   _canStack->addChild(canNode);
   OgreBulletDynamics::RigidBody *rigidCan = new OgreBulletDynamics::RigidBody(
       name, _world.get(), COL_CAN,
@@ -183,6 +193,7 @@ Vector3 StandLatas::calculateDirShoot() {
   string name = str.str();  
   SceneNode *ballNode = _sceneMgr->createSceneNode(name);
   Entity *ballEnt = _sceneMgr->createEntity("ball.mesh");
+  ballEnt->setCastShadows(true);
   ballNode->attachObject(ballEnt);
   OgreBulletDynamics::RigidBody *rigidBall = new OgreBulletDynamics::RigidBody(
       name, _world.get(), COL_BALL,
@@ -413,6 +424,7 @@ void StandLatas::endGame(){
 
   //Pedir Record
 
+  _crosshair.reset();
   _activatorActive = false;
   std::cout <<"End Game" << std::endl;
   _cameraBody->getBulletRigidBody()->forceActivationState(DISABLE_DEACTIVATION);

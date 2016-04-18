@@ -119,6 +119,7 @@ private:
   void createLight();
   void moveCamera();
   void createFloor();
+  void createForest();
 
 };
 
