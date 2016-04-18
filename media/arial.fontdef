@@ -1,0 +1,7 @@
+arial
+{
+   type truetype
+   source arial.ttf
+   size       25
+   resolution 72
+}

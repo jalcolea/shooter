@@ -32,6 +32,7 @@ protected:
   double _timeLoadingShoot;
   double _timeWithoutBalls;
   Ogre::OverlayContainer* _panel;
+  int _puntos;
 
   
   

@@ -8,12 +8,14 @@
 #include "OgreUtil.h"
 #include "OgreOverlayManager.h"
 #include "OgreOverlayElement.h"
+#include "OgreFontManager.h"
 #include "OgreOverlayContainer.h"
 #include "OgreTextAreaOverlayElement.h"
 #include "Carrusel.h"
+#include "WinState.h"
 
 #define NUM_BOLAS 3
-#define MIN_FORCE_SOUND 2
+#define MIN_FORCE_SOUND 4
 #define MAX_TIME_NO_BALLS 3
 using namespace Ogre;
 using namespace std;
@@ -38,6 +40,7 @@ void StandLatas::enter() {
    Carrusel c;
    c.go();
     _timeWithoutBalls=0;
+    _puntos=0;
 
     Ogre::Light* light = _sceneMgr->createLight("LightStandLatas");
     light->setType(Ogre::Light::LT_DIRECTIONAL);
@@ -262,7 +265,7 @@ void StandLatas::deleteFallenCans(){
       delete (*it);
 
       it = _canBodys.erase(it);
-      
+      _puntos+=10;
       _numCans--;
      }
     else{
@@ -369,7 +372,7 @@ void StandLatas::drawHud(){
 
   Ogre::OverlayManager &overlayManager = Ogre::OverlayManager::getSingleton();
 
- 
+  //new OgreFontManager();
 // Create a panel
    _panel = (OverlayContainer*)(
     overlayManager.createOverlayElement("Panel", "Panelaco"));
@@ -378,13 +381,26 @@ _panel->setPosition(10, 10);
 _panel->setDimensions(100, 10);
 _panel->setMaterialName("Material.002"); // Optional background material
  
-
+/*
+// Create a text area
+TextAreaOverlayElement* textArea = static_cast<TextAreaOverlayElement*>(
+    overlayManager.createOverlayElement("TextArea", "TextAreaName"));
+textArea->setMetricsMode(Ogre::GMM_PIXELS);
+textArea->setPosition(0, 0);
+textArea->setDimensions(100, 100);
+textArea->setCaption("Hello, World!");
+textArea->setCharHeight(16);
+textArea->setFontName("arial");
+textArea->setColourBottom(ColourValue(0.3, 0.5, 0.3));
+textArea->setColourTop(ColourValue(0.5, 0.7, 0.5));
+*/
+ 
 // Create an overlay, and add the panel
 Overlay* overlay = overlayManager.create("OverlayName");
 overlay->add2D(_panel);
  
 // Add the text area to the panel
-//panel->addChild(textArea);
+//_panel->addChild(textArea);
 
 // Show the overlay
 overlay->show();
@@ -422,7 +438,7 @@ void StandLatas::paintBallsHud(){
 
 void StandLatas::endGame(){
 
-  //Pedir Record
+  //Pedir RecordS
 
   _crosshair.reset();
   _activatorActive = false;
@@ -432,7 +448,13 @@ void StandLatas::endGame(){
    _cameraBody->getBulletRigidBody()->setAngularVelocity(convert(Vector3(0,0,0)));
    _cameraBody->getBulletRigidBody()->clearForces();
    // _cameraNode->translate(Vector3(0, -1, 3));
-  popState();
+
+   
+    popState();
+    WinState::getSingletonPtr()->setPoints(_puntos);
+    pushState(WinState::getSingletonPtr());
+
+
 
 
 }

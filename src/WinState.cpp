@@ -21,7 +21,11 @@ void WinState::enter ()
 }
 
 void WinState::exit()
+
+ 
 {
+
+  std::cout << "kakakakakaka" << std::endl;
  _root->getAutoCreatedWindow()->removeAllViewports();
   destroyMyGui();
 }
@@ -121,6 +125,7 @@ WinState& WinState::getSingleton ()
 
 void WinState::destroyMyGui()
 {
+  std::cout << "Destruyendo MyGUI" << std::endl;
     MyGUI::LayoutManager::getInstance().unloadLayout(layout);
 }
 
