@@ -387,68 +387,6 @@ void StandLatas::drawHud(){
    _playWidget->setPoints(0);
    
 
-  /*
-  Ogre::OverlayManager &overlayManager = Ogre::OverlayManager::getSingleton();
-
-  Ogre::FontManager* aux = new Ogre::FontManager();
-
-  FontPtr font = aux->create("arial", ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
-
-  font.get()->setType(FT_TRUETYPE);
-  font.get()->setSource("arial.ttf");
-  font.get()->setTrueTypeSize(10);
-  font.get()->setTrueTypeResolution(96);
-
-   font.get()->load();
-
-
-
-
-
-
-  
-  aux->reloadAll();
-// Create a panel
-   _panel = (OverlayContainer*)(
-    overlayManager.createOverlayElement("Panel", "Panelaco"));
-_panel->setMetricsMode(Ogre::GMM_PIXELS);
-_panel->setPosition(10, 10);
-_panel->setDimensions(100, 10);
-_panel->setMaterialName("Material.002"); // Optional background material
-
- OverlayContainer*   _panelPuntos = (OverlayContainer*)(
-    overlayManager.createOverlayElement("Panel", "PanelPuntacos"));
-_panelPuntos->setMetricsMode(Ogre::GMM_PIXELS);
-_panelPuntos->setPosition(800, 600);
-_panelPuntos->setDimensions(100, 100);
- _panelPuntos->setMaterialName("Material.002"); // Optional background material
-
-
-
-// Create a text area
-_textArea = static_cast<TextAreaOverlayElement*>(
-    overlayManager.createOverlayElement("TextArea", "puntos"));
-_textArea->setMetricsMode(Ogre::GMM_PIXELS);
-_textArea->setPosition(0, 0);
-_textArea->setDimensions(100, 100);
-_textArea->setCaption("0");
-_textArea->setCharHeight(16);
-_textArea->setFontName("arial");
-_textArea->setColourBottom(ColourValue(0.3, 0.5, 0.3));
-_textArea->setColourTop(ColourValue(0.5, 0.7, 0.5));
-
-
-// Create an overlay, and add the panel
-Overlay* overlay = overlayManager.create("OverlayName");
-overlay->add2D(_panel);
- overlay->add2D(_panelPuntos);
- 
-// Add the text area to the panel
-_panelPuntos->addChild(_textArea);
-
-// Show the overlay
-overlay->show();
-  */
  paintBallsHud();
 
 

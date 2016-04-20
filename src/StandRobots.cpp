@@ -60,7 +60,7 @@ void StandRobots::exit()
 {
     _activatorActive = false;
     _crosshair.reset();
-    resetCamera();
+    // resetCamera();
     ActivaPuerta(AccionPuerta::CERRAR);
     OgreUtil::destroyAllAttachedMovableObjects(_nodeEscudo);
     OgreUtil::destroyAllAttachedMovableObjects(_nodeWeapon);
@@ -68,6 +68,7 @@ void StandRobots::exit()
     OgreUtil::destroySceneNode(_nodeWeapon);
     OgreUtil::destroyAllAttachedMovableObjects(_sceneMgr->getSceneNode("nodoFondo"));
     OgreUtil::destroySceneNode(_sceneMgr->getSceneNode("nodoFondo"));
+    _cameraBody->getBulletRigidBody()->forceActivationState(DISABLE_DEACTIVATION);
 
 }
 
@@ -96,12 +97,6 @@ bool StandRobots::keyPressed (const OIS::KeyEvent &e)
         
     if (e.key == OIS::KC_P)
         ActivaPuerta(AccionPuerta::PARAR);
-
-      _cameraBody->getBulletRigidBody()->forceActivationState(DISABLE_DEACTIVATION);
-  _cameraBody->getBulletRigidBody()->setLinearVelocity(convert(Vector3(0,0,0)));
-   _cameraBody->getBulletRigidBody()->setAngularVelocity(convert(Vector3(0,0,0)));
-   _cameraBody->getBulletRigidBody()->clearForces();
-
         
     return true;
 }
@@ -452,12 +447,13 @@ void StandRobots::reacomodateCamera()
 //      bt.setRotation(convert(_cameraNode->getOrientation()));  
 
       _cameraBody->setOrientation(Ogre::Quaternion(Ogre::Radian(Ogre::Degree(0)), Vector3(0, 1, 0)));
-      _cameraBody->setPosition(Vector3(_activatorPosition.x,1.5,_activatorPosition.z));
+      /*      _cameraBody->setPosition(Vector3(_activatorPosition.x,1.5,_activatorPosition.z));*/
       _cameraBody->getBulletRigidBody()->forceActivationState(DISABLE_SIMULATION);
-      _camera->setPosition(Vector3(_activatorPosition.x-_position.x,1.5,_activatorPosition.z));
+        _cameraNode->setPosition(_activatorPosition + Vector3(0,1.5,0));
+      /*      _camera->setPosition(Vector3(_activatorPosition.x-_position.x,1.5,_activatorPosition.z));
       _camera->setOrientation(Ogre::Quaternion(Ogre::Radian(Ogre::Degree(0)), Vector3(0, 1, 0)));
       _cameraNode->setPosition(Vector3(_activatorPosition.x,1.5,_activatorPosition.z));
-      _cameraNode->setOrientation(Ogre::Quaternion(Ogre::Radian(Ogre::Degree(0)), Vector3(0, 1, 0)));
+      _cameraNode->setOrientation(Ogre::Quaternion(Ogre::Radian(Ogre::Degree(0)), Vector3(0, 1, 0)));*/
 
 //      bt.setOrigin(convert(_activatorPosition-Vector3(0,0,-10) ));
 //      bt.setOrigin(convert(Vector3(_activatorPosition.x,1,-3)));
@@ -471,14 +467,14 @@ void StandRobots::reacomodateCamera()
 
 void StandRobots::resetCamera()
 {
-      _cameraBody->setOrientation(Ogre::Quaternion(Ogre::Radian(Ogre::Degree(0)), Vector3(0, 1, 0)));
+  /*     _cameraBody->setOrientation(Ogre::Quaternion(Ogre::Radian(Ogre::Degree(0)), Vector3(0, 1, 0)));
       _cameraBody->setPosition(Vector3(_activatorPosition.x,1.5,_activatorPosition.z+1));
       _camera->setPosition(Vector3(_activatorPosition.x-_position.x,1.5,_activatorPosition.z+1));
       _camera->setOrientation(Ogre::Quaternion(Ogre::Radian(Ogre::Degree(0)), Vector3(0, 1, 0)));
       _cameraNode->setPosition(Vector3(_activatorPosition.x,1.5,_activatorPosition.z+1));
       _cameraNode->setOrientation(Ogre::Quaternion(Ogre::Radian(Ogre::Degree(0)), Vector3(0, 1, 0)));
       _cameraBody->getBulletRigidBody()->setLinearVelocity(convert(Vector3(0,0,0)));
-      _cameraBody->getBulletRigidBody()->forceActivationState(DISABLE_DEACTIVATION);
+      _cameraBody->getBulletRigidBody()->forceActivationState(DISABLE_DEACTIVATION);*/
 
 }
 

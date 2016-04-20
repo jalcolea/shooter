@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <MyGUI type="Layout" version="3.2.0">
     <Widget type="TextBox" skin="TextBox" position="50 20 150 70" layer="Main" name="edit_points">
         <Property key="FontName" value="Circus"/>
@@ -6,7 +6,7 @@
         <Property key="FontHeight" value="60"/>
         <Property key="TextColour" value="1 1 1"/>
     </Widget>
-    <Widget type="ProgressBar" skin="ProgressBar" position="250 20 200 70" layer="Main" name="progress_live">
+    <Widget type="ProgressBar" skin="ProgressBar" position="250 20 600 70" layer="Main" name="progress_live">
         <Property key="Range" value="100"/>
     </Widget>
     <CodeGeneratorSettings/>
