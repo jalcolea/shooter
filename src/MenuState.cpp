@@ -99,11 +99,10 @@ bool MenuState::keyPressed(const OIS::KeyEvent &e)
     c.go();
   }
   else if (e.key == OIS::KC_A) {
-    //MyGUI::LayoutManager::getInstance().unloadLayout(layout);
     //PlayWidget play(NULL);
-    PlayWidget play("shooter_play_up_left.layout");
-    play.setPoints(123011);
-    play.setLive(75);
+    PlayWidget * play = new PlayWidget("shooter_play_up_left.layout");
+    play->setPoints(123011);
+    play->setLive(75);
 
   }
   return true;

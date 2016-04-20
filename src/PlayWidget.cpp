@@ -28,7 +28,7 @@ progress_live->setProgressPosition(10);
 
 PlayWidget::~PlayWidget()
 {
-  MyGUI::LayoutManager::getInstance().unloadLayout(count_layout);
+  MyGUI::LayoutManager::getInstance().unloadLayout(layout);
 }
 
 void PlayWidget::setPoints(int points)
