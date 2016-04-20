@@ -55,6 +55,7 @@ public:
 
   inline OgreBulletCollisions::CollisionShape* getActivatorShape(){return _shapeActivator;};
   inline  bool getActivatorActive(){return _activatorActive;};
+  inline Vector3 getActivatorPosition(){return _activatorPosition;};
   virtual void checkCollisions(){};
   virtual void buildGame();
   virtual void startGame(){};

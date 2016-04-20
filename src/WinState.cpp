@@ -11,7 +11,7 @@
 
 #define TIME_RESUCITANDO 3
 
-template<> WinState* Ogre::Singleton<WinState>::msSingleton = 0;
+
 
 void WinState::enter ()
 {
@@ -26,7 +26,7 @@ void WinState::exit()
 {
 
   std::cout << "kakakakakaka" << std::endl;
- _root->getAutoCreatedWindow()->removeAllViewports();
+  //_root->getAutoCreatedWindow()->removeAllViewports();
   destroyMyGui();
 }
 
@@ -78,6 +78,7 @@ txt.resize(txt.size()-1);
         cout << "NEW RECORD TO SAVE" << endl;
         save_record();
         popState();
+
     }
 
   return true;
@@ -112,26 +113,20 @@ bool WinState::mouseReleased(const OIS::MouseEvent &e, OIS::MouseButtonID id)
   return true;
 }
 
-WinState* WinState::getSingletonPtr ()
-{
-    return msSingleton;
-}
 
-WinState& WinState::getSingleton ()
-{ 
-  assert(msSingleton);
-  return *msSingleton;
-}
 
 void WinState::destroyMyGui()
 {
   std::cout << "Destruyendo MyGUI" << std::endl;
+    std::cout << "Destruyendo My GUI "<< &layout << std::endl;
     MyGUI::LayoutManager::getInstance().unloadLayout(layout);
 }
 
 void WinState::createMyGui()
 {
+
   layout = MyGUI::LayoutManager::getInstance().loadLayout("shooter_win.layout");
+  std::cout << "Creando My GUI "<< &layout << std::endl;
   btn_resume = MyGUI::Gui::getInstance().findWidget<MyGUI::Button>("btn_resume");
   user_name_txt = MyGUI::Gui::getInstance().findWidget<MyGUI::EditBox>("user_name");
 
@@ -148,3 +143,8 @@ bool WinState::WiimoteButtonUp(const wiimWrapper::WiimoteEvent &e)
 {return true;}
 bool WinState::WiimoteIRMove(const wiimWrapper::WiimoteEvent &e)
 {return true;}
+
+WinState::~WinState(){
+  std::cout << "Eliminando winState" << std::endl;
+  MyGUI::LayoutManager::getInstance().unloadLayout(layout);
+}

@@ -85,8 +85,8 @@ bool MenuState::keyPressed(const OIS::KeyEvent &e)
   }
   else if (e.key == OIS::KC_W) {
     MyGUI::LayoutManager::getInstance().unloadLayout(layout);
-    WinState::getSingletonPtr()->setPoints(123123);
-    pushState(WinState::getSingletonPtr());
+    /* WinState::getSingletonPtr()->setPoints(123123);
+       pushState(WinState::getSingletonPtr());*/
   }
   else if (e.key == OIS::KC_L) {
     MyGUI::LayoutManager::getInstance().unloadLayout(layout);

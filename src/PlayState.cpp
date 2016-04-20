@@ -30,13 +30,14 @@ using namespace OgreBulletDynamics;
 using namespace OgreBulletCollisions;
 
 void PlayState::enter() {
+  
   _root = Ogre::Root::getSingletonPtr();
   _sceneMgr = _root->getSceneManager("SceneManager");
 
   _camera = _sceneMgr->getCamera("IntroCamera");
   // _camera->setPosition(Vector3(0,0,5));
   _cameraNode = _sceneMgr->createSceneNode("nodeCamera");
-  _camera->setPosition(Vector3::ZERO);
+   _camera->setPosition(Vector3::ZERO);
   _cameraNode->attachObject(_camera);
   //_cameraNode->setPosition(Vector3(0, 2, -10));
 
@@ -46,9 +47,9 @@ void PlayState::enter() {
   paused = false;
   
   _deltaT = 0;
-    std::cout << "OverlayManager " <<  new Ogre::OverlayManager() << "PlayState" << std::endl;
+  /*  new Ogre::OverlayManager();
   _sceneMgr->addRenderQueueListener(new Ogre::OverlaySystem());
-
+  */
 
   // Activar Bullet
   AxisAlignedBox boundBox =
@@ -80,7 +81,15 @@ void PlayState::exit() { destroyMyGui(); }
 void PlayState::pause() { paused = true; }
 
 void PlayState::resume()
-{ 
+{
+
+    _cameraBody->getBulletRigidBody()->setLinearVelocity(convert(Vector3(0,0,0)));
+   _cameraBody->getBulletRigidBody()->setAngularVelocity(convert(Vector3(0,0,0)));
+   
+   _cameraBody->getBulletRigidBody()->clearForces();
+
+
+
     paused = false; 
 }
 
@@ -108,7 +117,7 @@ bool PlayState::frameEnded(const Ogre::FrameEvent &evt) {
 
 bool PlayState::keyPressed(const OIS::KeyEvent &e) {
 
-  std::cout << "presionando " << std::endl;
+
   keysArePressed.erase(e.key);
   keysArePressed[e.key] = true;
   if (e.key == OIS::KC_P) {
@@ -127,6 +136,7 @@ bool PlayState::keyPressed(const OIS::KeyEvent &e) {
 void PlayState::moveCamera() {
 
   if (keysArePressed[OIS::KC_UP]) {
+    std::cout << "Pulsado UP" << std::endl;
     btQuaternion quat = _cameraBody->getBulletRigidBody()->getOrientation();
     btVector3 aux(0, 0, -CAMSPEED);
     aux = aux.rotate(quat.getAxis(), quat.getAngle());
@@ -272,6 +282,7 @@ void PlayState::destroyMyGui() {}
 void PlayState::createLight()
 
 {
+  
   _sceneMgr->setShadowTextureCount(2);
   _sceneMgr->setShadowTextureSize(512);
   Light *light = _sceneMgr->createLight("Light1");
@@ -310,6 +321,9 @@ bool PlayState::WiimoteIRMove(const wiimWrapper::WiimoteEvent &e) {
 }
 
 void PlayState::checkCollisions() {
+
+
+  
   btCollisionShape *cameraShape = _cameraShape->getBulletShape();
   btCollisionShape *floorShape = _floorShape->getBulletShape();
   btCollisionWorld *collisionWorld = _world.get()->getBulletCollisionWorld();
@@ -338,25 +352,23 @@ void PlayState::checkCollisions() {
 		other && stand.get()->getActivatorActive();
             });
         if (it != _stands.end()) {
- 	  _cameraBody->setLinearVelocity(Vector3(0,0,0));
+
+
+	  /*	  std::cout << vector3.getX() <<"," << vector3.getY() << "," << vector3.getZ() << std::endl;
+	  std::cout <<(*it)->getActivatorPosition() << std::endl;
+	  btTransform transform = _cameraBody->getBulletRigidBody() -> getCenterOfMassTransform();
+	  
+	  transform.setOrigin(convert((*it)->getActivatorPosition()));
+	  _cameraBody->getBulletRigidBody() -> setCenterOfMassTransform(transform);
+	  std::cout << vector3.getX() <<"," << vector3.getY() << "," << vector3.getZ() << std::endl;
+	  */
+	  keysArePressed.clear();
+	 
 	  pushState((*it).get());
 
         }
 
-        /*
 
-        std::cout << floorShape <<" Floor"
-                      << obA->getCollisionShape()->getName() << std::endl;
-
-
-
-        std::cout << other <<" Collision Body A: "
-                      << obA->getCollisionShape()->getName() << std::endl;
-
-        std::cout << floorShape<< " Collision Body B: "
-                      << obB->getCollisionShape()->getName() << std::endl;
-
-        */
       }
     }
   }

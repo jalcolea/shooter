@@ -96,6 +96,12 @@ bool StandRobots::keyPressed (const OIS::KeyEvent &e)
         
     if (e.key == OIS::KC_P)
         ActivaPuerta(AccionPuerta::PARAR);
+
+      _cameraBody->getBulletRigidBody()->forceActivationState(DISABLE_DEACTIVATION);
+  _cameraBody->getBulletRigidBody()->setLinearVelocity(convert(Vector3(0,0,0)));
+   _cameraBody->getBulletRigidBody()->setAngularVelocity(convert(Vector3(0,0,0)));
+   _cameraBody->getBulletRigidBody()->clearForces();
+
         
     return true;
 }

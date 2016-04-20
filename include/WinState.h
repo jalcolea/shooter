@@ -32,11 +32,11 @@
 using namespace std;
 using namespace Ogre;
 
-class WinState : public Ogre::Singleton<WinState>, public GameState
+class WinState :  public GameState
 {
  public:
   WinState() {points=0;}
-  ~WinState() {}
+  ~WinState();
 
   void enter ();
   void exit ();

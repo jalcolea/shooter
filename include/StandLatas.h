@@ -4,8 +4,11 @@
 
 #include "Stand.h"
 #include "PlayState.h"
+#include "StandLatas.h"
 #include "Crosshair.h"
 #include "OgreOverlayContainer.h"
+#include "OgreTextAreaOverlayElement.h"
+#include "PlayWidget.h"
 
 class StandLatas:public Stand{
 
@@ -31,8 +34,10 @@ protected:
   bool _loadingShoot;
   double _timeLoadingShoot;
   double _timeWithoutBalls;
-  Ogre::OverlayContainer* _panel;
+  //  Ogre::OverlayContainer* _panel;
   int _puntos;
+  //  TextAreaOverlayElement* _textArea;
+  PlayWidget * _playWidget;
 
   
   
@@ -51,6 +56,7 @@ public:
   void drawHud();
   void paintBallsHud();
   void endGame();
+  void exit();
   
 
   StandLatas( Vector3 position, SceneManager* sceneMgr, std::string name,shared_ptr<OgreBulletDynamics::DynamicsWorld> world ):Stand(position, sceneMgr,name,world){

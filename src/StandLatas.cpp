@@ -170,6 +170,7 @@ bool StandLatas::mousePressed(const OIS::MouseEvent &e, OIS::MouseButtonID id) {
  */
 Vector3 StandLatas::calculateDirShoot() {
 
+  
   Vector3 dirShoot;
   _rayScnQuery->setSortByDistance(true);
   _rayScnQuery->setQueryMask(COL_STAND|COL_CAN);
@@ -193,7 +194,8 @@ Vector3 StandLatas::calculateDirShoot() {
 
   stringstream str;
   str << "Ball" << _numBolas;
-  string name = str.str();  
+  string name = str.str();
+  std::cout << "Nombre " << str.str() << std::endl;
   SceneNode *ballNode = _sceneMgr->createSceneNode(name);
   Entity *ballEnt = _sceneMgr->createEntity("ball.mesh");
   ballEnt->setCastShadows(true);
@@ -215,6 +217,7 @@ Vector3 StandLatas::calculateDirShoot() {
 
   
 
+  //Destruir las bolas el marcador de bolas restantes
   stringstream str2;
   str2 << "BallHud" << _numBolas;
   OgreUtil::destroySceneNode(_sceneMgr->getSceneNode(str2.str()));
@@ -229,11 +232,11 @@ void StandLatas::reacomodateCamera() {
       Ogre::Quaternion(Ogre::Radian(Ogre::Degree(0)), Vector3(0, 1, 0)));
 
   _cameraBody->getBulletRigidBody()->forceActivationState(DISABLE_SIMULATION);
-  /*    btTransform bt = _cameraBody->getBulletRigidBody()->getWorldTransform();
-  bt.setOrigin(convert(_activatorPosition-Vector3(0,0,-10) ));
-  _cameraBody->getBulletRigidBody()->setWorldTransform(bt);
-  _cameraNode->translate(_activatorPosition-Vector3(0,0,2));*/
-  _cameraNode->translate(Vector3(0, 1, -3));
+
+  std::cout <<_cameraNode->getPosition() << std::endl;
+  _cameraNode->setPosition(_activatorPosition + Vector3(0,2,0));
+  std::cout <<_cameraNode->getPosition() << std::endl;			  
+
 }
 
 
@@ -267,6 +270,9 @@ void StandLatas::deleteFallenCans(){
       it = _canBodys.erase(it);
       _puntos+=10;
       _numCans--;
+
+      _playWidget->setPoints(_puntos);
+      //  _textArea->setCaption(str.str());
      }
     else{
       it++;
@@ -311,6 +317,12 @@ void StandLatas::deleteFallenCans(){
 
 
 }
+
+void StandLatas::exit(){
+
+
+  delete _playWidget;
+}
 void StandLatas::checkCollisions() {
 
   btCollisionWorld *collisionWorld = _world.get()->getBulletCollisionWorld();
@@ -351,7 +363,7 @@ void StandLatas::checkCollisions() {
 
     double width = 0.1+ _timeLoadingShoot/0.001;
     if(width<1000){
-    _panel->setWidth(width);
+     _playWidget->setLive(width/10);
     _timeLoadingShoot += _deltaT;
     }
   }
@@ -370,9 +382,32 @@ void StandLatas::checkCollisions() {
 
 void StandLatas::drawHud(){
 
+   _playWidget = new PlayWidget("shooter_play_up_left.layout");
+   _playWidget->setLive(0);
+   _playWidget->setPoints(0);
+   
+
+  /*
   Ogre::OverlayManager &overlayManager = Ogre::OverlayManager::getSingleton();
 
-  //new OgreFontManager();
+  Ogre::FontManager* aux = new Ogre::FontManager();
+
+  FontPtr font = aux->create("arial", ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+
+  font.get()->setType(FT_TRUETYPE);
+  font.get()->setSource("arial.ttf");
+  font.get()->setTrueTypeSize(10);
+  font.get()->setTrueTypeResolution(96);
+
+   font.get()->load();
+
+
+
+
+
+
+  
+  aux->reloadAll();
 // Create a panel
    _panel = (OverlayContainer*)(
     overlayManager.createOverlayElement("Panel", "Panelaco"));
@@ -380,31 +415,40 @@ _panel->setMetricsMode(Ogre::GMM_PIXELS);
 _panel->setPosition(10, 10);
 _panel->setDimensions(100, 10);
 _panel->setMaterialName("Material.002"); // Optional background material
- 
-/*
+
+ OverlayContainer*   _panelPuntos = (OverlayContainer*)(
+    overlayManager.createOverlayElement("Panel", "PanelPuntacos"));
+_panelPuntos->setMetricsMode(Ogre::GMM_PIXELS);
+_panelPuntos->setPosition(800, 600);
+_panelPuntos->setDimensions(100, 100);
+ _panelPuntos->setMaterialName("Material.002"); // Optional background material
+
+
+
 // Create a text area
-TextAreaOverlayElement* textArea = static_cast<TextAreaOverlayElement*>(
-    overlayManager.createOverlayElement("TextArea", "TextAreaName"));
-textArea->setMetricsMode(Ogre::GMM_PIXELS);
-textArea->setPosition(0, 0);
-textArea->setDimensions(100, 100);
-textArea->setCaption("Hello, World!");
-textArea->setCharHeight(16);
-textArea->setFontName("arial");
-textArea->setColourBottom(ColourValue(0.3, 0.5, 0.3));
-textArea->setColourTop(ColourValue(0.5, 0.7, 0.5));
-*/
- 
+_textArea = static_cast<TextAreaOverlayElement*>(
+    overlayManager.createOverlayElement("TextArea", "puntos"));
+_textArea->setMetricsMode(Ogre::GMM_PIXELS);
+_textArea->setPosition(0, 0);
+_textArea->setDimensions(100, 100);
+_textArea->setCaption("0");
+_textArea->setCharHeight(16);
+_textArea->setFontName("arial");
+_textArea->setColourBottom(ColourValue(0.3, 0.5, 0.3));
+_textArea->setColourTop(ColourValue(0.5, 0.7, 0.5));
+
+
 // Create an overlay, and add the panel
 Overlay* overlay = overlayManager.create("OverlayName");
 overlay->add2D(_panel);
+ overlay->add2D(_panelPuntos);
  
 // Add the text area to the panel
-//_panel->addChild(textArea);
+_panelPuntos->addChild(_textArea);
 
 // Show the overlay
 overlay->show();
-
+  */
  paintBallsHud();
 
 
@@ -444,15 +488,13 @@ void StandLatas::endGame(){
   _activatorActive = false;
   std::cout <<"End Game" << std::endl;
   _cameraBody->getBulletRigidBody()->forceActivationState(DISABLE_DEACTIVATION);
-  _cameraBody->getBulletRigidBody()->setLinearVelocity(convert(Vector3(0,0,0)));
-   _cameraBody->getBulletRigidBody()->setAngularVelocity(convert(Vector3(0,0,0)));
-   _cameraBody->getBulletRigidBody()->clearForces();
    // _cameraNode->translate(Vector3(0, -1, 3));
 
    
     popState();
-    WinState::getSingletonPtr()->setPoints(_puntos);
-    pushState(WinState::getSingletonPtr());
+    WinState* state = new WinState();
+    state->setPoints(_puntos);
+    pushState(state);
 
 
 
