@@ -10,7 +10,7 @@
 #include "LooseState.h"
 #include "records.h"
 #include "Carrusel.h"
-
+#include "PlayWidget.h"
 //http://www.cplusplus.com/doc/tutorial/templates/          <--------Visita esta página para entender la linea justo debajo de esta
 template<> MenuState* Ogre::Singleton<MenuState>::msSingleton = 0;
 
@@ -97,6 +97,14 @@ bool MenuState::keyPressed(const OIS::KeyEvent &e)
     //MyGUI::LayoutManager::getInstance().unloadLayout(layout);
     Carrusel c;
     c.go();
+  }
+  else if (e.key == OIS::KC_A) {
+    //MyGUI::LayoutManager::getInstance().unloadLayout(layout);
+    //PlayWidget play(NULL);
+    PlayWidget play("shooter_play_up_left.layout");
+    play.setPoints(123011);
+    play.setLive(75);
+
   }
   return true;
 }
